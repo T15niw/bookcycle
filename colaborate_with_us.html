@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Collaborate with us</title>
+    <link rel="icon" href="logo/bookcycle.png" type="image/x-icon" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lexend&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+      body {
+        font-family: "Lexend", sans-serif;
+        background-color: #238649;
+      }
+      header {
+        background-image: url(Photos/col);
+        background-size: cover;
+        background-position: center;
+      }
+      .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 40px;
+      }
+      nav ul {
+        display: flex;
+        gap: 30px;
+        align-items: center;
+      }
+      .navItems {
+        color: #238649;
+        font-size: 22px;
+        font-weight: 900;
+      }
+
+      .navItems:hover {
+        color: #32eb2a;
+        cursor: pointer;
+      }
+
+      .navItems button {
+        background-color: #32eb2a;
+        color: white;
+        padding: 6px 35px;
+        border-radius: 20px;
+        font-size: 18px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        border: white;
+        border-style: solid;
+      }
+      .navItems button:hover {
+        background-color: #238649;
+        cursor: pointer;
+      }
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
+      nav ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+      .heroSection {
+        height: 500px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+        padding: 5%;
+        position: relative;
+        overflow: hidden;
+      }
+      .heroSection h1 {
+        font-size: 65px;
+        font-weight: 800;
+        color: black;
+        margin-bottom: 20px;
+        width: 1000px;
+      }
+      .heroSection p {
+        font-size: 40px;
+        color: black;
+        margin-bottom: 40px;
+        width: 900px;
+      }
+      .heroSection img {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 50%;
+        height: auto;
+      }
+      .heroSection a button {
+        background-color: #32eb2a;
+        color: white;
+        padding: 16px 77px;
+        margin-bottom: 150px;
+        font-size: 25px;
+        font-weight: bolder;
+        border: none;
+        border-radius: 30px;
+        border-bottom-left-radius: 4px;
+        position: relative;
+      }
+      .heroSection a button:hover {
+        background-color: #238649;
+        cursor: pointer;
+      }
+    @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap');
+
+        .who-can-join-section {
+            background: linear-gradient(135deg, #4CAF50 0%, #388E3C 100%);
+            padding: 80px 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .section-title {
+            color: white;
+            font-size: 4rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 60px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 40px;
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        .card {
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            border-radius: 16px;
+            padding: 40px;
+            color: white;
+            position: relative;
+            min-height: 350px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.6) 100%);
+            z-index: 1;
+        }
+
+        .card-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .partners-card {
+            background-image: url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80');
+        }
+
+        .volunteers-card {
+            background-image: url('https://images.unsplash.com/photo-1529156069898-49953e39b3ac?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80');
+        }
+
+        .card-type {
+            font-size: 2.2rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .card-subtitle {
+            font-size: 1.4rem;
+            font-weight: 400;
+            margin-bottom: 30px;
+            opacity: 0.95;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .help-section-title {
+            font-size: 1.3rem;
+            font-weight: 500;
+            margin-bottom: 20px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .help-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .help-list li {
+            font-size: 1.1rem;
+            font-weight: 400;
+            margin-bottom: 12px;
+            padding-left: 20px;
+            position: relative;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .help-list li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: #4CAF50;
+            font-weight: bold;
+            font-size: 1.5rem;
+            text-shadow: 0 0 10px rgba(76, 175, 80, 0.8);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 1100px) {
+            .cards-container {
+                grid-template-columns: 1fr;
+                max-width: 600px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .who-can-join-section {
+                padding: 60px 15px;
+            }
+
+            .section-title {
+                font-size: 3rem;
+                margin-bottom: 40px;
+            }
+
+            .cards-container {
+                gap: 30px;
+            }
+
+            .card {
+                padding: 30px;
+                min-height: 300px;
+            }
+
+            .card-type {
+                font-size: 1.8rem;
+            }
+
+            .card-subtitle {
+                font-size: 1.2rem;
+                margin-bottom: 25px;
+            }
+
+            .help-section-title {
+                font-size: 1.1rem;
+            }
+
+            .help-list li {
+                font-size: 1rem;
+                margin-bottom: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .section-title {
+                font-size: 2.5rem;
+            }
+
+            .card {
+                padding: 25px;
+                min-height: 280px;
+            }
+
+            .card-type {
+                font-size: 1.6rem;
+            }
+
+            .card-subtitle {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="navbar">
+        <a href="index.html"
+          ><img src="logo/Logo black shadow.png" alt="Logo"
+        /></a>
+        <nav>
+          <ul>
+            <li>
+              <a href="colaborate_with_us.html" target="_self" class="navItems"
+                >Collaborate with us</a
+              >
+            </li>
+            <li>
+              <a href="about_us.html" target="_self" class="navItems"
+                >About us</a
+              >
+            </li>
+            <li>
+              <a href="contact_us.html" target="_self" class="navItems"
+                >Contact us</a
+              >
+            </li>
+            <li>
+              <a href="logIn.html" target="_self" class="navItems"
+                ><button type="button">
+                  Log In <img src="Icons/UI/Right Arrow.png" alt="" />
+                </button>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+      <section class="heroSection">
+        <h1>Let’s Make an Impact Together!</h1>
+        <p>
+          We believe in collective action. Whether you're a company, bookstore,
+          or passionate individual, there’s a place for you in our mission
+        </p>
+        <img src="Photos/collaborate_with_us/Hero section.png" alt="chejra" />
+        <a href="#teamUpForm"
+          ><button type="button">Support the Mission</button></a
+        >
+      </section>
+    </header>
+    <main>
+      <section>
+        <h1>Who can join</h1>
+        <div class="who-can-join-section">
+        <div class="stcard">
+          <h2>Partners / Sponsors</h2>
+          <h3>Bookstores, businesses, NGOs</h3>
+          <h2>What they can help us with:</h2>
+          <ul>
+            <li>Provide funding</li>
+            <li>Offer physical space</li>
+            <li>Logistics or transport</li>
+          </ul>
+        </div>
+        <div class="ndcard">
+          <h2>Volunteers</h2>
+          <h3>Students or individuals</h3>
+          <h2>What they can help us with:</h2>
+          <ul>
+            <li>Book collection</li>
+            <li>Book sorting</li>
+            <li>Community outreach</li>
+          </ul>
+        </div>
+        </div>
+      </section>
+      <section>
+        <h1>Why join Us?</h1>
+        <img src="Photos/collaborate with us/why join us bg.png" alt="" />
+        <div>
+          <h2>Partners / Sponsors</h2>
+          <img
+            src="Icons/UI/collaborate with us/icons8-haut-parleur-1-100.png"
+            alt=""
+          />
+          <p>Exposure and branding opportunities</p>
+          <br />
+          <img
+            src="Icons/UI/collaborate with us/icons8-durabilité-100.png"
+            alt=""
+          />
+          <p>Sustainability contribution</p>
+          <br />
+          <img
+            src="Icons/UI/collaborate with us/icons8-script-de-rapport-de-graphique-100.png"
+            alt=""
+          />
+          <p>Community impact reports</p>
+        </div>
+        <div>
+          <h2>Volunteers</h2>
+          <img
+            src="Icons/UI/collaborate with us/icons8-compétences-de-développement-100.png"
+            alt=""
+          />
+          <p>Gaining practical experience: logistics, communication…</p>
+          <br />
+          <img
+            src="Icons/UI/collaborate with us/icons8-diplôme-1-100.png"
+            alt=""
+          />
+          <p>Certificates</p>
+          <br />
+          <img
+            src="Icons/UI/collaborate with us/icons8-nourriture-naturelle-100.png"
+            alt=""
+          />
+          <p>Social, environmental impact</p>
+        </div>
+      </section>
+      <section id="teamUpForm">
+        <h1>Ready to Team Up?</h1>
+        <div>
+          <img src="Photos/collaborate with us/team up form.png" alt="" />
+        </div>
+        <div>
+          <form action="" method="post">
+            <label for="fName"></label>
+            <input type="text" name="" id="fName" placeholder="Full name" />
+            <label for="telNum"></label>
+            <input
+              type="tel"
+              name=""
+              id="telNum"
+              placeholder="Phone Number"
+            /><br />
+            <label for="email"></label>
+            <input
+              type="email"
+              name=""
+              id="email"
+              placeholder="Email Address"
+            />
+            <label for="preConMethod"></label>
+            <select name="" id="preConMethod">
+              <option value=""></option>
+              <option value="">Calls</option>
+              <option value="">Whatsapp</option>
+              <option value="">Emails</option></select
+            ><br />
+            <label for="city"></label>
+            <input type="text" id="city" placeholder="City of habitat" />
+            <label for="collaType"></label>
+            <select name="" id="collaType">
+              <option value=""></option>
+              <option value="">Partnership / Sponsorship</option>
+              <option value="">Volunteering</option></select
+            ><br />
+            <label for="nameCompany"></label>
+            <input
+              type="text"
+              name=""
+              id="nameCompany"
+              placeholder="Company name"
+            />
+            <label for="fieldActivity"></label>
+            <input
+              type="text"
+              id="fieldActivity"
+              placeholder="Field of activity"
+            /><br />
+            <label for="desiredRole"></label>
+            <select name="" id="desiredRole">
+              <option value=""></option>
+              <option value="">Logistics</option>
+              <option value="">Sorting</option>
+              <option value="">Communication & Digital Marketing</option>
+              <option value="">Administrative Assistance</option>
+            </select>
+            <label for="availability"></label>
+            <select name="" id="availability">
+              <option value=""></option>
+              <option value="">Occasionally</option>
+              <option value="">Once a week</option>
+              <option value="">Weekends only</option>
+              <option value="">Several times a week</option>
+              <option value="">Flexible</option></select
+            ><br />
+            <label for="uploadedFile"></label>
+            <input
+              type="file"
+              name=""
+              id="uploadedFile"
+              placeholder="Upload file (CV/ proposal)"
+            /><br />
+            <label for="message"></label>
+            <textarea
+              name=""
+              id="message"
+              placeholder="Tell us a bit about how you'd like to collaborate with us"
+            ></textarea
+            ><br />
+            <button type="submit">Submit</button>
+          </form>
+        </div>
+      </section>
+      <section>
+        <h1>Our Partners</h1>
+        <img src="Photos/collaborate with us/partner 1.png" alt="" /><img
+          src="Photos/collaborate with us/partner 2.png"
+          alt=""
+        /><img src="Photos/collaborate with us/partner 3.png" alt="" /><img
+          src="Photos/collaborate with us/partner 4.png"
+          alt=""
+        />
+      </section>
+      <section id="faq">
+        <h2>FAQ</h2>
+        <div>
+          <details>
+            <summary>Can my small bookstore partner with you?</summary>
+            <p>
+              Absolutely! We welcome partnerships with bookstores of all sizes.
+            </p>
+          </details>
+          <details>
+            <summary>
+              Will our brand be visible if we sponsor BookCycle?
+            </summary>
+            <p>
+              Yes, we offer brand exposure on our website, social media, events,
+              and community reports.
+            </p>
+          </details>
+          <details>
+            <summary>Is there a minimum sponsorship requirement?</summary>
+            <p>
+              We’re flexible; both small and large contributions are valuable
+              and acknowledged.
+            </p>
+          </details>
+        </div>
+        <div>
+          <details>
+            <summary>
+              Do I need to commit for a long time as a volunteer?
+            </summary>
+            <p>
+              No long-term commitment is required, join us when you can, every
+              little bit helps!
+            </p>
+          </details>
+          <details>
+            <summary>Do I need previous experience to volunteer?</summary>
+            <p>
+              Not at all! We'll guide you based on your interests and skills.
+            </p>
+          </details>
+          <details>
+            <summary>Can I volunteer remotely?</summary>
+            <p>
+              Some roles like content creation administrative assistance can be
+              done remotely. The other roles are local.
+            </p>
+          </details>
+        </div>
+        <p>
+          Still have questions?<br />Don’t hesitate to reach out through our
+          contact form!
+        </p>
+        <a href="contact_us.html" target="_self"
+          ><button type="button">Ask Us here</button></a
+        >
+      </section>
+    </main>
+    <footer>
+      <div>
+        <h3>Useful links</h3>
+        <a href="about_us.html" class="usefuLinks">About us</a><br />
+        <a href="colaborate_with_us.html" class="usefuLinks"
+          >collaborate with us</a
+        ><br />
+        <a href="" class="usefuLinks">Privacy policy</a><br />
+        <a href="" class="usefuLinks"> Terms & Conditions</a><br />
+      </div>
+      <div>
+        <h3>Customer Service</h3>
+        <a href="contact_us.html">Contact Us</a><br />
+        <a href="#faq">FAQ</a><br />
+        <h3>Follow us</h3>
+        <br />
+        <a href="https://www.facebook.com" target="_blank"
+          ><img src="Icons/UI/icons8-facebook-nouveau-200.png" alt="FB"
+        /></a>
+        <a href="https://www.instagram.com" target="_blank"
+          ><img src="Icons/UI/icons8-instagram-200.png" alt="IG"
+        /></a>
+        <a href="https://x.com" target="_blank"
+          ><img src="Icons/UI/icons8-x-200.png" alt="X"
+        /></a>
+        <a href="https://www.youtube.com" target="_blank"
+          ><img src="Icons/UI/icons8-youtube-200.png" alt="Ytb"
+        /></a>
+      </div>
+      <div>
+        <a href="index.html"><img src="logo/Logo black shadow.png" alt="" /></a>
+        <a href=""
+          ><p>Solicode, Hawma Seddam <br />Tangier, Morocco, North Africa</p></a
+        >
+      </div>
+      <p>
+        CopyRights © 2025 BookCycle. All rights reserved <br /><b
+          >Tasnim Mezgueldi</b
+        >
+      </p>
+    </footer>
+  </body>
+</html>
