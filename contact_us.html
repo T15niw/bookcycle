@@ -9,25 +9,224 @@
     <style>
         body {
           font-family: 'Lexend', sans-serif;
-          background-color: #238649;
+          background-image: url(Photos/contact_us/background.jpg);
+        background-size: cover;
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        margin: 0;
+        padding: 0;
+          box-sizing: border-box;
+    color: black;
         }
+        .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 40px;
+      }
+      nav ul {
+        display: flex;
+        gap: 35px;
+        align-items: center;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+      .navItems {
+        color: #238649;
+        font-size: 22px;
+        font-weight: bold;
+        text-shadow: 0px 4px 4px rgb(255, 255, 255, 0.95);
+      }
+      .navItems:hover {
+        color: #32eb2a;
+        cursor: pointer;
+      }
+      .navItems button {
+        background-color: #32eb2a;
+        color: white;
+        padding: 6px 35px;
+        border-radius: 20px;
+        font-size: 18px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        border: 1px solid white;
+      }
+      .navItems button:hover {
+        background-color: #238649;
+        cursor: pointer;
+      }
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
+      main{
+        display: flex;
+        flex-wrap: wrap; 
+        justify-content: center;
+    gap: 30px 50px;
+    margin-bottom: 20px;
+      }
+      h1 {
+    flex-basis: 100%; 
+    text-align: center;
+    font-size: 65px;
+    font-weight: bolder;
+    margin-bottom: 5px;
+    margin-top: 0;
+    text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.40);
+}
+.contactForm{
+    flex-basis: 380px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.contactInfo{ 
+    flex-basis: 400px;
+    padding-left: 5px;
+}
+#fName, #email, #message {
+    width: 400px;
+    padding: 15px;
+    margin-bottom: 20px; 
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    font-family: 'Lexend', sans-serif;
+    font-size: 16px;
+    background-color: #f9f9f9;
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.20);
+      }
+      #fName::placeholder, #email::placeholder, #message::placeholder{
+        color: #888;
+      }
+      textarea{
+        height: 180px;
+      }
+      button{
+         background-color: #238649;
+    color: white;
+    padding: 8px 48px;
+    border: none;
+    border-radius: 5px;
+    font-family: 'Lexend', sans-serif;
+    font-size: 18px;
+    font-weight: lighter;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.20);
+      }
+      button:hover{
+         background-color: #1c6b3a;
+      }
+      .giveUs{
+        font-size: 19px;
+        text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.20);
+      }
+      .contact-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+.contact-item img {
+    width: 30px; 
+    height: 30px;
+
+}
+.contact-item h3 {
+    font-size: 1.2em;
+    font-weight: 600;
+    color: #000000;
+    margin-top: 0;
+    margin-bottom: 5px;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+.contact-item p {
+    font-size: 1em;
+    color: #555;
+    margin: 0;
+    line-height: 1.5;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+.onMap{
+    display: inline-flex;
+    justify-content: center;
+    gap: 8px;
+    color: #238649;
+    font-weight: 600;
+    font-size: 19px;
+    margin-top: 10px;
+}
+.onMap img {
+    width: 22px;
+    height: 22px;
+    rotate: -45deg;
+}
+.onMap:hover{
+text-decoration: underline;
+text-decoration-thickness: 2px;
+}
+hr{
+    border: 0;
+    height: 4px;
+    width: 395px;
+    background-color: #000000;
+    margin-top: 10px;
+    margin-bottom: 15px;
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.20);
+}
+.socials{
+    display: flex;
+    justify-content: center;
+}
+.socials a img{
+     width: 60px;
+    height: 60px;
+}
     </style>
 </head>
 <body>
     <header>
-        <a href="index.html"><img src="logo/Logo black shadow.png" alt="Logo"></a>
-    <nav>
-    <ul>
-        <li><a href="colaborate_with_us.html" target="_self" class="navItems">Collaborate with us</a></li>
-        <li><a href="about_us.html" target="_self" class="navItems">About us</a></li>
-        <li><a href="contact_us.html" target="_self" class="navItems">Contact us</a></li>
-        <li><a href="logIn.html" target="_self" class="navItems"><button type="button">Log In</button></a></li> 
-    </ul>
-    </nav>   
+        <div class="navbar">
+        <a href="index.html"
+          ><img src="logo/logo_100_white.png" alt="Logo"
+        /></a>
+        <nav>
+          <ul>
+            <li>
+              <a href="colaborate_with_us.html" target="_self" class="navItems"
+                >Collaborate with us</a
+              >
+            </li>
+            <li>
+              <a href="about_us.html" target="_self" class="navItems"
+                >About us</a
+              >
+            </li>
+            <li>
+              <a href="contact_us.html" target="_self" class="navItems"
+                >Contact us</a
+              >
+            </li>
+            <li>
+              <a href="logIn.html" target="_self" class="navItems"
+                ><button type="button">
+                  Log In <img src="Icons/UI/Right Arrow.png" alt="" />
+                </button>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>  
 </header>
 <main>
     <h1>How can we help?</h1>
-    <div>
+    <div class="contactForm">
+        <form action="" method="post">
         <label for="fName"></label>
         <input type="text" name="" id="fName" placeholder="Full name"><br>
         <label for="email"></label>
@@ -35,24 +234,40 @@
         <label for="message"></label>
         <textarea name="" id="message" placeholder="Message"></textarea><br>
         <button type="submit">Send</button>
+        </form>
     </div>
-    <div>
-        <p>Give us a call or send a message <br>we will be happy to answer your questions!</p>
-        <img src="Icons/UI/contact us/icons8-phone-100.png" alt="">
+    <div class="contactInfo">
+        <p class="giveUs">Give us a call or send a message <br>we will be happy to answer your questions!</p>
+        <div class="contact-item">
+        <img src="Icons/UI/contact_us/icons8-phone-100.png" alt="">
+        <div>
         <h3>Let’s talk</h3>
         <p>+212-612345678</p>
-        <img src="Icons/UI/contact us/icons8-nouveau-message-100.png" alt="">
+        </div>
+        </div>
+        <div class="contact-item">
+        <img src="Icons/UI/contact_us/icons8-nouveau-message-100.png" alt="">
+        <div>
         <h3>General Support</h3>
         <p>info@bookcycle.com</p>
-        <img src="Icons/UI/contact us/icons8-marqueur-100.png" alt="">
+        </div>
+        </div>
+        <div class="contact-item">
+        <img src="Icons/UI/contact_us/icons8-marqueur-100.png" alt="">
+        <div>
         <h3>Address</h3>
         <p>Tangier, Morocco, North Africa</p>
-        <a href="" target="_blank">View on map <img src="Icons/UI/contact us/icons8-right-100 (1).png" alt=""></a><br>
+        <a href="" target="_blank" class="onMap">View on map <img src="Icons/UI/contact_us/icons8-right-100 (1).png" alt=""></a><br>
+        </div>
+    </div>
+    <hr>
+    <div class="socials">
         <a  href="https://www.facebook.com" target="_blank"><img src="Icons/UI/icons8-facebook-nouveau-200.png" alt="FB"></a>
         <a  href="https://www.instagram.com" target="_blank"><img src="Icons/UI/icons8-instagram-200.png" alt="IG"></a>
         <a  href="https://x.com" target="_blank"><img src="Icons/UI/icons8-x-200.png" alt="X"></a>
         <a  href="https://www.youtube.com" target="_blank"><img src="Icons/UI/icons8-youtube-200.png" alt="Ytb"></a>
     </div>
+</div>
 </main> 
 </body>
 </html>
