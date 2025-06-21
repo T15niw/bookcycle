@@ -18,11 +18,13 @@
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
+        background-attachment: fixed;
         display: flex;
         justify-content: center;
         align-items: center;
         margin: 0;
         padding: 0;
+        position: relative;
       }
       main {
         display: flex;
@@ -37,10 +39,10 @@
       }
       .signUpCard {
         background-color: #ffffff;
-        padding: 50px 68px;
+        padding: 50px 42px;
         box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
         text-align: left;
-        width: 600px;
+        width: 680px;
       }
       .backToHome {
         display: flex;
@@ -56,7 +58,7 @@
       }
        h1 {
         color: black;
-        font-size: 22px;
+        font-size: 25px;
         margin-top: 50px;
         margin-bottom: 18px;
         font-weight: bold;
@@ -64,11 +66,18 @@
       form {
         display: flex;
         flex-direction: column;
+        justify-content: center;
+      }
+      .form_row{
+        display: flex;
+  flex-direction: row;
+  gap: 12px;
       }
       #stName, #ndName, #email, #telNum, #preConMethod, #city,
       #PW, #confirmPW {
-        width: 250px;
-        padding: 14px 18px;
+        width: 100%;
+        height: auto;
+        padding: 20px 18px;
         margin-bottom: 18px;
         border: 1px solid #6c757d;
         border-radius: 5px;
@@ -81,7 +90,7 @@
         box-shadow: 0 0 0 3px rgba(35, 134, 73, 0.2);
       }
       #stName::placeholder, #ndName::placeholder, #email::placeholder, #telNum::placeholder,
-    #preConMethod::placeholder, #city::placeholder, #PW::placeholder, #confirmPW::placeholder {
+     #city::placeholder, #PW::placeholder, #confirmPW::placeholder {
         color: #838383;
       }
       button {
@@ -89,12 +98,15 @@
         color: white;
         border: none;
         padding: 13px;
+        margin-top: 25px;
         border-radius: 8px;
         font-size: 20px;
         font-family: "Lexend", sans-serif;
         font-weight: bold;
         cursor: pointer;
         transition: background-color 0.2s ease-in-out;
+        width: fit-content;
+        align-self: center; 
       }
       button:hover {
         background-color: #1c6b3a;
@@ -102,13 +114,13 @@
       span{
         color: #238649;
         font-weight: bold;
+        cursor: pointer;
       }
       p {
         text-align: center;
         color: #6c757d;
         font-size: 19px;
-        margin-top: 8px;
-        margin-bottom: 12px;
+        margin-top: 2px;
       }
       .logIn {
         display: block;
@@ -130,29 +142,39 @@
          <a href="index.html" class="backToHome"><img src="Icons/UI/logIn_signUp/icons8-vers-l'avant-100.png" class="leftArrow">BACK TO HOME</a>
          <h1>SIGN UP AND START MAKING AN IMPACT</h1>
          <form action="" method="post">
+            <div class="form_row">
          <label for="1stName"></label>
          <input type="text" name="" id="stName" placeholder="First name" required>
          <label for="2ndName"></label>
-         <input type="text" name="" id="ndName" placeholder="Last name" required><br>
+         <input type="text" name="" id="ndName" placeholder="Last name" required>
+         </div>
+         <div class="form_row">
          <label for="email"></label>
          <input type="email" name="" id="email" placeholder="Email Address" required>
          <label for="telNum"></label>
-         <input type="tel" name="" id="telNum" placeholder="Phone Number" required><br>
-         <label for="preConMethod" placeholder="preferred contact method"></label>
+         <input type="tel" name="" id="telNum" placeholder="Phone Number" required>
+         </div>
+         <div class="form_row">
+         <label for="preConMethod"></label>
          <select name="" id="preConMethod" required>
-            <option value=""></option>
-            <option value="">Calls</option>
-            <option value="">Whatsapp</option>
-            <option value="">Emails</option>
+            <option value="" disabled selected>preferred contact method</option>
+            <option value="calls">Calls</option>
+            <option value="whatsapp">Whatsapp</option>
+            <option value="emails">Emails</option>
          </select>
          <label for="city"></label>
-         <input type="text" id="city" placeholder="City of habitat" required><br>
-         <label for="1PW"></label>
+         <input type="text" id="city" placeholder="City" required>
+         </div>
+         <div class="form_row">
+         <label for="PW"></label>
          <input type="password" name="" id="PW" placeholder="Password" required>
-         <label for="2PW"></label>
-         <input type="password" name="" id="confirmPW" placeholder="Confirm Password" required><br>
+         <label for="confirmPW"></label>
+         <input type="password" name="" id="confirmPW" placeholder="Confirm Password" required>
+         </div>
+         <div class="form_row">
          <input type="checkbox" name="" id="privacyPolicy" required>
-         <label for="privacyPolicy" class="privacyPolicy">I have read and agreed to the <span>terms</span> and <span>privacy policy</span>.</label><br>
+         <label for="privacyPolicy" class="privacyPolicy">I have read and agreed to the <span>terms</span> and <span>privacy policy</span>.</label>
+         </div>
          <button type="submit">Sign Up</button><br>
      </form>
          <p>Already have an account?<br>
