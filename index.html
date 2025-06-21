@@ -65,7 +65,12 @@
         text-decoration: none;
         color: inherit;
       }
+      .hero{
+            display: flex;
+            justify-content: space-around;
+      }
         h1{
+        text-align: left;
         font-size: 75px;
         font-weight: bold;
         margin-top: 110px;
@@ -75,24 +80,36 @@
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         }
-        .herosec{
-            display: flex;
-            justify-content: space-around;
-        }
-        .heroSection{
+        .heroSection p{
+            width: 800px;
+            height: 80px;
             text-align: center;
             color: white;
-            font-size: 36px;
-            font-weight: 300;
+            font-size: 30px;
+            text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.10);
+            margin-left: 250px;
         }
-        .grid{
-            display: grid;
-            grid-template-columns: 30%, 30%, 30%;
-            width: 1200px;
-            gap: 30px;
+        .heroSection button{
+            display: flex;
+            width: 400px;
+            height: 80px;
+            padding: 22px 60px;
+            align-self: center;
+            justify-content: center;
+            border-radius: 50px 50px 8px 8px;
+            border: none;
+            background: #32EB2A;
+            color: white;
+            text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.15);
+            font-family: 'Lexend', sans-serif;
+            font-size: 25px;
+            font-weight: bold;
+            margin-left: 450px;
+            margin-bottom: 40px;
         }
-        .icon{
-            width: 55px;
+        .heroSection button:hover{
+            cursor: pointer;
+            background-color: #23a31e;
         }
         .process{
             background-image: url(Photos/Homepage/background.jpeg);
@@ -119,7 +136,76 @@
             padding-right: 15px;
             padding-left: 15px;
         }
-
+        footer {
+            background-image: url('photos/Homepage/background.jpeg');
+            background-size: cover;
+            background-position: center;
+            padding: 10px 40px 5px 80px; 
+            font-family: 'Lexend', sans-serif;
+            font-size: 20px;
+        }
+        .footerDivs{
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 80px;
+            margin-bottom: 35px;
+        }
+        .usefuLinks, .customerService {
+            flex-basis: 30%; 
+        }
+        .usefuLinks a, .customerService a{
+            line-height: 2.2;
+        }
+        .logo { 
+            flex-basis: 38%;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            text-align: left; 
+            margin-top: 80px;
+            font-size: 10px;
+        }
+        .logo a img{
+            width: 350px;
+            margin-bottom: 0;
+        }
+        .logo a p{
+            margin-top: 0;
+            font-size: 15;
+        }
+        footer h3 {
+            color: #238649; 
+            font-size: 30px;
+            font-weight: bold;
+            border-bottom: 3px solid #238649;
+            padding-bottom: 5px;
+            margin-bottom: 18px;
+            display: inline-block;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+        footer a {
+            color: black;
+            text-decoration: none;
+            font-size: 25px;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+        footer a:hover {
+            text-decoration: underline;
+        }
+        .follow{
+            border-bottom: none;
+            margin-top: 3px;
+            margin-bottom: 0;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+        .icon{
+            width: 55px;
+            height: 55px;
+        }
+        .copyRights{
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -158,12 +244,14 @@
 </header>
 <main>
     <section class="heroSection">
-        <div class="herosec">
+        <div class="hero">
         <div><h1>Recycle Books. <br>Save Trees. <br>Love the Earth!</h1></div>
         <div><img src="Photos/Homepage/hero section.png" alt=""></div>
     </div>
+    <div class="section">
     <p>Not sure what to do with your old school books?<br>We’ve got you covered!</p>
     <a href="#request_form" ><button type="button" >Request a Pickup</button></a>
+    </div>
     </section>
     <section class="process">
         <h2>How it works</h2>
@@ -225,30 +313,30 @@
     </section>
 </main>
 <footer>
-    <div class="grid">
-    <div>
-    <h3>Useful links</h3>
+    <div class="footerDivs">
+    <div class="usefuLinks">
+    <h3>Useful links</h3> <br>
         <a href="about_us.html" class="usefuLinks">About us</a><br>
-        <a href="colaborate_with_us.html" class="usefuLinks">collaborate with us</a><br>
+        <a href="colaborate_with_us.html" class="usefuLinks">Collaborate with us</a><br>
         <a href="" class="usefuLinks">Privacy policy</a><br>
         <a href="" class="usefuLinks"> Terms & Conditions</a><br>
     </div>
-    <div>
-        <h3>Customer Service</h3>
+    <div class="customerService">
+        <h3>Customer Service</h3> <br>
         <a href="contact_us.html">Contact Us</a><br>
         <a href="colaborate_with_us.html">FAQ</a><br>
-        <h3>Follow us</h3><br>
+        <h3 class="follow">Follow us</h3><br>
         <a  href="https://www.facebook.com" target="_blank"><img src="Icons/UI/icons8-facebook-nouveau-200.png" alt="FB" class="icon"></a>
         <a  href="https://www.instagram.com" target="_blank"><img src="Icons/UI/icons8-instagram-200.png" alt="IG" class="icon"></a>
         <a  href="https://x.com" target="_blank"><img src="Icons/UI/icons8-x-200.png" alt="X" class="icon"></a>
         <a  href="https://www.youtube.com" target="_blank"><img src="Icons/UI/icons8-youtube-200.png" alt="Ytb" class="icon"></a>
     </div>
-    <div>
-        <a href="index.html"><img src="logo/Logo black shadow.png" alt=""></a>
-        <a href=""><p>Solicode, Hawma Seddam <br>Tangier, Morocco, North Africa</p></a>
+    <div class="logo">
+        <a href="index.html"><img src="logo/footer.png" alt=""></a>
+        <a href="https://maps.app.goo.gl/ZkFxrk1bbLt5jyUe8" target="_blank"><p>Solicode, Hawma Seddam <br>Tangier,<br> Morocco, North Africa</p></a>
     </div>
 </div>
-    <p>CopyRights © 2025 BookCycle. All rights reserved <br><b>Tasnim Mezgueldi</b></p>
+    <p class="copyRights">CopyRights © 2025 BookCycle. All rights reserved <br><b>Tasnim Mezgueldi</b></p>
 </footer>
 </body>
 </html>

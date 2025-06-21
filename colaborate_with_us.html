@@ -28,7 +28,7 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 40px;
+        padding: 20px 40px;
       }
       nav ul {
         display: flex;
@@ -59,8 +59,7 @@
         display: flex;
         align-items: center;
         gap: 7px;
-        border: white;
-        border-style: solid;
+        border: 1px solid white;
       }
       .navItems button:hover {
         background-color: #238649;
@@ -301,6 +300,79 @@
                 font-size: 1.1rem;
             }
         }
+
+/**************************************************************/
+/*************************************************************/
+/************************************************************/
+footer {
+            background-image: url('Photos/collaborate_with_us/background.jpg');
+            background-size: cover;
+            padding: 35px 40px 5px 80px; 
+            font-family: 'Lexend', sans-serif;
+            font-size: 20px;
+        }
+        .footerDivs{
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 80px;
+            margin-bottom: 35px;
+        }
+        .usefuLinks, .customerService {
+            flex-basis: 30%; 
+        }
+        .usefuLinks a, .customerService a{
+            line-height: 2.2;
+        }
+        .logo { 
+            flex-basis: 38%;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            text-align: left; 
+            margin-top: 60px;
+            font-size: 10px;
+        }
+        .logo a img{
+            width: 350px;
+            margin-bottom: 0;
+        }
+        .logo a p{
+            margin-top: 0;
+            font-size: 15;
+        }
+        footer h3 {
+            color: #238649; 
+            font-size: 30px;
+            font-weight: bold;
+            border-bottom: 3px solid #238649;
+            padding-bottom: 5px;
+            margin-bottom: 18px;
+            display: inline-block;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+        footer a {
+            color: black;
+            text-decoration: none;
+            font-size: 25px;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+        footer a:hover {
+            text-decoration: underline;
+        }
+        .follow{
+            border-bottom: none;
+            margin-top: 3px;
+            margin-bottom: 0;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+        .icon{
+            width: 55px;
+            height: 55px;
+        }
+        .copyRights{
+            text-align: center;
+        }
     </style>
   </head>
   <body>
@@ -421,7 +493,7 @@
       <section id="teamUpForm">
         <h1>Ready to Team Up?</h1>
         <div>
-          <img src="Photos/collaborate with us/team up form.png" alt="" />
+          <img src="Photos/collaborate_with_us/team up form.png" alt="" />
         </div>
         <div>
           <form action="" method="post">
@@ -506,11 +578,11 @@
       </section>
       <section>
         <h1>Our Partners</h1>
-        <img src="Photos/collaborate with us/partner 1.png" alt="" /><img
-          src="Photos/collaborate with us/partner 2.png"
+        <img src="Photos/collaborate_with_us/partner 1.png" alt="" /><img
+          src="Photos/collaborate_with_us/partner 2.png"
           alt=""
-        /><img src="Photos/collaborate with us/partner 3.png" alt="" /><img
-          src="Photos/collaborate with us/partner 4.png"
+        /><img src="Photos/collaborate_with_us/partner 3.png" alt="" /><img
+          src="Photos/collaborate_with_us/partner 4.png"
           alt=""
         />
       </section>
@@ -574,45 +646,30 @@
       </section>
     </main>
     <footer>
-      <div>
-        <h3>Useful links</h3>
-        <a href="about_us.html" class="usefuLinks">About us</a><br />
-        <a href="colaborate_with_us.html" class="usefuLinks"
-          >collaborate with us</a
-        ><br />
-        <a href="" class="usefuLinks">Privacy policy</a><br />
-        <a href="" class="usefuLinks"> Terms & Conditions</a><br />
-      </div>
-      <div>
-        <h3>Customer Service</h3>
-        <a href="contact_us.html">Contact Us</a><br />
-        <a href="#faq">FAQ</a><br />
-        <h3>Follow us</h3>
-        <br />
-        <a href="https://www.facebook.com" target="_blank"
-          ><img src="Icons/UI/icons8-facebook-nouveau-200.png" alt="FB"
-        /></a>
-        <a href="https://www.instagram.com" target="_blank"
-          ><img src="Icons/UI/icons8-instagram-200.png" alt="IG"
-        /></a>
-        <a href="https://x.com" target="_blank"
-          ><img src="Icons/UI/icons8-x-200.png" alt="X"
-        /></a>
-        <a href="https://www.youtube.com" target="_blank"
-          ><img src="Icons/UI/icons8-youtube-200.png" alt="Ytb"
-        /></a>
-      </div>
-      <div>
-        <a href="index.html"><img src="logo/Logo black shadow.png" alt="" /></a>
-        <a href=""
-          ><p>Solicode, Hawma Seddam <br />Tangier, Morocco, North Africa</p></a
-        >
-      </div>
-      <p>
-        CopyRights © 2025 BookCycle. All rights reserved <br /><b
-          >Tasnim Mezgueldi</b
-        >
-      </p>
-    </footer>
+    <div class="footerDivs">
+    <div class="usefuLinks">
+    <h3>Useful links</h3> <br>
+        <a href="about_us.html" class="usefuLinks">About us</a><br>
+        <a href="colaborate_with_us.html" class="usefuLinks">Collaborate with us</a><br>
+        <a href="" class="usefuLinks">Privacy policy</a><br>
+        <a href="" class="usefuLinks"> Terms & Conditions</a><br>
+    </div>
+    <div class="customerService">
+        <h3>Customer Service</h3> <br>
+        <a href="contact_us.html">Contact Us</a><br>
+        <a href="colaborate_with_us.html">FAQ</a><br>
+        <h3 class="follow">Follow us</h3><br>
+        <a  href="https://www.facebook.com" target="_blank"><img src="Icons/UI/icons8-facebook-nouveau-200.png" alt="FB" class="icon"></a>
+        <a  href="https://www.instagram.com" target="_blank"><img src="Icons/UI/icons8-instagram-200.png" alt="IG" class="icon"></a>
+        <a  href="https://x.com" target="_blank"><img src="Icons/UI/icons8-x-200.png" alt="X" class="icon"></a>
+        <a  href="https://www.youtube.com" target="_blank"><img src="Icons/UI/icons8-youtube-200.png" alt="Ytb" class="icon"></a>
+    </div>
+    <div class="logo">
+        <a href="index.html"><img src="logo/footer.png" alt=""></a>
+        <a href="https://maps.app.goo.gl/ZkFxrk1bbLt5jyUe8" target="_blank"><p>Solicode, Hawma Seddam <br>Tangier,<br> Morocco, North Africa</p></a>
+    </div>
+</div>
+    <p class="copyRights">CopyRights © 2025 BookCycle. All rights reserved <br><b>Tasnim Mezgueldi</b></p>
+</footer>
   </body>
 </html>
