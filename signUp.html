@@ -26,16 +26,29 @@
         padding: 0;
         position: relative;
       }
+      body::before {
+  content: ""; 
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 0; 
+}
       main {
         display: flex;
         flex-direction: column;
         align-items: center;
         width: 100%;
+        position: relative; 
+  z-index: 1; 
       }
       .logo {
         position: fixed;
         top: 29px;
         left: 46px;
+        z-index: 2; 
       }
       .signUpCard {
         background-color: #ffffff;
