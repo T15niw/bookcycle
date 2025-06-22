@@ -11,6 +11,7 @@
     />
     <style>
       @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Lexend:wght@100..900&display=swap');
+      @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Lexend:wght@100..900&display=swap');
       * {
           margin: 0;
           padding: 0;
@@ -282,7 +283,144 @@
     line-height: 1.5;
 }
 /************************************************************/
-       
+    .teamUpForm {
+    background-color: #238649;
+    padding: 50px 60px 30px 10px;
+    font-family: 'Lexend', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 100px;
+    }
+    #teamUpForm h1 {
+      width: 100%;
+      text-align: center;
+      margin-top: 40px;
+      font-size: 70px;
+      font-weight: 900;
+      background: url(Photos/collaborate_with_us/background.jpg);
+      background-size: cover;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .teamUpForm img {
+        text-align: center;
+        min-width: 380px;
+    }
+    .teamUpForm form {
+        display: grid;
+        grid-template-columns: 321px 321px;
+        justify-content: center;
+        gap: 15px;
+    }
+    .teamUpForm label, .teamUpForm br {
+        display: none;
+    }
+    .teamUpForm input,
+    .teamUpForm select,
+    .teamUpForm textarea {
+        padding: 15px 30px;
+        border: 1px solid transparent;
+        border-radius: 5px;
+        background-color: white;
+        font-size: 17px;
+        font-family: 'Lexend', sans-serif;
+        color: rgba(0, 0, 0, 0.70);
+        box-sizing: border-box;
+        font-weight: 350;
+    }
+    .teamUpForm input::placeholder,
+    .teamUpForm select::placeholder,
+    .teamUpForm textarea::placeholder{
+      color: rgba(0, 0, 0, 0.70);
+    }
+    .teamUpForm input:focus,
+    .teamUpForm select:focus,
+    .teamUpForm textarea:focus {
+        outline: none;
+        border-color: black;
+    }
+    .teamUpForm select {
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23555' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 14px center;
+    }
+    .teamUpForm #uploadedFile,
+    .teamUpForm #message {
+        grid-column: 1 / -1;
+    }
+    .teamUpForm #message {
+        min-height: 140px;
+        resize: vertical;
+    }
+    .teamUpForm #uploadedFile::file-selector-button {
+        display: none;
+    }
+    .teamUpForm button{
+      grid-column: 1 / -1;
+        justify-self: center;
+        background-color: #32eb2a;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        padding: 12px 33px;
+        font-family: 'Lexend', sans-serif ;
+        font-size: 20px;
+        font-weight: 550;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+    .teamUpForm button:hover {
+        background-color: #2dbb2d;
+    } 
+    
+    .hidden {
+    display: none !important;
+}
+#partner-fields,
+#volunteer-fields {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: 321px 321px;
+    gap: 15px;
+    border-radius: 5px; 
+}
+    #partner-fields input:focus,
+    #volunteer-fields select:focus{
+        outline: none;
+        border-color: black;
+    }
+/************************************************************/ 
+.ourPartners {
+    background-image: url('Photos/collaborate_with_us/our\ partners\ bg.jpeg');
+    background-size: cover;
+    background-position: center;
+    padding: 60px 40px;
+    text-align: center;
+    font-family: 'Lexend', sans-serif;
+}
+.ourPartners h1 {
+    font-size: 66px;
+    font-weight: 900;
+    color: #000;
+    margin-bottom:  40px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+}
+.logos-container {
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+    gap: 50px;
+}
+.logos-container img {
+    max-height: 150px; 
+    max-width: 250px;
+    width: auto;
+    cursor: pointer;
+}
+/************************************************************/
+
 
 /************************************************************/
         footer {
@@ -489,72 +627,83 @@
       </section>
       <section id="teamUpForm">
         <h1>Ready to Team Up?</h1>
+        <div class="teamUpForm">
         <div>
           <img src="Photos/collaborate_with_us/team up form.png" alt="" />
         </div>
-        <div>
+        <div class="theForm">
           <form action="" method="post">
             <label for="fName"></label>
-            <input type="text" name="" id="fName" placeholder="Full name" />
+            <input type="text" name="" id="fName" placeholder="Full name" required/>
             <label for="telNum"></label>
             <input
               type="tel"
               name=""
               id="telNum"
-              placeholder="Phone Number"
+              placeholder="Phone Number" required
             /><br />
             <label for="email"></label>
             <input
               type="email"
               name=""
               id="email"
-              placeholder="Email Address"
+              placeholder="Email Address" required
             />
             <label for="preConMethod"></label>
-            <select name="" id="preConMethod">
-              <option value=""></option>
+            <select name="" id="preConMethod" required>
+              <option value="" disabled selected>Preferred Contact Method</option>
               <option value="">Calls</option>
               <option value="">Whatsapp</option>
               <option value="">Emails</option></select
             ><br />
             <label for="city"></label>
-            <input type="text" id="city" placeholder="City of habitat" />
+            <input type="text" id="city" placeholder="City" required/>
             <label for="collaType"></label>
-            <select name="" id="collaType">
-              <option value=""></option>
-              <option value="">Partnership / Sponsorship</option>
-              <option value="">Volunteering</option></select
-            ><br />
+            <select name="" id="collaType" required>
+              <option value="" disabled selected>Type of Collaboration</option>
+              <option value="partnership">Partnership / Sponsorship</option>
+              <option value="volunteering">Volunteering</option></select
+            >
+
+
+            <div id="partner-fields" class="hidden">
             <label for="nameCompany"></label>
             <input
               type="text"
-              name=""
+              name="company_name"
               id="nameCompany"
-              placeholder="Company name"
+              placeholder="Company name" required
             />
             <label for="fieldActivity"></label>
             <input
               type="text"
+              name="field_of_activity"
               id="fieldActivity"
-              placeholder="Field of activity"
-            /><br />
+              placeholder="Field of activity" required
+            />
+            </div>
+
+            <div id="volunteer-fields" class="hidden">
             <label for="desiredRole"></label>
-            <select name="" id="desiredRole">
-              <option value=""></option>
+            <select name="desired_role" id="desiredRole" required>
+              <option value=""disabled selected>Desired Role</option>
               <option value="">Logistics</option>
               <option value="">Sorting</option>
               <option value="">Communication & Digital Marketing</option>
               <option value="">Administrative Assistance</option>
             </select>
-            <label for="availability"></label>
-            <select name="" id="availability">
-              <option value=""></option>
+            <label for="availability" ></label>
+            <select name="availability" id="availability" required>
+              <option value="" disabled selected>Availability</option>
               <option value="">Occasionally</option>
               <option value="">Once a week</option>
               <option value="">Weekends only</option>
               <option value="">Several times a week</option>
               <option value="">Flexible</option></select
-            ><br />
+            >
+            </div>
+
+
             <label for="uploadedFile"></label>
             <input
               type="file"
@@ -566,22 +715,23 @@
             <textarea
               name=""
               id="message"
-              placeholder="Tell us a bit about how you'd like to collaborate with us"
+              placeholder="Tell us a bit about how you'd like to collaborate with us" required
             ></textarea
             ><br />
             <button type="submit">Submit</button>
           </form>
         </div>
+        </div>
       </section>
       <section class="ourPartners">
         <h1>Our Partners</h1>
-        <img src="Photos/collaborate_with_us/partner 1.png" alt="" /><img
-          src="Photos/collaborate_with_us/partner 2.png"
-          alt=""
-        /><img src="Photos/collaborate_with_us/partner 3.png" alt="" /><img
-          src="Photos/collaborate_with_us/partner 4.png"
-          alt=""
-        />
+         <div class="logos-container">
+        <a target="_blank" href="https://fsc.org/en"><img src="Photos/collaborate_with_us/partner 1.png" alt="" /></a>
+        <a target="_blank" href="https://www.paper-mountain.net/commercial-recycling/"><img src="Photos/collaborate_with_us/partner5.png" alt=""></a>
+        <a target="_blank" href="https://www.paperresource.com.au"><img src="Photos/collaborate_with_us/partner 2.png" alt=""/></a>
+        <a target="_blank" href="https://www.suez.com/fr/afrique"><img src="Photos/collaborate_with_us/partner 3.png" alt="" /></a>
+        <a target="_blank" href="https://www.terracycle.com/fr-FR/?srsltid=AfmBOoq8eRHJcmOPCKIhEqVfkQ0RLawEdG6MFC8H5V57thUuBPAv3Ju7"><img src="Photos/collaborate_with_us/partner 4.png" alt=""/></a>
+        </div>
       </section>
       <section id="faq">
         <h2>FAQ</h2>
@@ -668,5 +818,29 @@
 </div>
     <p class="copyRights">CopyRights © 2025 BookCycle. All rights reserved <br><span style="font-weight: 900;">Tasnim Mezgueldi</span></p>
 </footer>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const collaborationTypeSelect = document.getElementById('collaType');
+    const partnerFields = document.getElementById('partner-fields');
+    const volunteerFields = document.getElementById('volunteer-fields');
+
+    function toggleConditionalFields() {
+        const selectedValue = collaborationTypeSelect.value;
+
+        partnerFields.classList.add('hidden');
+        volunteerFields.classList.add('hidden');
+       
+        if (selectedValue === 'partnership') {
+            partnerFields.classList.remove('hidden');
+        } else if (selectedValue === 'volunteering') {
+            volunteerFields.classList.remove('hidden');
+        }
+    }
+
+    collaborationTypeSelect.addEventListener('change', toggleConditionalFields);
+
+    toggleConditionalFields();
+});
+</script>
   </body>
 </html>
