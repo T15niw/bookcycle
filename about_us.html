@@ -7,6 +7,7 @@
     <link rel="icon" href="logo/bookcycle.png" type="image/x-icon" />
     <link href="https://fonts.googleapis.com/css2?family=Lexend&display=swap" rel="stylesheet">
     <style>
+    @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Lexend:wght@100..900&display=swap');
         * {
             margin: 0;
             padding: 0;
@@ -41,12 +42,10 @@
         font-size: 22px;
         font-weight: 900;
       }
-
       .navItems:hover {
         color: #32eb2a;
         cursor: pointer;
       }
-
       .navItems button {
         background-color: #32eb2a;
         color: white;
@@ -67,11 +66,38 @@
         text-decoration: none;
         color: inherit;
       }
-      /************************************************************/
+/************************************************************/
+    .heroSection {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        min-height: 88vh;
+        padding: 50px 5px;
+        overflow: hidden;
+        font-family: 'Lexend', sans-serif;
+    }
+    .heroSection h1 {
+        font-size: 80px;
+        font-weight: 900;
+        color: black;
+        line-height: 1.6;
+        margin: 0;
+        text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.3); 
+        width: 100%;
+    }
+    .old {
+        text-align: right;
+        padding-right: 25px;
+    }
+    .new {
+        text-align: left;
+        padding-left: 25px;
+    }
+/************************************************************/
 
 
-
-      /************************************************************/
+/************************************************************/
         footer {
             background-image: url('Photos/about_us/background.jpeg');
             background-size: cover;
@@ -178,12 +204,12 @@
         </nav>
       </div> 
 <section class="heroSection">
-        <h1>Turning Old Pages</h1>
-        <h1>into New Opportunities</h1>
+        <h1 class="old">Turning Old Pages</h1>
+        <h1 class="new">Into New Opportunities</h1>
         </section>
     </header>
     <main>
-    <section>
+    <section class="ourMission">
         <div class="ourMissionTitle">
             <h2>Our Mission</h2>
         </div>
@@ -206,7 +232,7 @@
             <h2>Our Values</h2>
         </div>
     </section>
-    <section>
+    <section class="ourVision">
         <div class="ourVisionTitle">
             <h2>Our vision</h2>
         </div>
@@ -214,7 +240,7 @@
             <p>We aim to promote eco-friendly habits, building a circular economy for books, where every book finds a second life whether in a student's hands or as recycled material for new creations.</p>
         </div>
     </section>
-    <section>
+    <section class="whyItMatters">
         <h2>Why it Matters</h2>
         <div>
             <p>Paper that ends up in landfills instead of being reused or recycled, leads to <span class="3lachMattersParagra">unnecessary waste, pollution,</span> and <span class="3lachMattersParagra">resource depletion.</span> <br><br><span class="3lachMattersParagra">Paper waste</span> contributes significantly to <span class="3lachMattersParagra">deforestation</span> and <span class="3lachMattersParagra">energy consumption.</span> In fact, producing <span class="3lachMattersParagra">one ton of paper</span> requires around <span class="3lachMattersParagra">17 trees</span> and over <span class="3lachMattersParagra">26,000 liters of water.</span> <br><br><span class="3lachMattersParagraph">Your small action can make a big difference. <br>Together, we can build a more sustainable and conscious community.</span></p>
@@ -223,7 +249,7 @@
             <img src="Photos/about_us/why it matters.png" alt="">
         </div>
     </section>
-    <section>
+    <section class="team">
         <h2>Meet the team</h2>
         <div>
             <img src="Photos/about_us/team member 1.png" alt="">
