@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="style.css">
     <link rel="import" href="font/Lexend-Black.ttf"><link rel="import" href="font/Lexend-Bold.ttf"><link rel="import" href="font/Lexend-ExtraBold.ttf"><link rel="import" href="font/Lexend-Medium.ttf"><link rel="import" href="font/Lexend-SemiBold.ttf"><link rel="import" href="font/Lexend-Regular.ttf"><link rel="import" href="font/Lexend-Light.ttf">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Lexend:wght@100..900&display=swap');
         body {
           font-family: 'Lexend', sans-serif;
           background-color: #238649;
@@ -69,10 +71,10 @@
             display: flex;
             justify-content: space-around;
       }
-        h1{
+        .heroSection h1{
         text-align: left;
         font-size: 75px;
-        font-weight: bold;
+        font-weight: 800;
         margin-top: 110px;
         margin-left: 25px;
         background: url(Photos/Homepage/background.jpeg);
@@ -86,6 +88,7 @@
             text-align: center;
             color: white;
             font-size: 30px;
+            font-weight: 300;
             text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.10);
             margin-left: 250px;
         }
@@ -111,31 +114,154 @@
             cursor: pointer;
             background-color: #23a31e;
         }
-        .process{
-            background-image: url(Photos/Homepage/background.jpeg);
+
+        .process {
+            background-image: url('Photos/Homepage/background.jpeg');
             background-size: cover;
-            height: 700px;
-        }
-        .etapes{
-            display: flex;
-            flex-direction: row;
-            gap: 30px;
-            margin: 60px;
-            margin-bottom: 60px;
-        }
-        .step{
-            width: 300px;
-            height: 400px;
-            background-color: #238649;
-            border-radius: 25px;
-            color: white;
-            font-size: 25px;
+            background-position: center;
+            padding: 80px 20px;
             text-align: center;
-            padding-top: 20px;
-            padding-bottom: 30px;
-            padding-right: 15px;
-            padding-left: 15px;
         }
+        .process h2 {
+            font-family: "Lexend", sans-serif;
+            font-size: 70px;
+            font-weight: 800;
+            color: #238649;
+            margin: 0;
+        }
+        .process > h3 {
+            font-family: "Caveat", cursive;
+            font-size: 50px;
+            font-weight: 400;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+            margin-top: 10px;
+            margin-bottom: 35px;
+        }
+        .etapes {
+            display: flex;
+            justify-content: center;
+            align-items: stretch;
+            gap: 30px;
+        }
+        .step {
+            background-color: #238649;
+            color: white;
+            padding: 15px 15px;
+            border-radius: 25px;
+            min-width: 230px;
+            max-width: 260px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            
+        }
+        .step h3 {
+            font-family: 'Caveat', cursive;
+            font-size: 40px;
+            font-weight: 500;
+            line-height: 1.2;
+            margin-top: 15px;
+            margin-bottom: 15px;
+        }
+        .step p {
+            font-size: 20px;
+            font-weight: 300;
+            line-height: 1.3;
+            margin-top: 20px;
+        }
+
+        #request_form {
+        display: flex;
+        align-items: center;
+        background-color: #238649;
+        color: white;
+        font-family: 'Lexend', sans-serif; ;
+        overflow: hidden;
+        }
+        .formTxts{
+            flex: 1.2;
+            padding: 60px 5%;
+        }
+        .booksImg {
+            flex: 0.8;
+            align-self: stretch; 
+        }
+        .booksImg img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; 
+            display: block;
+        }
+        #request_form h1 {
+            font-size: 65px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            margin-top: 0;
+            padding-top: 0;
+            background: url(Photos/Homepage/background.jpeg);
+            background-size: cover;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        #request_form h5 {
+            font-size: 24px;
+            font-weight: 200;
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: white;
+        }
+        #request_form input,
+        #request_form select,
+        #request_form textarea {
+            width: 100%;
+            padding: 16px 45px;
+            margin-bottom: 15px;
+            border: none;
+            border-radius: 8px;
+            background-color: #fff;
+            font-size: 20px;
+            font-weight: 250;
+            font-family: 'Lexend', sans-serif;
+            color:  rgba(0, 0, 0, 0.50);;
+            box-sizing: border-box;
+        }
+        #request_form input::placeholder,
+        #request_form textarea::placeholder {
+            color: #9E9E9E;
+            opacity: 1;
+        }
+        #request_form select {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23555' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 45px center;
+        }
+        #request_form textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+        #request_form button {
+            background-color: #32EB2A; 
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 14px 64px;
+            font-size: 24px;
+            font-weight: 600;
+            font-family: 'Lexend', sans-serif ;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            display: inline-block;
+            width: 215;
+            align-self: center;
+        }
+        #request_form button[type="submit"]:hover {
+            background-color: #2dbb2d;
+        }
+
         footer {
             background-image: url('photos/Homepage/background.jpeg');
             background-size: cover;
@@ -177,7 +303,7 @@
         footer h3 {
             color: #238649; 
             font-size: 30px;
-            font-weight: bold;
+            font-weight: 700;
             border-bottom: 3px solid #238649;
             padding-bottom: 5px;
             margin-bottom: 18px;
@@ -188,6 +314,7 @@
             color: black;
             text-decoration: none;
             font-size: 25px;
+            font-weight: 300;
             text-shadow: 0 1px 3px rgba(0,0,0,0.2);
         }
         footer a:hover {
@@ -205,6 +332,7 @@
         }
         .copyRights{
             text-align: center;
+            font-weight: 300;
         }
     </style>
 </head>
@@ -259,7 +387,7 @@
         <div class="etapes">
         <div class="step">
             <img src="Icons/UI/homepage/icons8-envoyer-un-document-100.png" alt="">
-            <h3>1 Submit Form</h3>
+            <h3>1 Submit Form</h3><br><br>
             <p>Fill out our form and let us know what you have.</p>
         </div>
         <div class="step">
@@ -274,26 +402,26 @@
         </div>
         <div class="step">
             <img src="Icons/UI/homepage/icons8-recycle-100.png" alt="">
-            <h3>4 Books Get a New Life</h3>
+            <h3>4 Books Get <br> a New Life</h3>
             <p>Usable books are resold at low prices to libraries, and damaged ones are sent for recycling.</p>
         </div>
     </div>
     </section>
     <section id="request_form">
-        <div>
+        <div class="formTxts">
         <h1>Let’s do business!</h1>
         <h5>About Your Books</h5>
         <form action="" method="post">
             <label for="category"></label>
             <select name="" id="category" required>
-                <option value=""></option>
+                <option value="" disabled selected>Category</option>
                 <option value="">Books</option>
                 <option value="">Notebook</option>
                 <option value="">Both</option>
             </select><br>
             <label for="quantity"></label>
             <select name="" id="quantity" required>
-                <option value=""></option>
+                <option value="" disabled selected>Quantity</option>
                 <option value="">5 - 10 book</option>
                 <option value="">10 - 50 book</option>
                 <option value="">50+ book</option>
@@ -307,7 +435,7 @@
             <button type="submit">Submit</button>
             </form>
         </div>
-        <div>
+        <div class="booksImg"> 
             <img src="Photos/Homepage/request form.png" alt="">
         </div>
     </section>
@@ -336,7 +464,7 @@
         <a href="https://maps.app.goo.gl/ZkFxrk1bbLt5jyUe8" target="_blank"><p>Solicode, Hawma Seddam <br>Tangier,<br> Morocco, North Africa</p></a>
     </div>
 </div>
-    <p class="copyRights">CopyRights © 2025 BookCycle. All rights reserved <br><b>Tasnim Mezgueldi</b></p>
+    <p class="copyRights">CopyRights © 2025 BookCycle. All rights reserved <br><span style="font-weight: 900;">Tasnim Mezgueldi</span></p>
 </footer>
 </body>
 </html>
