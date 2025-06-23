@@ -419,7 +419,113 @@
     cursor: pointer;
 }
 /************************************************************/
-
+#faq {
+    display: grid;
+    grid-template-columns: 580px 580px;
+    grid-template-rows: auto auto auto auto;
+    grid-template-areas:
+        "title title"
+        "col1 col2"
+        "contact contact"
+        "button-area button-area";
+    gap: 40px 20px;
+    padding: 30px 60px;
+    color: white;
+    font-family: 'Lexend', sans-serif;
+}
+#faq h2 {
+    grid-area: title;
+    text-align: center;
+    font-size: 65px;
+    font-weight: 800;
+    color: white;
+}
+.stCol {
+    grid-area: col1;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.ndCol {
+    grid-area: col2;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+#faq details {
+    background-color: #FFFFFF;
+    border-radius: 8px;
+    width: 100%;
+    overflow: hidden;
+    display: grid;
+    grid-template-rows: auto 0fr;
+    transition: grid-template-rows 0.3s ease-in-out;
+}
+#faq details[open] {
+    grid-template-rows: auto 1fr;
+}
+#faq summary {
+    padding: 22px 20px 22px 40px;
+    color: black;
+    font-size: 19px;
+    font-weight: 400;
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center; 
+}
+#faq summary::-webkit-details-marker {
+    display: none;
+}
+#faq summary::after {
+    content: '';
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-style: solid;
+    border-color: #555555; 
+    border-width: 0 2px 2px 0; 
+    transform: rotate(45deg);
+}
+#faq details[open] summary::after {
+    transform: rotate(225deg);
+}
+#faq details p {
+    background-color: black;
+    color: white;
+    padding: 30px 40px;
+    margin: 0;
+    font-size: 19px;
+    overflow: hidden;
+}
+.stillHave {
+    grid-area: contact;
+    text-align: center;
+    font-family: "Caveat", cursive;
+    font-size: 35px;
+    color: white;
+}
+#faq > a {
+    grid-area: button-area;
+    justify-self: center;
+    text-decoration: none;
+}
+#faq button {
+    background-color: #32eb2a;
+    color: white;
+    padding: 15px 40px;
+    border: none;
+    border-radius: 12px;
+    font-size: 25px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-family: 'Lexend', sans-serif;
+}
+#faq button:hover {
+    background-color: #2dbb2d;
+}
 
 /************************************************************/
         footer {
@@ -734,7 +840,7 @@
       </section>
       <section id="faq">
         <h2>FAQ</h2>
-        <div>
+        <div class="stCol">
           <details>
             <summary>Can my small bookstore partner with you?</summary>
             <p>
@@ -758,7 +864,7 @@
             </p>
           </details>
         </div>
-        <div>
+        <div class="ndCol">
           <details>
             <summary>
               Do I need to commit for a long time as a volunteer?
@@ -782,7 +888,7 @@
             </p>
           </details>
         </div>
-        <p>
+        <p class="stillHave">
           Still have questions?<br />Don’t hesitate to reach out through our
           contact form!
         </p>
