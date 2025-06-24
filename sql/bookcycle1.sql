@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : mar. 24 juin 2025 à 17:32
+-- Généré le : mar. 24 juin 2025 à 13:45
 -- Version du serveur : 10.4.32-MariaDB
 -- Version de PHP : 8.2.12
 
@@ -43,20 +43,11 @@ CREATE TABLE `client` (
   `first_name` varchar(255) NOT NULL,
   `last_name` varchar(255) NOT NULL,
   `phone_number` varchar(255) NOT NULL,
-  `preferred_contact_method` enum('calls','whatsapp','emails','') NOT NULL,
-  `city` varchar(255) NOT NULL,
+  `preferred_contact_method` enum('Calls','Whatsapp messages','Emails','') NOT NULL,
+  `address` varchar(255) NOT NULL,
+  `city` enum('Tangier','Tetouan','Rabat','Casablanca','Marrakesh','Agadir','Fez','Meknes','Oujda') NOT NULL,
   `password` varchar(255) NOT NULL COMMENT 'client''s acc pw'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Déchargement des données de la table `client`
---
-
-INSERT INTO `client` (`email_client_ID`, `first_name`, `last_name`, `phone_number`, `preferred_contact_method`, `city`, `password`) VALUES
-('medsaid@gmail.com', 'med', 'said', '0612345678', 'calls', 'Tanger', '$2y$10$lcVnLBYyczk2oKj0xLndHOWoKstD7wmuIt5S5mnN0cdK5DzdpcAHm'),
-('tasnim3mezgueldi@gmail.com', 'tas', 'mez', '0606060606', '', 'Taner', '$2y$10$cbr.ThA3lBX7qK39oEL6k.cCRamoLr0IpZcWA4KshEYtbupHyEG1C'),
-('tasnimmezgueldi@gmail.com', 'Tasnim', 'Mezgueldi', '0612345678', 'calls', 'Tanger', '$2y$10$xSOISprYOSxvcZ3cfazD5.ENV.6dEwZaotLjY7yUh5a.PhxpfwQrO'),
-('tasnimmezgujeldi@gmail.com', 'Tasnim', 'Mezgueldi', '0612345678', '', 'Tanger', '$2y$10$d2XyCkObXYQRrMfArAYq5uRxWL8my2yGRf2thWF.vWxr1PQWGEDZe');
 
 -- --------------------------------------------------------
 
