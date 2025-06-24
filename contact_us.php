@@ -209,12 +209,12 @@ hr{
               >
             </li>
             <li>
-              <a href="contact_us.html" target="_self" class="navItems"
+              <a href="contact_us.php" target="_self" class="navItems"
                 >Contact us</a
               >
             </li>
             <li>
-              <a href="logIn.html" target="_self" class="navItems"
+              <a href="logIn.php" target="_self" class="navItems"
                 ><button type="button">
                   Log In <img src="Icons/UI/Right Arrow.png" alt="" />
                 </button>
