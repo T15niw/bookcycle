@@ -286,9 +286,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <label for="preConMethod"></label>
             <select name="contact_method" id="preConMethod" required>
                 <option value="" disabled selected>Preferred Contact Method</option>
-                <option value="Calls">Calls</option>
-                <option value="WhatsApp messages">WhatsApp messages</option>
-                <option value="Emails">Emails</option>
+                <option value="calls">Calls</option>
+                <option value="whatsApp">WhatsApp</option>
+                <option value="emails">Emails</option>
             </select>
             <label for="city"></label>
             <input type="text" name="city" id="city" placeholder="City" required>
