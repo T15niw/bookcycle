@@ -147,6 +147,23 @@
       .logIn:hover {
         text-decoration: underline;
       }
+
+      .error-message {
+            color: red;
+            font-size: 0.9em;
+            width: 100%; /* Make it take the full width of its container */
+            text-align: left;
+            margin-top: 5px;
+        }
+        /* Style for the general error message at the top */
+        .general-error {
+            color: #D8000C;
+            background-color: #FFD2D2;
+            border: 1px solid;
+            margin: 10px 0px;
+            padding: 15px;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
@@ -155,38 +172,48 @@
         <div class="signUpCard">
          <a href="index.php" class="backToHome"><img src="Icons/UI/logIn_signUp/icons8-vers-l'avant-100.png" class="leftArrow">BACK TO HOME</a>
          <h1>SIGN UP AND START MAKING AN IMPACT</h1>
-         <form action="" method="post">
+         <form action="PHP/signup_form.php" method="post">
+
+         <?php if (!empty($generalError)): ?>
+            <div class="general-error"><?php echo $generalError; ?></div>
+        <?php endif; ?>
+
             <div class="form_row">
          <label for="1stName"></label>
-         <input type="text" name="" id="stName" placeholder="First name" required>
+         <input type="text" name="first_name" id="stName" placeholder="First name" required>
          <label for="2ndName"></label>
-         <input type="text" name="" id="ndName" placeholder="Last name" required>
+         <input type="text" name="last_name" id="ndName" placeholder="Last name" required>
          </div>
          <div class="form_row">
          <label for="email"></label>
-         <input type="email" name="" id="email" placeholder="Email Address" required>
+         <input type="email" name="email" id="email" placeholder="Email Address" required>
          <label for="telNum"></label>
-         <input type="tel" name="" id="telNum" placeholder="Phone Number" required>
+         <input type="tel" name="phone_number" id="telNum" placeholder="Phone Number" required>
          </div>
          <div class="form_row">
          <label for="preConMethod"></label>
-         <select name="" id="preConMethod" required>
+         <select name="contact_method" id="preConMethod" required>
             <option value="" disabled selected>preferred contact method</option>
             <option value="calls">Calls</option>
             <option value="whatsapp">Whatsapp</option>
             <option value="emails">Emails</option>
          </select>
          <label for="city"></label>
-         <input type="text" id="city" placeholder="City" required>
+         <input type="text" name="city" id="city" placeholder="City" required>
          </div>
          <div class="form_row">
          <label for="PW"></label>
-         <input type="password" name="" id="PW" placeholder="Password" required>
+         <input type="password" name="password" id="PW" placeholder="Password" required>
          <label for="confirmPW"></label>
-         <input type="password" name="" id="confirmPW" placeholder="Confirm Password" required>
-         </div>
+         <input type="password" name="confirm_password" id="confirmPW" placeholder="Confirm Password" required>
+         
+         <?php if (!empty($passwordError)): ?>
+                <div class="error-message"><?php echo $passwordError; ?></div>
+            <?php endif; ?>
+
+        </div>
          <div class="form_row">
-         <input type="checkbox" name="" id="privacyPolicy" required>
+         <input type="checkbox" name="privacyPolicy" id="privacyPolicy" required>
          <label for="privacyPolicy" class="privacyPolicy">I have read and agreed to the <span>terms</span> and <span>privacy policy</span>.</label>
          </div>
          <button type="submit">Sign Up</button><br>
