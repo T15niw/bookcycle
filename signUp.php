@@ -172,7 +172,7 @@
         <div class="signUpCard">
          <a href="index.php" class="backToHome"><img src="Icons/UI/logIn_signUp/icons8-vers-l'avant-100.png" class="leftArrow">BACK TO HOME</a>
          <h1>SIGN UP AND START MAKING AN IMPACT</h1>
-         <form action="PHP/signup_form.php" method="post">
+         <form action="signup_form.php" method="post">
 
          <?php if (!empty($generalError)): ?>
             <div class="general-error"><?php echo $generalError; ?></div>
