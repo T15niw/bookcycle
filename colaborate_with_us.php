@@ -605,13 +605,13 @@
   <body>
     <header>
       <div class="navbar">
-        <a href="index.html"
+        <a href="index.php"
           ><img src="logo/Logo black shadow.png" alt="Logo"
         /></a>
         <nav>
           <ul>
             <li>
-              <a href="colaborate_with_us.html" target="_self" class="navItems"
+              <a href="colaborate_with_us.php" target="_self" class="navItems"
                 >Collaborate with us</a
               >
             </li>

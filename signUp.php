@@ -151,9 +151,9 @@
 </head>
 <body>
     <main>
-        <div><a href="index.html" class="logo"><img src="logo/logo_white Shadow.png" alt=""></a></div>
+        <div><a href="index.php" class="logo"><img src="logo/logo_white Shadow.png" alt=""></a></div>
         <div class="signUpCard">
-         <a href="index.html" class="backToHome"><img src="Icons/UI/logIn_signUp/icons8-vers-l'avant-100.png" class="leftArrow">BACK TO HOME</a>
+         <a href="index.php" class="backToHome"><img src="Icons/UI/logIn_signUp/icons8-vers-l'avant-100.png" class="leftArrow">BACK TO HOME</a>
          <h1>SIGN UP AND START MAKING AN IMPACT</h1>
          <form action="" method="post">
             <div class="form_row">
@@ -192,7 +192,7 @@
          <button type="submit">Sign Up</button><br>
      </form>
          <p>Already have an account?<br>
-         <a href="logIn.html" class="logIn">LOG IN NOW</a></p>
+         <a href="logIn.php" class="logIn">LOG IN NOW</a></p>
         </div>
      </main>
 </body>

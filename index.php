@@ -342,13 +342,13 @@
 <body>
 <header>
      <div class="navbar">
-        <a href="index.html"
+        <a href="index.php"
           ><img src="logo/Logo black shadow.png" alt="Logo"
         /></a>
         <nav>
           <ul>
             <li>
-              <a href="colaborate_with_us.html" target="_self" class="navItems"
+              <a href="colaborate_with_us.php" target="_self" class="navItems"
                 >Collaborate with us</a
               >
             </li>
@@ -358,12 +358,12 @@
               >
             </li>
             <li>
-              <a href="contact_us.html" target="_self" class="navItems"
+              <a href="contact_us.php" target="_self" class="navItems"
                 >Contact us</a
               >
             </li>
             <li>
-              <a href="logIn.html" target="_self" class="navItems"
+              <a href="logIn.php" target="_self" class="navItems"
                 ><button type="button">
                   Log In <img src="Icons/UI/Right Arrow.png" alt="" />
                 </button>
@@ -448,14 +448,14 @@
     <div class="usefuLinks">
     <h3>Useful links</h3> <br>
         <a href="about_us.html" class="usefuLinks">About us</a><br>
-        <a href="colaborate_with_us.html" class="usefuLinks">Collaborate with us</a><br>
+        <a href="colaborate_with_us.php" class="usefuLinks">Collaborate with us</a><br>
         <a href="" class="usefuLinks">Privacy policy</a><br>
         <a href="" class="usefuLinks"> Terms & Conditions</a><br>
     </div>
     <div class="customerService">
         <h3>Customer Service</h3> <br>
-        <a href="contact_us.html">Contact Us</a><br>
-        <a href="colaborate_with_us.html">FAQ</a><br>
+        <a href="contact_us.php">Contact Us</a><br>
+        <a href="colaborate_with_us.php">FAQ</a><br>
         <h3 class="follow">Follow us</h3><br>
         <a  href="https://www.facebook.com" target="_blank"><img src="Icons/UI/icons8-facebook-nouveau-200.png" alt="FB" class="icon"></a>
         <a  href="https://www.instagram.com" target="_blank"><img src="Icons/UI/icons8-instagram-200.png" alt="IG" class="icon"></a>
@@ -463,7 +463,7 @@
         <a  href="https://www.youtube.com" target="_blank"><img src="Icons/UI/icons8-youtube-200.png" alt="Ytb" class="icon"></a>
     </div>
     <div class="logo">
-        <a href="index.html"><img src="logo/footer.png" alt=""></a>
+        <a href="index.php"><img src="logo/footer.png" alt=""></a>
         <a href="https://maps.app.goo.gl/ZkFxrk1bbLt5jyUe8" target="_blank"><p>Solicode, Hawma Seddam <br>Tangier,<br> Morocco, North Africa</p></a>
     </div>
 </div>

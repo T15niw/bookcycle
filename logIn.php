@@ -158,12 +158,12 @@
   <body>
     <main>
       <div>
-        <a href="index.html" class="logo"
+        <a href="index.php" class="logo"
           ><img src="logo/logo_white Shadow.png" alt=""
         /></a>
       </div>
       <div class="logInCard">
-        <a href="index.html" class="backToHome"
+        <a href="index.php" class="backToHome"
           ><img
             src="Icons/UI/logIn_signUp/icons8-vers-l'avant-100.png"
             class="leftArrow"
@@ -186,7 +186,7 @@
         </form>
         <p>
           Don’t have an account? <br />
-          <a href="signUp.html" class="signUp">SIGN UP HERE</a>
+          <a href="signUp.php" class="signUp">SIGN UP HERE</a>
         </p>
       </div>
     </main>
