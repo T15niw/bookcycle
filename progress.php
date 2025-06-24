@@ -220,11 +220,11 @@
               >
             </li>
             <li>
-              <a href="contact_us.html" target="_self" class="navItems"
+              <a href="contact_us.php" target="_self" class="navItems"
                 >Contact us</a
               >
             </li>
-            <li><a href="profile.html"><img src="Icons/UI/Progress/icons8-utilisateur-100.png" class="img"></a></li>
+            <li><a href="profile.php"><img src="Icons/UI/Progress/icons8-utilisateur-100.png" class="img"></a></li>
           </ul>
         </nav>
       </div>  
