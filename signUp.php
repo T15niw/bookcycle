@@ -261,7 +261,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <div class="signUpCard">
          <a href="index.php" class="backToHome"><img src="Icons/UI/logIn_signUp/icons8-vers-l'avant-100.png" class="leftArrow">BACK TO HOME</a>
          <h1>SIGN UP AND START MAKING AN IMPACT</h1>
-         <form action="signup.php" method="post">
+         <form action="signUp.php" method="post">
     
         <!-- Universal Message Area: This will display success or error messages -->
         <?php if (!empty($message)): ?>

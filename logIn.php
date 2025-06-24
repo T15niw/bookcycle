@@ -1,4 +1,88 @@
-<?php include 'include/db_connect.php'; ?>
+<?php
+// Start a session at the very beginning of the script.
+// This is required to manage the user's logged-in state.
+session_start();
+
+// If the user is already logged in, redirect them to the homepage
+if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true) {
+    header('Location: index.php');
+    exit;
+}
+
+// --- DATABASE CONNECTION ---
+$host = 'localhost';
+$dbname = 'bookcycle';
+$user = 'root';
+$password = ''; // Your DB password
+
+try {
+    $conn = new PDO("mysql:host=$host;dbname=$dbname", $user, $password);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Connection failed: " . $e->getMessage());
+}
+
+// Initialize an empty variable to hold our error message
+$errorMessage = '';
+
+// --- FORM PROCESSING ---
+// Check if the form was submitted via POST
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+    // 1. Get email and password from the form
+    $email = trim($_POST['email']);
+    $pass = $_POST['password'];
+
+    // Basic validation to ensure fields are not empty
+    if (empty($email) || empty($pass)) {
+        $errorMessage = 'Please enter both email and password.';
+    } else {
+        try {
+            // 2. Prepare a SQL statement to find the user by email
+            $sql = "SELECT email_client_ID, password, first_name FROM client WHERE email_client_ID = :email";
+            $stmt = $conn->prepare($sql);
+            $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+            $stmt->execute();
+
+            // 3. Check if exactly one user was found
+            if ($stmt->rowCount() == 1) {
+                // Fetch the user's data
+                $user = $stmt->fetch(PDO::FETCH_ASSOC);
+                
+                // 4. Verify the submitted password against the hashed password from the database
+                // The password_verify() function does this securely.
+                if (password_verify($pass, $user['password'])) {
+                    // Password is correct!
+                    
+                    // Regenerate session ID for security
+                    session_regenerate_id(true);
+
+                    // Store user data in the session to mark them as logged in
+                    $_SESSION['loggedin'] = true;
+                    $_SESSION['email'] = $user['email_client_ID'];
+                    $_SESSION['name'] = $user['first_name']; // Useful for personalizing the homepage
+
+                    // 5. Redirect to the homepage
+                    header("Location: index.php");
+                    exit(); // IMPORTANT: Stop the script after a redirect
+
+                } else {
+                    // Password was not correct
+                    $errorMessage = 'Password incorrect.';
+                }
+            } else {
+                // No user found with that email address
+                // We use a generic message for security to not reveal which part was wrong.
+                $errorMessage = 'Invalid email or password.';
+            }
+
+        } catch (PDOException $e) {
+            $errorMessage = 'A database error occurred. Please try again later.';
+            // For debugging, you could log the error: error_log($e->getMessage());
+        }
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -153,6 +237,15 @@
       .signUp:hover {
         text-decoration: underline;
       }
+      .error-message {
+            color: #D8000C; /* Red text */
+            background-color: #FFD2D2; /* Light red background */
+            border: 1px solid #D8000C;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            text-align: center;
+        }
     </style>
   </head>
   <body>
@@ -171,19 +264,34 @@
         >
         <h1>LOG IN</h1>
         <h3>One click. One book. Big impact.</h3>
-        <form action="" method="post">
-          <label for="email"></label>
-          <input
+        <form action="logIn.php" method="post">
+        
+        <!-- PHP code to display the error message if it exists -->
+        <?php if (!empty($errorMessage)): ?>
+            <div class="error-message"><?php echo htmlspecialchars($errorMessage); ?></div>
+        <?php endif; ?>
+
+        <label for="email"></label>
+        <input
             type="email"
-            name=""
+            name="email"  
             id="email"
             placeholder="Email Address"
-          /><br />
-          <label for="PW"></label>
-          <input type="password" name="" id="PW" placeholder="Password" /><br />
-          <a href="" class="forgotPW">Forgot Password?</a><br />
-          <button type="submit">Log In</button><br />
-        </form>
+            required
+        /><br />
+
+        <label for="PW"></label>
+        <input
+            type="password"
+            name="password" 
+            id="PW"
+            placeholder="Password"
+            required
+        /><br />
+
+        <a href="#" class="forgotPW">Forgot Password?</a><br />
+        <button type="submit">Log In</button><br />
+    </form>
         <p>
           Don’t have an account? <br />
           <a href="signUp.php" class="signUp">SIGN UP HERE</a>
