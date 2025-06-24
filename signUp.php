@@ -1,4 +1,89 @@
-<?php include 'include/db_connect.php'; ?>
+<?php
+session_start();
+
+// --- DATABASE CONNECTION ---
+$host = 'localhost';
+$dbname = 'bookcycle';
+$user = 'root';
+$password = ''; // Your DB password
+
+$message = ''; // Variable to hold success or error messages
+$message_type = ''; // Variable to hold the class for styling the message (success or error)
+
+try {
+    $conn = new PDO("mysql:host=$host;dbname=$dbname", $user, $password);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    // This is a critical error, so we'll stop the script.
+    die("Connection failed: " . $e->getMessage());
+}
+
+// --- FORM PROCESSING ---
+// Check if the form was submitted
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+    // 1. Retrieve and sanitize form data
+    $firstName = trim($_POST['first_name']);
+    $lastName = trim($_POST['last_name']);
+    $email = trim($_POST['email']);
+    $phone = trim($_POST['phone_number']);
+    $contactMethod = $_POST['contact_method'];
+    $city = trim($_POST['city']);
+    $pass = $_POST['password'];
+    $confirmPass = $_POST['confirm_password'];
+
+    // 2. Validate Passwords
+    if ($pass !== $confirmPass) {
+        $message = "Passwords do not match. Please try again.";
+        $message_type = "error";
+    } else {
+        // 3. Passwords match, proceed with database operations
+        try {
+            // 4. Check if the email (primary key) already exists
+            $checkSql = "SELECT email_client_ID FROM client WHERE email_client_ID = :email";
+            $checkStmt = $conn->prepare($checkSql);
+            $checkStmt->bindParam(':email', $email);
+            $checkStmt->execute();
+
+            if ($checkStmt->rowCount() > 0) {
+                // Email already exists
+                $message = "An account with this email address already exists.";
+                $message_type = "error";
+            } else {
+                // 5. Email is unique, hash the password and insert the new client
+                $hashedPassword = password_hash($pass, PASSWORD_DEFAULT);
+
+                // SQL statement WITHOUT the address column
+                $sql = "INSERT INTO client (email_client_ID, first_name, last_name, phone_number, preferred_contact_method, city, password) 
+                        VALUES (:email, :first_name, :last_name, :phone_number, :contact_method, :city, :password)";
+
+                $stmt = $conn->prepare($sql);
+
+                // Bind parameters
+                $stmt->bindParam(':email', $email);
+                $stmt->bindParam(':first_name', $firstName);
+                $stmt->bindParam(':last_name', $lastName);
+                $stmt->bindParam(':phone_number', $phone);
+                $stmt->bindParam(':contact_method', $contactMethod);
+                $stmt->bindParam(':city', $city);
+                $stmt->bindParam(':password', $hashedPassword);
+
+                // Execute the statement
+                $stmt->execute();
+                
+                // Set the success message
+                $message = "Sign up successful! Welcome to BookCycle.";
+                $message_type = "success";
+            }
+        } catch (PDOException $e) {
+            // Catch any other database errors during the process
+            $message = "An unexpected error occurred. Please try again later.";
+            $message_type = "error";
+            // For debugging: error_log("Signup Error: " . $e->getMessage());
+        }
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -148,21 +233,25 @@
         text-decoration: underline;
       }
 
-      .error-message {
-            color: red;
-            font-size: 0.9em;
-            width: 100%; /* Make it take the full width of its container */
-            text-align: left;
-            margin-top: 5px;
+      .message {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            font-family: sans-serif;
+            font-size: 1em;
+            text-align: center;
         }
-        /* Style for the general error message at the top */
-        .general-error {
+        /* Style for error messages (red) */
+        .error {
             color: #D8000C;
             background-color: #FFD2D2;
-            border: 1px solid;
-            margin: 10px 0px;
-            padding: 15px;
-            border-radius: 5px;
+            border: 1px solid #D8000C;
+        }
+        /* Style for success messages (green) */
+        .success {
+            color: #270;
+            background-color: #DFF2BF;
+            border: 1px solid #270;
         }
     </style>
 </head>
@@ -172,52 +261,50 @@
         <div class="signUpCard">
          <a href="index.php" class="backToHome"><img src="Icons/UI/logIn_signUp/icons8-vers-l'avant-100.png" class="leftArrow">BACK TO HOME</a>
          <h1>SIGN UP AND START MAKING AN IMPACT</h1>
-         <form action="signup_form.php" method="post">
-
-         <?php if (!empty($generalError)): ?>
-            <div class="general-error"><?php echo $generalError; ?></div>
+         <form action="signup.php" method="post">
+    
+        <!-- Universal Message Area: This will display success or error messages -->
+        <?php if (!empty($message)): ?>
+            <div class="message <?php echo $message_type; ?>">
+                <?php echo $message; ?>
+            </div>
         <?php endif; ?>
 
-            <div class="form_row">
-         <label for="1stName"></label>
-         <input type="text" name="first_name" id="stName" placeholder="First name" required>
-         <label for="2ndName"></label>
-         <input type="text" name="last_name" id="ndName" placeholder="Last name" required>
-         </div>
-         <div class="form_row">
-         <label for="email"></label>
-         <input type="email" name="email" id="email" placeholder="Email Address" required>
-         <label for="telNum"></label>
-         <input type="tel" name="phone_number" id="telNum" placeholder="Phone Number" required>
-         </div>
-         <div class="form_row">
-         <label for="preConMethod"></label>
-         <select name="contact_method" id="preConMethod" required>
-            <option value="" disabled selected>preferred contact method</option>
-            <option value="calls">Calls</option>
-            <option value="whatsapp">Whatsapp</option>
-            <option value="emails">Emails</option>
-         </select>
-         <label for="city"></label>
-         <input type="text" name="city" id="city" placeholder="City" required>
-         </div>
-         <div class="form_row">
-         <label for="PW"></label>
-         <input type="password" name="password" id="PW" placeholder="Password" required>
-         <label for="confirmPW"></label>
-         <input type="password" name="confirm_password" id="confirmPW" placeholder="Confirm Password" required>
-         
-         <?php if (!empty($passwordError)): ?>
-                <div class="error-message"><?php echo $passwordError; ?></div>
-            <?php endif; ?>
-
+        <div class="form_row">
+            <label for="firstName"></label>
+            <input type="text" name="first_name" id="stName" placeholder="First name" required>
+            <label for="lastName"></label>
+            <input type="text" name="last_name" id="ndName" placeholder="Last name" required>
         </div>
-         <div class="form_row">
-         <input type="checkbox" name="privacyPolicy" id="privacyPolicy" required>
-         <label for="privacyPolicy" class="privacyPolicy">I have read and agreed to the <span>terms</span> and <span>privacy policy</span>.</label>
-         </div>
-         <button type="submit">Sign Up</button><br>
-     </form>
+        <div class="form_row">
+            <label for="email"></label>
+            <input type="email" name="email" id="email" placeholder="Email Address" required>
+            <label for="telNum"></label>
+            <input type="tel" name="phone_number" id="telNum" placeholder="Phone Number" required>
+        </div>
+        <div class="form_row">
+            <label for="preConMethod"></label>
+            <select name="contact_method" id="preConMethod" required>
+                <option value="" disabled selected>Preferred Contact Method</option>
+                <option value="Calls">Calls</option>
+                <option value="WhatsApp messages">WhatsApp messages</option>
+                <option value="Emails">Emails</option>
+            </select>
+            <label for="city"></label>
+            <input type="text" name="city" id="city" placeholder="City" required>
+        </div>
+        <div class="form_row">
+            <label for="PW"></label>
+            <input type="password" name="password" id="PW" placeholder="Password" required>
+            <label for="confirmPW"></label>
+            <input type="password" name="confirm_password" id="confirmPW" placeholder="Confirm Password" required>
+        </div>
+        <div class="form_row">
+            <input type="checkbox" name="privacyPolicy" id="privacyPolicy" required>
+            <label for="privacyPolicy" class="privacyPolicy">I have read and agreed to the <span>terms</span> and <span>privacy policy</span>.</label>
+        </div>
+        <button type="submit">Sign Up</button><br>
+    </form>
          <p>Already have an account?<br>
          <a href="logIn.php" class="logIn">LOG IN NOW</a></p>
         </div>
