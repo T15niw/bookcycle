@@ -1,10 +1,102 @@
-<?php include 'include/db_connect.php';
+<?php
+// 1. START SESSION & SECURITY CHECK
 session_start();
-// SECURITY CHECK: If the user is NOT logged in, redirect them to the login page
+
+// Redirect to login if not logged in
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     header('Location: index.php');
-    exit; // Stop the script from running further
+    exit;
 }
+
+// 2. DATABASE CONNECTION
+$host = 'localhost';
+$dbname = 'bookcycle';
+$user = 'root';
+$password = '';
+
+try {
+    $conn = new PDO("mysql:host=$host;dbname=$dbname", $user, $password);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Connection failed: " . $e->getMessage());
+}
+
+// 3. HANDLE FORM SUBMISSION (UPDATE LOGIC)
+// This block runs only when the "Save change" button is clicked and the form is submitted
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    try {
+        // Get data from the form
+        $firstName = $_POST['firstName'];
+        $lastName = $_POST['lastName'];
+        $phone = $_POST['phone'];
+        $contactMethod = $_POST['contactMethod'];
+        $city = $_POST['city'];
+
+        // Get the user's email from the session to know which row to update
+        $userEmail = $_SESSION['email'];
+        
+        // Prepare the UPDATE SQL statement
+        $sql = "UPDATE client SET 
+                    first_name = :first_name, 
+                    last_name = :last_name, 
+                    phone_number = :phone_number, 
+                    preferred_contact_method = :contact_method, 
+                    city = :city 
+                WHERE email_client_ID = :email";
+
+        $stmt = $conn->prepare($sql);
+
+        // Bind parameters
+        $stmt->bindParam(':first_name', $firstName);
+        $stmt->bindParam(':last_name', $lastName);
+        $stmt->bindParam(':phone_number', $phone);
+        $stmt->bindParam(':contact_method', $contactMethod);
+        $stmt->bindParam(':city', $city);
+        $stmt->bindParam(':email', $userEmail);
+
+        $stmt->execute();
+        
+        // IMPORTANT: Update the name in the session so the welcome message changes
+        $_SESSION['name'] = $firstName;
+        
+        // Set a success flash message
+        $_SESSION['flash_message'] = "Profile updated successfully!";
+        $_SESSION['flash_type'] = "success";
+
+    } catch (PDOException $e) {
+        // Set an error flash message
+        $_SESSION['flash_message'] = "Error updating profile: " . $e->getMessage();
+        $_SESSION['flash_type'] = "error";
+    }
+
+    // Redirect back to the profile page to show the message and prevent form resubmission
+    header('Location: profile.php');
+    exit;
+}
+
+// 4. FETCH CURRENT USER DATA (to display on the page)
+// This runs every time the page loads
+try {
+    $userEmail = $_SESSION['email'];
+    $sql = "SELECT * FROM client WHERE email_client_ID = :email";
+    $stmt = $conn->prepare($sql);
+    $stmt->bindParam(':email', $userEmail);
+    $stmt->execute();
+    
+    // Fetch the user data into the $client variable
+    $client = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    // If for some reason the user isn't found, log them out
+    if (!$client) {
+        header('Location: logOut.php');
+        exit;
+    }
+} catch (PDOException $e) {
+    die("Error fetching user data: " . $e->getMessage());
+}
+
+// Include your header file if you have one
+// include 'header.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -234,6 +326,15 @@ font-weight: 600;
     background-color: #FF0000; /* Dark red background on hover */
     color: white;
 }
+
+.form-group input, .form-group select { pointer-events: none; background-color: #f3f4f6; color: #6b7280; }
+        .form-group.editable input, .form-group.editable select { pointer-events: auto; background-color: #fff; color: #111827; }
+        .edit-button.save-mode { background-color: #238649; color: white; }
+        .logout-button { text-decoration: none; /* ... your other logout styles */ }
+        .form-actions { display: flex; justify-content: space-between; align-items: center; grid-column: 1 / -1; }
+        .message { padding: 1em; margin-bottom: 1em; border-radius: 5px; text-align: center; grid-column: 1 / -1; }
+        .success { background-color: #d4edda; color: #155724; }
+        .error { background-color: #f8d7da; color: #721c24; }
     </style>
 </head>
 <body>
@@ -268,48 +369,56 @@ font-weight: 600;
    <main>
     <div class="profile-card">
         <div class="profile-header">
-        <h3>Welcome back, <?php echo htmlspecialchars($_SESSION['name']); ?>!</h3>
+         <h3>Welcome back, <?php echo htmlspecialchars($_SESSION['name']); ?>!</h3>
         
         </div>
       <div class="profile-body">
         <div class="profile-info">
             <img src="Icons/UI/Progress/icons8-utilisateur-100.png">
-            <p>Tasnim <br>Mezgueldi</p>
+             <p><?php echo htmlspecialchars($client['first_name']); ?> <br><?php echo htmlspecialchars($client['last_name']); ?></p>
         </div>
-        <form class="profile-form" action="/update-profile" method="post">
+        <form class="profile-form" action="profile.php" method="post">
+
+        <?php
+                    if (isset($_SESSION['flash_message'])) {
+                        echo '<div class="message ' . $_SESSION['flash_type'] . '">' . htmlspecialchars($_SESSION['flash_message']) . '</div>';
+                        unset($_SESSION['flash_message']);
+                        unset($_SESSION['flash_type']);
+                    }
+                ?>
           
                 <div class="form-group">
                     <label for="firstName">First Name</label>
-                    <input type="text" id="firstName" name="firstName" value="Tasnim">
+                    <input type="text" id="firstName" name="firstName" value="<?php echo htmlspecialchars($client['first_name']); ?>">
                 </div>
                 
                 <div class="form-group">
                     <label for="lastName">Last Name</label>
-                    <input type="text" id="lastName" name="lastName" value="Mezgueldi">
+                    <input type="text" id="lastName" name="lastName" value="<?php echo htmlspecialchars($client['last_name']); ?>">
                 </div>
 
                 <div class="form-group">
                     <label for="telNum">Phone number</label>
-                    <input type="tel" id="telNum" name="phone" value="+212 612-345678">
+                    <input type="tel" id="telNum" name="phone" value="<?php echo htmlspecialchars($client['phone_number']); ?>">
                 </div>
 
                 <div class="form-group">
                     <label for="email">Email address</label>
-                    <input id="email" name="email" value="tasnimmezgueldi@gmail.com">
+                    <input id="email" name="email" value="<?php echo htmlspecialchars($client['email_client_ID']); ?>">
                 </div>
 
                 <div class="form-group">
                     <label for="preConMethod">Preferred contact method</label>
                     <select id="preConMethod" name="contactMethod">
-                        <option value="calls" selected>Calls</option>
-                        <option value="whatsapp">Whatsapp</option>
-                        <option value="emails">Emails</option>
+                        <option value="calls" <?php if($client['preferred_contact_method'] == 'calls') echo 'selected'; ?>>Calls</option>
+                        <option value="whatsapp" <?php if($client['preferred_contact_method'] == 'whatsapp') echo 'selected'; ?>>Whatsapp</option>
+                        <option value="emails"  <?php if($client['preferred_contact_method'] == 'emails') echo 'selected'; ?>>Emails</option>
                     </select>
                   </div>
 
                 <div class="form-group">
                     <label for="city">City</label>
-                    <input type="text" id="city" name="city" value="Tanger">
+                    <input type="text" id="city" name="city" value="<?php echo htmlspecialchars($client['city']); ?>">
                 </div>
 
                 <div class="form-group full-width">
@@ -377,10 +486,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // BONUS: Update the name displayed next to the icon and in the header
             // This simulates what would happen after the page reloads with new data.
-            const newFullName = `${firstNameInput.value} <br>${lastNameInput.value}`;
-            const newFirstName = firstNameInput.value;
-            userNameDisplay.innerHTML = newFullName;
-            welcomeMessage.textContent = `Welcome back, ${newFirstName}!`;
+            console.log('Form submitted!'); // For testing purposes
+            form.submit();
         }
     });
 });
