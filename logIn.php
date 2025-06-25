@@ -1,13 +1,6 @@
 <?php
-// Start a session at the very beginning of the script.
-// This is required to manage the user's logged-in state.
+// Make sure session_start() is at the VERY TOP
 session_start();
-
-// If the user is already logged in, redirect them to the homepage
-if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true) {
-    header('Location: index.php');
-    exit;
-}
 
 // --- DATABASE CONNECTION ---
 $host = 'localhost';

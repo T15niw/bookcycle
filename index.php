@@ -1,4 +1,100 @@
-<?php include 'include/db_connect.php'; ?>
+<?php
+// 1. START SESSION & SECURITY CHECK
+// This MUST be the very first thing in your file.
+session_start();
+
+// 2. DATABASE CONNECTION
+$host = 'localhost';
+$dbname = 'bookcycle';
+$user = 'root';
+$password = ''; 
+
+try {
+    $conn = new PDO("mysql:host=$host;dbname=$dbname", $user, $password);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Connection failed: " . $e->getMessage());
+}
+
+// 3. INITIALIZE MESSAGE VARIABLES
+$message = '';
+$message_type = ''; // 'success' or 'error'
+
+// 4. HANDLE FORM SUBMISSION
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+    // 1. ADD THIS SECURITY CHECK HERE
+    // First, check if the user is actually logged in.
+    if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
+        
+        // If they are NOT logged in, set the error message and stop.
+        $message = "You must be logged in to submit a request.";
+        $message_type = "error";
+
+    } else {
+        // 2. If the check passes, the user IS logged in.
+        // Now it's safe to run all the database logic.
+        
+        // Retrieve form data
+        $category = $_POST['category'];
+        $quantity = $_POST['quantity'];
+        $pickup_address = trim($_POST['pickup_address']);
+        $pickup_date = $_POST['pickup_date'];
+        $additional_notes = trim($_POST['additional_notes']);
+        
+        // This line is now SAFE because we know the user is logged in.
+        $client_email = $_SESSION['email'];
+
+        try {
+            // Prepare the SQL INSERT statement with named placeholders for security
+            $sql = "INSERT INTO request_form (
+                        email_client_ID, 
+                        submission_date, 
+                        category, 
+                        quantity, 
+                        pickup_address, 
+                        pickup_date, 
+                        additional_remarks, 
+                        status, 
+                        books_price
+                    ) VALUES (
+                        :email_client_id, 
+                        NOW(), 
+                        :category, 
+                        :quantity, 
+                        :pickup_address, 
+                        :pickup_date, 
+                        :additional_remarks, 
+                        'Received', 
+                        0.00
+                    )";
+            
+            $stmt = $conn->prepare($sql);
+            
+            // Bind the parameters
+            $stmt->bindParam(':email_client_id', $client_email);
+            $stmt->bindParam(':category', $category);
+            $stmt->bindParam(':quantity', $quantity);
+            $stmt->bindParam(':pickup_address', $pickup_address);
+            $stmt->bindParam(':pickup_date', $pickup_date);
+            $stmt->bindParam(':additional_remarks', $additional_notes);
+            
+            // Execute the query
+            $stmt->execute();
+            
+            // Set success message
+            $message = "Your request was submitted successfully!";
+            $message_type = "success";
+
+        } catch (PDOException $e) {
+            // Set error message for database-specific issues
+            $message = "An error occurred while saving your request. Please try again.";
+            $message_type = "error";
+        }
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,55 +116,12 @@
         }
         /************************************************************/
          .navbar {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 20px 40px;
         background-image: url('Photos/Homepage/background.jpeg');
         background-size: cover;
         background-position: center; 
         box-sizing: border-box;
       }
-      nav ul {
-        display: flex;
-        gap: 30px;
-        align-items: center;
-        list-style: none;
-        margin: 0;
-        padding: 0;
-      }
-      .navItems {
-        color: #238649;
-        font-size: 22px;
-        font-weight: 900;
-      }
-
-      .navItems:hover {
-        color: #32eb2a;
-        cursor: pointer;
-      }
-
-      .navItems button {
-        background-color: #32eb2a;
-        color: white;
-        padding: 6px 35px;
-        border-radius: 20px;
-        font-size: 18px;
-        font-weight: bold;
-        display: flex;
-        align-items: center;
-        gap: 7px;
-        border: 1px solid white;
-        border-style: solid;
-      }
-      .navItems button:hover {
-        background-color: #238649;
-        cursor: pointer;
-      }
-      a {
-        text-decoration: none;
-        color: inherit;
-      }
+     
       /************************************************************/
       .hero{
             display: flex;
@@ -78,7 +131,7 @@
         text-align: left;
         font-size: 75px;
         font-weight: 800;
-        margin-top: 110px;
+        margin-top: 100px;
         margin-left: 25px;
         background: url(Photos/Homepage/background.jpeg);
         background-size: cover;
@@ -94,6 +147,7 @@
             font-weight: 300;
             text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.10);
             margin-left: 250px;
+            margin-bottom:20px
         }
         .heroSection button{
             display: flex;
@@ -150,7 +204,7 @@
         .step {
             background-color: #238649;
             color: white;
-            padding: 15px 15px;
+            padding: 20px 15px 35px 15px;
             border-radius: 25px;
             min-width: 230px;
             max-width: 260px;
@@ -161,7 +215,7 @@
         }
         .step h3 {
             font-family: 'Caveat', cursive;
-            font-size: 40px;
+            font-size: 35px;
             font-weight: 500;
             line-height: 1.2;
             margin-top: 15px;
@@ -337,41 +391,24 @@
             text-align: center;
             font-weight: 300;
         }
+
+        .message { padding: 15px; margin-bottom: 20px; border-radius: 4px; text-align: center; }
+        .success { background-color: #d4edda; color: #155724; }
+        .error { background-color: #f8d7da; color: #721c24; }
     </style>
 </head>
 <body>
 <header>
-     <div class="navbar">
-        <a href="index.php"
-          ><img src="logo/Logo black shadow.png" alt="Logo"
-        /></a>
-        <nav>
-          <ul>
-            <li>
-              <a href="colaborate_with_us.php" target="_self" class="navItems"
-                >Collaborate with us</a
-              >
-            </li>
-            <li>
-              <a href="about_us.html" target="_self" class="navItems"
-                >About us</a
-              >
-            </li>
-            <li>
-              <a href="contact_us.php" target="_self" class="navItems"
-                >Contact us</a
-              >
-            </li>
-            <li>
-              <a href="logIn.php" target="_self" class="navItems"
-                ><button type="button">
-                  Log In <img src="Icons/UI/Right Arrow.png" alt="" />
-                </button>
-              </a>
-            </li>
-          </ul>
-        </nav>
-      </div>  
+    <?php
+            // Check if the user is logged in
+            if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true) {
+                // If they are logged in, show the logged-in navbar
+                include 'include/navbar_logged_in.php';
+            } else {
+                // If they are not logged in, show the logged-out navbar
+                include 'include/navbar_logged_out.php';
+            }
+        ?>
 </header>
 <main>
     <section class="heroSection">
@@ -395,7 +432,7 @@
         </div>
         <div class="step">
             <img src="Icons/UI/homepage/icons8-camion-100.png" alt="">
-            <h3>2 We Pick Them Up</h3>
+            <h3>2 We Pick Them <br> Up</h3>
             <p>Our team schedules a pickup and collects your books at your convenience.</p>
         </div>
         <div class="step">
@@ -414,27 +451,34 @@
         <div class="formTxts">
         <h1>Let’s do business!</h1>
         <h5>About Your Books</h5>
-        <form action="" method="post">
+        <form action="#request_form" method="post">
+
+        <?php if (!empty($message)): ?>
+            <div class="message <?php echo $message_type; ?>">
+                <?php echo htmlspecialchars($message); ?>
+            </div>
+        <?php endif; ?>
+
             <label for="category"></label>
-            <select name="" id="category" required>
+            <select name="category" id="category" required>
                 <option value="" disabled selected>Category</option>
-                <option value="">Books</option>
-                <option value="">Notebook</option>
-                <option value="">Both</option>
+                <option value="books">Books</option>
+                <option value="notebooks">Notebooks</option>
+                <option value="both">Both</option>
             </select><br>
             <label for="quantity"></label>
-            <select name="" id="quantity" required>
+            <select name="quantity" id="quantity" required>
                 <option value="" disabled selected>Quantity</option>
-                <option value="">5 - 10 book</option>
-                <option value="">10 - 50 book</option>
-                <option value="">50+ book</option>
+                <option value="5 - 10 book">5 - 10 book</option>
+                <option value="10 - 50 book">10 - 50 book</option>
+                <option value="50+ book">50+ book</option>
             </select><br>
             <label for="address"></label>
-            <input type="text" name="" id="address" placeholder="Pickup Address" required><br>
+            <input type="text" name="pickup_address" id="address" placeholder="Pickup Address" required><br>
             <label for="date"></label>
-            <input type="date" name="" id="date" placeholder="Pickup Date" required><br>
+            <input type="date" name="pickup_date" id="date" placeholder="Pickup Date" required><br>
             <label for="addNotes"></label>
-            <textarea name="" id="addNotes" placeholder="Additional Notes"></textarea><br>
+            <textarea name="additional_notes" id="addNotes" placeholder="Additional Notes"></textarea><br>
             <button type="submit">Submit</button>
             </form>
         </div>
@@ -447,7 +491,7 @@
     <div class="footerDivs">
     <div class="usefuLinks">
     <h3>Useful links</h3> <br>
-        <a href="about_us.html" class="usefuLinks">About us</a><br>
+        <a href="about_us.php" class="usefuLinks">About us</a><br>
         <a href="colaborate_with_us.php" class="usefuLinks">Collaborate with us</a><br>
         <a href="" class="usefuLinks">Privacy policy</a><br>
         <a href="" class="usefuLinks"> Terms & Conditions</a><br>

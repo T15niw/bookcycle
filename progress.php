@@ -1,4 +1,11 @@
-<?php include 'include/db_connect.php'; ?>
+<?php include 'include/db_connect.php';
+session_start();
+// SECURITY CHECK: If the user is NOT logged in, redirect them to the login page
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
+    header('Location: logIn.php');
+    exit; // Stop the script from running further
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -215,7 +222,7 @@
               >
             </li>
             <li>
-              <a href="about_us.html" target="_self" class="navItems"
+              <a href="about_us.php" target="_self" class="navItems"
                 >About us</a
               >
             </li>

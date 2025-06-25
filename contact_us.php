@@ -1,4 +1,76 @@
-<?php include 'include/db_connect.php'; ?>
+<?php
+// Start session for flash messages
+session_start();
+
+// Import PHPMailer classes into the global namespace
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+// Load PHPMailer files
+require 'src/Exception.php';
+require 'src/PHPMailer.php';
+require 'src/SMTP.php';
+
+// --- THIS IS THE MOST IMPORTANT FIX ---
+// Only run this code if the form has been submitted
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+    // --- Sanitize and Validate Form Data ---
+    $fullName = trim($_POST['full_name']);
+    $email = trim($_POST['email']);
+    $message_body = trim($_POST['message']); // Renamed variable to avoid conflict
+
+    if (empty($fullName) || !filter_var($email, FILTER_VALIDATE_EMAIL) || empty($message_body)) {
+        // If validation fails, set an error message
+        $_SESSION['flash_message'] = "Please fill out all fields correctly.";
+        $_SESSION['flash_type'] = "error";
+    } else {
+        // --- If validation passes, create a new PHPMailer instance ---
+        $mail = new PHPMailer(true);
+
+        try {
+            // --- Server settings ---
+            $mail->isSMTP();
+            $mail->Host       = 'smtp.gmail.com';
+            $mail->SMTPAuth   = true;
+            $mail->Username   = 'tasnimmezgueldi@gmail.com'; // Your Gmail address
+            $mail->Password   = 'vsbm eaxl tykl euqx';      // Your Gmail App Password
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+            $mail->Port       = 465;
+
+            // --- Recipients ---
+            $mail->setFrom('tasnimmezgueldi@gmail.com', 'BookCycle Contact Form');
+            $mail->addAddress('tasnimmezgueldi@gmail.com');
+            $mail->addReplyTo($email, $fullName);
+
+            // --- Content ---
+            $mail->isHTML(true);
+            $mail->Subject = 'New Contact Form Submission from ' . $fullName;
+            $mail->Body    = "<h3>New Message from Contact Form</h3>
+                              <p><b>Name:</b> " . htmlspecialchars($fullName) . "</p>
+                              <p><b>Email:</b> " . htmlspecialchars($email) . "</p>
+                              <hr>
+                              <p><b>Message:</b><br>" . nl2br(htmlspecialchars($message_body)) . "</p>";
+            $mail->AltBody = "Name: $fullName\nEmail: $email\n\nMessage:\n$message_body";
+
+            $mail->send();
+            
+            // Set success message
+            $_SESSION['flash_message'] = 'Thank you! Your message has been sent.';
+            $_SESSION['flash_type'] = 'success';
+
+        } catch (Exception $e) {
+            // Set error message if sending fails
+            $_SESSION['flash_message'] = "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+            $_SESSION['flash_type'] = 'error';
+        }
+    }
+
+    // --- Redirect back to the form to show the message ---
+    header('Location: ' . $_SERVER['PHP_SELF']);
+    exit;
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -188,52 +260,44 @@ hr{
      width: 60px;
     height: 60px;
 }
+
+.message { padding: 1em; margin-bottom: 1em; border-radius: 5px; text-align: center; } 
+.success { background-color: #d4edda; color: #155724; } 
+.error { background-color: #f8d7da; color: #721c24; }
     </style>
 </head>
 <body>
     <header>
-        <div class="navbar">
-        <a href="index.php"
-          ><img src="logo/logo_100_white.png" alt="Logo"
-        /></a>
-        <nav>
-          <ul>
-            <li>
-              <a href="colaborate_with_us.php" target="_self" class="navItems"
-                >Collaborate with us</a
-              >
-            </li>
-            <li>
-              <a href="about_us.html" target="_self" class="navItems"
-                >About us</a
-              >
-            </li>
-            <li>
-              <a href="contact_us.php" target="_self" class="navItems"
-                >Contact us</a
-              >
-            </li>
-            <li>
-              <a href="logIn.php" target="_self" class="navItems"
-                ><button type="button">
-                  Log In <img src="Icons/UI/Right Arrow.png" alt="" />
-                </button>
-              </a>
-            </li>
-          </ul>
-        </nav>
-      </div>  
+       <?php
+            // Check if the user is logged in
+            if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true) {
+                // If they are logged in, show the logged-in navbar
+                include 'include/navbar_logged_in.php';
+            } else {
+                // If they are not logged in, show the logged-out navbar
+                include 'include/navbar_logged_out.php';
+            }
+        ?>
 </header>
 <main>
     <h1>How can we help?</h1>
     <div class="contactForm">
-        <form action="" method="post">
+        <form action="contact_us.php" method="post">
+
+<?php
+                if (isset($_SESSION['flash_message'])) {
+                    echo '<div class="message ' . $_SESSION['flash_type'] . '">' . htmlspecialchars($_SESSION['flash_message']) . '</div>';
+                    unset($_SESSION['flash_message']);
+                    unset($_SESSION['flash_type']);
+                }
+            ?>
+
         <label for="fName"></label>
-        <input type="text" name="" id="fName" placeholder="Full name" required><br>
+        <input type="text" name="full_name" id="fName" placeholder="Full name" required><br>
         <label for="email"></label>
-        <input type="email" name="" id="email" placeholder="Email" required><br>
+        <input type="email" name="email" id="email" placeholder="Email" required><br>
         <label for="message"></label>
-        <textarea name="" id="message" placeholder="Message"></textarea><br>
+        <textarea name="message" id="message" placeholder="Message"></textarea><br>
         <button type="submit">Send</button>
         </form>
     </div>

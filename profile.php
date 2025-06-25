@@ -1,4 +1,11 @@
-<?php include 'include/db_connect.php'; ?>
+<?php include 'include/db_connect.php';
+session_start();
+// SECURITY CHECK: If the user is NOT logged in, redirect them to the login page
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
+    header('Location: index.php');
+    exit; // Stop the script from running further
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -203,6 +210,30 @@ font-weight: 600;
     color: black;
 }
 
+.form-group.full-width {
+    grid-column: 1 / -1; /* This makes it span the full width like before */
+    display: flex;
+    justify-content: space-between; /* This pushes the buttons to opposite ends */
+    align-items: center;
+}
+
+.logout-button {
+    background-color: #fee2e2; /* Light red background */
+    color: #FF0000; /* Darker red text */
+    border: 1px solid #FF0000;
+    border-radius: 8px;
+    padding: 12px 20px;
+    font-family: 'Lexend', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none; /* Removes underline from the link */
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+.logout-button:hover {
+    background-color: #FF0000; /* Dark red background on hover */
+    color: white;
+}
     </style>
 </head>
 <body>
@@ -220,7 +251,7 @@ font-weight: 600;
               >
             </li>
             <li>
-              <a href="about_us.html" target="_self" class="navItems"
+              <a href="about_us.php" target="_self" class="navItems"
                 >About us</a
               >
             </li>
@@ -237,7 +268,8 @@ font-weight: 600;
    <main>
     <div class="profile-card">
         <div class="profile-header">
-        <h3>Welcome back, Tasnim!</h3>
+        <h3>Welcome back, <?php echo htmlspecialchars($_SESSION['name']); ?>!</h3>
+        
         </div>
       <div class="profile-body">
         <div class="profile-info">
@@ -282,6 +314,7 @@ font-weight: 600;
 
                 <div class="form-group full-width">
                      <button type="submit" class="edit-button"><span>Edit</span></button>
+                    <a href="logOut.php" class="logout-button">Log Out</a>
                 </div>
             </form>
       </div>

@@ -1,4 +1,106 @@
-<?php include 'include/db_connect.php'; ?>
+<?php
+// Start the session at the very top. This is required for flash messages.
+session_start();
+
+// --- DATABASE CONNECTION ---
+$host = 'localhost';
+$dbname = 'bookcycle';
+$user = 'root';
+$password = ''; 
+
+try {
+    $conn = new PDO("mysql:host=$host;dbname=$dbname", $user, $password);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Connection failed: " . $e->getMessage());
+}
+
+// --- HANDLE FORM SUBMISSION ---
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+    // --- 1. HANDLE FILE UPLOAD ---
+    $uploaded_file_path = NULL; 
+    $file_upload_error = false;
+
+    if (isset($_FILES['uploaded_file']) && $_FILES['uploaded_file']['error'] == 0) {
+        $upload_dir = 'uploads/'; // Make sure this folder exists
+        $unique_name = uniqid() . '-' . basename($_FILES['uploaded_file']['name']);
+        $target_file = $upload_dir . $unique_name;
+        
+        if (move_uploaded_file($_FILES['uploaded_file']['tmp_name'], $target_file)) {
+            $uploaded_file_path = $target_file;
+        } else {
+            $_SESSION['flash_message'] = "Sorry, there was an error uploading your file.";
+            $_SESSION['flash_type'] = "error";
+            $file_upload_error = true;
+        }
+    }
+
+    // --- 2. PROCESS THE REST OF THE FORM (if no file upload error) ---
+    if (!$file_upload_error) {
+        
+        // Get all the form data
+        $collaboration_type = $_POST['collaboration_type'];
+        $full_name = trim($_POST['full_name']);
+        $phone_number = trim($_POST['phone_number']);
+        $email = trim($_POST['email']);
+        $contact_method = $_POST['contact_method'];
+        $city = trim($_POST['city']);
+        $user_message = trim($_POST['message']);
+
+        try {
+            // --- 3. CHOOSE THE SQL BASED ON COLLABORATION TYPE ---
+            if ($collaboration_type === 'volunteering') {
+                $sql = "INSERT INTO volunteers (email_volunteer_ID, full_name, phone_number, preferred_contact_method, city, type_of_collaboration, desired_role, how_often_can_you_volunteer, uploaded_file, message) 
+                        VALUES (:email, :name, :phone, :contact, :city, :collab_type, :role, :availability, :file, :msg)";
+                $stmt = $conn->prepare($sql);
+                $stmt->bindParam(':role', $_POST['desired_role']);
+                $stmt->bindParam(':availability', $_POST['availability']);
+
+            } elseif ($collaboration_type === 'partnership') {
+                $sql = "INSERT INTO partners (email_partner_ID, full_name, phone_number, preferred_contact_method, city, type_of_collaboration, company_name, field_of_activity, uploaded_file, message) 
+                        VALUES (:email, :name, :phone, :contact, :city, :collab_type, :company, :activity, :file, :msg)";
+                $stmt = $conn->prepare($sql);
+                $stmt->bindParam(':company', $_POST['company_name']);
+                $stmt->bindParam(':activity', $_POST['field_of_activity']);
+            }
+
+            // --- 4. BIND COMMON FIELDS AND EXECUTE ---
+            if (isset($stmt)) {
+                $stmt->bindParam(':email', $email);
+                $stmt->bindParam(':name', $full_name);
+                $stmt->bindParam(':phone', $phone_number);
+                $stmt->bindParam(':contact', $contact_method);
+                $stmt->bindParam(':city', $city);
+                $stmt->bindParam(':collab_type', $collaboration_type);
+                $stmt->bindParam(':file', $uploaded_file_path);
+                $stmt->bindParam(':msg', $user_message);
+                
+                $stmt->execute();
+                
+                // Set the SUCCESS flash message
+                $_SESSION['flash_message'] = "Thank you! Your submission has been received. We'll make sure to contact you as soon as possible!";
+                $_SESSION['flash_type'] = "success";
+            } else {
+                 // Set an ERROR flash message if type is invalid
+                 $_SESSION['flash_message'] = "An invalid collaboration type was selected.";
+                 $_SESSION['flash_type'] = "error";
+            }
+
+        } catch (PDOException $e) {
+            // Set the DATABASE ERROR flash message (e.g., duplicate email)
+            $_SESSION['flash_message'] = "A submission with this email address already exists.";
+            $_SESSION['flash_type'] = "error";
+            // For debugging: error_log($e->getMessage());
+        }
+    }
+    
+    // --- 5. REDIRECT BACK TO THE FORM TO SHOW THE MESSAGE ---
+    // This runs after every form submission, success or error.
+    header('Location: ' . $_SERVER['PHP_SELF'] . '#form');
+    exit;
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -27,51 +129,7 @@
         background-size: cover;
         background-position: center;
       }
-      .navbar {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 20px 40px;
-      }
-      nav ul {
-        display: flex;
-        gap: 30px;
-        align-items: center;
-        list-style: none;
-        margin: 0;
-        padding: 0;
-      }
-      .navItems {
-        color: #238649;
-        font-size: 22px;
-        font-weight: 900;
-      }
-
-      .navItems:hover {
-        color: #32eb2a;
-        cursor: pointer;
-      }
-
-      .navItems button {
-        background-color: #32eb2a;
-        color: white;
-        padding: 6px 35px;
-        border-radius: 20px;
-        font-size: 18px;
-        font-weight: bold;
-        display: flex;
-        align-items: center;
-        gap: 7px;
-        border: 1px solid white;
-      }
-      .navItems button:hover {
-        background-color: #238649;
-        cursor: pointer;
-      }
-      a {
-        text-decoration: none;
-        color: inherit;
-      }
+      
       /************************************************************/
       .heroSection {
         display: flex;
@@ -600,41 +658,36 @@
             text-align: center;
             font-weight: 300;
         }
+
+        .message { 
+          grid-column: 1 / -1; 
+          padding: 15px; 
+          margin-bottom: 15px; 
+          border-radius: 4px; 
+          text-align: center; 
+        }
+        .success { 
+          background-color: #d4edda; 
+          color: #155724; 
+        }
+        .error { 
+          background-color: #f8d7da; 
+          color: #721c24; 
+        }
     </style>
   </head>
   <body>
     <header>
-      <div class="navbar">
-        <a href="index.php"
-          ><img src="logo/Logo black shadow.png" alt="Logo"
-        /></a>
-        <nav>
-          <ul>
-            <li>
-              <a href="colaborate_with_us.php" target="_self" class="navItems"
-                >Collaborate with us</a
-              >
-            </li>
-            <li>
-              <a href="about_us.html" target="_self" class="navItems"
-                >About us</a
-              >
-            </li>
-            <li>
-              <a href="contact_us.php" target="_self" class="navItems"
-                >Contact us</a
-              >
-            </li>
-            <li>
-              <a href="logIn.php" target="_self" class="navItems"
-                ><button type="button">
-                  Log In <img src="Icons/UI/Right Arrow.png" alt="" />
-                </button>
-              </a>
-            </li>
-          </ul>
-        </nav>
-      </div>
+<?php
+            // Check if the user is logged in
+            if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true) {
+                // If they are logged in, show the logged-in navbar
+                include 'include/navbar_logged_in.php';
+            } else {
+                // If they are not logged in, show the logged-out navbar
+                include 'include/navbar_logged_out.php';
+            }
+        ?>
       <section class="heroSection">
         <h1>Let’s Make an Impact Together!</h1>
         <p>
@@ -737,35 +790,50 @@
         <div>
           <img src="Photos/collaborate_with_us/team up form.png" alt="" />
         </div>
-        <div class="theForm">
-          <form action="" method="post">
+        <div id="form" class="theForm">
+          <form action="#form" method="post" enctype="multipart/form-data">
+
+          <?php
+            // Check if a flash message exists in the session
+            if (isset($_SESSION['flash_message'])) {
+                // Display the message with the correct style
+                echo '<div class="message ' . $_SESSION['flash_type'] . '">';
+                echo htmlspecialchars($_SESSION['flash_message']);
+                echo '</div>';
+                
+                // CRUCIAL: Delete the message so it doesn't show again
+                unset($_SESSION['flash_message']);
+                unset($_SESSION['flash_type']);
+            }
+        ?>
+
             <label for="fName"></label>
-            <input type="text" name="" id="fName" placeholder="Full name" required/>
+            <input type="text" name="full_name" id="fName" placeholder="Full name" required/>
             <label for="telNum"></label>
             <input
               type="tel"
-              name=""
+              name="phone_number"
               id="telNum"
               placeholder="Phone Number" required
             /><br />
             <label for="email"></label>
             <input
               type="email"
-              name=""
+              name="email"
               id="email"
               placeholder="Email Address" required
             />
             <label for="preConMethod"></label>
-            <select name="" id="preConMethod" required>
+            <select name="contact_method" id="preConMethod" required>
               <option value="" disabled selected>Preferred Contact Method</option>
-              <option value="">Calls</option>
-              <option value="">Whatsapp</option>
-              <option value="">Emails</option></select
+              <option value="calls">Calls</option>
+              <option value="whatsapp">Whatsapp</option>
+              <option value="emails">Emails</option></select
             ><br />
             <label for="city"></label>
-            <input type="text" id="city" placeholder="City" required/>
+            <input type="text" id="city" name="city" placeholder="City" required/>
             <label for="collaType"></label>
-            <select name="" id="collaType" required>
+            <select name="collaboration_type" id="collaType" required>
               <option value="" disabled selected>Type of Collaboration</option>
               <option value="partnership">Partnership / Sponsorship</option>
               <option value="volunteering">Volunteering</option></select
@@ -778,34 +846,34 @@
               type="text"
               name="company_name"
               id="nameCompany"
-              placeholder="Company name" required
+              placeholder="Company name"
             />
             <label for="fieldActivity"></label>
             <input
               type="text"
               name="field_of_activity"
               id="fieldActivity"
-              placeholder="Field of activity" required
+              placeholder="Field of activity"
             />
             </div>
 
             <div id="volunteer-fields" class="hidden">
             <label for="desiredRole"></label>
-            <select name="desired_role" id="desiredRole" required>
+            <select name="desired_role" id="desiredRole" >
               <option value=""disabled selected>Desired Role</option>
-              <option value="">Logistics</option>
-              <option value="">Sorting</option>
-              <option value="">Communication & Digital Marketing</option>
-              <option value="">Administrative Assistance</option>
+              <option value="logistics">Logistics</option>
+              <option value="sorting">Sorting</option>
+              <option value="communication">Communication & Digital Marketing</option>
+              <option value="admin_assistance">Administrative Assistance</option>
             </select>
             <label for="availability" ></label>
-            <select name="availability" id="availability" required>
+            <select name="availability" id="availability">
               <option value="" disabled selected>Availability</option>
-              <option value="">Occasionally</option>
-              <option value="">Once a week</option>
-              <option value="">Weekends only</option>
-              <option value="">Several times a week</option>
-              <option value="">Flexible</option></select
+              <option value="occasionally">Occasionally</option>
+              <option value="once a week">Once a week</option>
+              <option value="weekends only">Weekends only</option>
+              <option value="several times a week">Several times a week</option>
+              <option value="flexible">Flexible</option></select
             >
             </div>
 
@@ -813,13 +881,13 @@
             <label for="uploadedFile"></label>
             <input
               type="file"
-              name=""
+              name="uploaded_file"
               id="uploadedFile"
               placeholder="Upload file (CV/ proposal)"
             /><br />
             <label for="message"></label>
             <textarea
-              name=""
+              name="message"
               id="message"
               placeholder="Tell us a bit about how you'd like to collaborate with us" required
             ></textarea
@@ -902,7 +970,7 @@
     <div class="footerDivs">
     <div class="usefuLinks">
     <h3>Useful links</h3> <br>
-        <a href="about_us.html" class="usefuLinks">About us</a><br>
+        <a href="about_us.php" class="usefuLinks">About us</a><br>
         <a href="colaborate_with_us.php" class="usefuLinks">Collaborate with us</a><br>
         <a href="" class="usefuLinks">Privacy policy</a><br>
         <a href="" class="usefuLinks"> Terms & Conditions</a><br>
@@ -925,28 +993,34 @@
     <p class="copyRights">CopyRights © 2025 BookCycle. All rights reserved <br><span style="font-weight: 900;">Tasnim Mezgueldi</span></p>
 </footer>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const collaborationTypeSelect = document.getElementById('collaType');
+    const collaTypeSelect = document.getElementById('collaType');
     const partnerFields = document.getElementById('partner-fields');
     const volunteerFields = document.getElementById('volunteer-fields');
+    
+    // Get all the inputs/selects within the conditional sections
+    const partnerInputs = partnerFields.querySelectorAll('input');
+    const volunteerInputs = volunteerFields.querySelectorAll('select');
 
-    function toggleConditionalFields() {
-        const selectedValue = collaborationTypeSelect.value;
-
+    collaTypeSelect.addEventListener('change', function() {
+        // First, hide both sections and make all their fields NOT required
         partnerFields.classList.add('hidden');
         volunteerFields.classList.add('hidden');
-       
-        if (selectedValue === 'partnership') {
+        partnerInputs.forEach(input => input.required = false);
+        volunteerInputs.forEach(input => input.required = false);
+
+        // Now, show the correct section and make ITS fields required
+        if (this.value === 'partnership') {
             partnerFields.classList.remove('hidden');
-        } else if (selectedValue === 'volunteering') {
+            partnerInputs.forEach(input => input.required = true);
+        } else if (this.value === 'volunteering') {
             volunteerFields.classList.remove('hidden');
+            volunteerInputs.forEach(input => input.required = true);
         }
-    }
+    });
 
-    collaborationTypeSelect.addEventListener('change', toggleConditionalFields);
-
-    toggleConditionalFields();
-});
+    // Optional: Trigger the change event on page load in case a value is pre-selected
+    // This is good practice for forms that might remember old values.
+    collaTypeSelect.dispatchEvent(new Event('change'));
 </script>
   </body>
 </html>
