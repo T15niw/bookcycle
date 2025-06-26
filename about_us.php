@@ -152,7 +152,7 @@ session_start();
 .value p {
     /* Slightly adjusted font-size and line-height for readability */
     font-size: 22px; 
-    font-weight: 300;
+    font-weight: 400;
     color: black;
     /* Increased line-height to match the maquette's spacing */
     line-height: 1.4; 
