@@ -183,7 +183,7 @@ hr { margin-bottom: 20px; border: 0; border-top: 1px solid #EFF0F6; }
             </div>
             <nav class="sidebar-nav">
                 <ul>
-                    <li class="active"><a href="statistics.php"><img src="../Icons/Dashboard/increaseGreen (1).png" alt=""><span>Statistique</span></a></li>
+                    <li class="active"><a href="statistics.php"><img src="../Icons/Dashboard/increaseGreen (1).png" alt=""><span>Statistics</span></a></li>
                     <li><a href="requests.php"><img src="../Icons/Dashboard/icons8-liste-de-tâches-100.png" alt=""><span>Requests</span></a></li>
                     <li><a href="clients.php"><img src="../Icons/Dashboard/utilisateur.png" alt=""><span>Clients</span></a></li>
                     <li><a href="volunteers.php"><img src="../Icons/Dashboard/icons8-bénévolat-100.png" alt=""><span>Volunteers</span></a></li>

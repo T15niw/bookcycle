@@ -63,7 +63,7 @@
 <body>
      <div class="navbar">
         <a href="index.php"
-          ><img src="../logo/Logo black shadow.png" alt="Logo"
+          ><img src="logo/Logo black shadow.png" alt="Logo"
         /></a>
         <nav>
           <ul>
@@ -85,7 +85,7 @@
             <li>
               <a href="logIn.php" target="_self" class="navItems"
                 ><button type="button">
-                  Log In <img src="../Icons/UI/Right Arrow.png" alt="" />
+                  Log In <img src="Icons/UI/Right Arrow.png" alt="" />
                 </button>
               </a>
             </li>

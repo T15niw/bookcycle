@@ -50,7 +50,7 @@
 <body>
        <div class="navbar">
         <a href="index.php"
-          ><img src="../logo/Logo black shadow.png" alt="Logo"
+          ><img src="logo/Logo black shadow.png" alt="Logo"
         /></a>
         <nav>
           <ul>
@@ -70,7 +70,7 @@
                 >Contact us</a
               >
             </li>
-            <li><a href="profile.php"><img src="../Icons/UI/Progress/icons8-utilisateur-100.png" class="img"></a></li>
+            <li><a href="profile.php"><img src="Icons/UI/Progress/icons8-utilisateur-100.png" class="img"></a></li>
           </ul>
         </nav>
       </div>  
