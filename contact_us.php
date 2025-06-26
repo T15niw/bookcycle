@@ -7,9 +7,9 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
 // Load PHPMailer files
-require 'src/Exception.php';
-require 'src/PHPMailer.php';
-require 'src/SMTP.php';
+require 'PHP_mail/Exception.php';
+require 'PHP_mail/PHPMailer.php';
+require 'PHP_mail/SMTP.php';
 
 // --- THIS IS THE MOST IMPORTANT FIX ---
 // Only run this code if the form has been submitted

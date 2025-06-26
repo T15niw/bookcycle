@@ -97,7 +97,7 @@ try {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Statistics</title>
+    <title>Settings</title>
     <link rel="icon" href="../logo/bookcycle.png" type="image/x-icon" />
     <style>
             @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Lexend:wght@100..900&display=swap');
@@ -110,8 +110,27 @@ try {
             --background-main: #ffffff;
         }
 body { margin: 0; font-family: "Lexend", sans-serif; background-color: #F9F9F9; color: var(--text-primary); }
-        .dashboard { display: flex; min-height: 100vh; }
-        .sidebar { flex: 0 0 208px; border: 1px solid #EFF0F6; background: #FFF; display: flex; flex-direction: column; padding: 25px 35px 38px 18px; border-radius: 20px; }
+        .dashboard { min-height: 100vh; }
+.sidebar {
+    /* --- The Fix --- */
+    position: fixed; /* This is the key: it fixes the element to the viewport */
+    top: 0;
+    left: 0;
+    height: 100vh; /* Make the sidebar always full height */
+    overflow-y: auto; /* Add a scrollbar ONLY to the sidebar if its content is too long */
+    width: 263px; /* We need to explicitly define the width now */
+    z-index: 100; /* Ensures the sidebar stays on top of other content */
+
+    /* --- Your existing styles (kept for consistency) --- */
+    flex: 0 0 208px;
+    background: var(--background-main, #FFF);
+        border: 1px solid var(--Stroke-Color, #EFF0F6);
+    display: flex;
+    flex-direction: column;
+    padding: 25px 35px 38px 18px;
+    border-radius: 20px; /* Note: you might want to change this */
+    box-sizing: border-box; /* Good practice to include this */
+}
         .logo { margin-top: 10px; margin-bottom: 15px; margin-left: 18px; height: 45px; }
         .sidebar-nav { flex-grow: 1; }
         .sidebar ul { list-style: none; padding: 0; margin: 0; }
@@ -119,7 +138,15 @@ body { margin: 0; font-family: "Lexend", sans-serif; background-color: #F9F9F9; 
         .sidebar-nav li a:hover, .sidebar-footer li a:hover { background-color: #F9F9F9; color: var(--text-primary); }
         .sidebar-footer li.active a { background-color: var(--light-green-bg); color: var(--primary-green); }
         .sidebar-nav img, .sidebar-footer img { width: 30px; height: 30px; }
-        .main-content { flex-grow: 1; padding: 40px 32px; background-color: #F9F9F9; }
+.main-content {
+    /* --- The Fix --- */
+    margin-left: 263px; /* This pushes the content to the right, creating space for the sidebar */
+    
+    /* --- Your existing styles (kept for consistency) --- */
+    flex-grow: 1;
+    padding: 40px 32px;
+    background-color: #F9F9F9;
+}
         .content-header h1 { font-size: 28px; font-weight: 700; margin: 0 0 15px 0; }
         hr { margin-bottom: 20px; border: 0; border-top: 1px solid #EFF0F6; }
 /* *************************************************** */

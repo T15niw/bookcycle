@@ -63,91 +63,56 @@ function get_contact_pill_info($method) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Statistics</title>
+    <title>Clients</title>
     <link rel="icon" href="../logo/bookcycle.png" type="image/x-icon" />
     <style>
             @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Lexend:wght@100..900&display=swap');
 :root {
-    --primary-green: #32eb2a;
-    --light-green-bg: rgba(50, 235, 42, 0.30);
-    --text-primary: black;
-    --text-secondary: #414142;
-    --border-color: #e5e7eb;
-    --background-main: #ffffff;
-}
-body {
-    margin: 0;
-    font-family: "Lexend", sans-serif;
-    background-color: #F9F9F9;
-    color: var(--text-primary);
-}
-.dashboard {
-    display: flex;
-    min-height: 100vh;
-}
+            --primary-green: #32eb2a;
+            --light-green-bg: rgba(50, 235, 42, 0.30);
+            --text-primary: black;
+            --text-secondary: #414142;
+            --border-color: #e5e7eb;
+            --background-main: #ffffff;
+        }
+body { margin: 0; font-family: "Lexend", sans-serif; background-color: #F9F9F9; color: var(--text-primary); }
+        .dashboard { min-height: 100vh; }
 .sidebar {
+    /* --- The Fix --- */
+    position: fixed; /* This is the key: it fixes the element to the viewport */
+    top: 0;
+    left: 0;
+    height: 100vh; /* Make the sidebar always full height */
+    overflow-y: auto; /* Add a scrollbar ONLY to the sidebar if its content is too long */
+    width: 263px; /* We need to explicitly define the width now */
+    z-index: 100; /* Ensures the sidebar stays on top of other content */
+
+    /* --- Your existing styles (kept for consistency) --- */
     flex: 0 0 208px;
+    background: var(--background-main, #FFF);
     border: 1px solid var(--Stroke-Color, #EFF0F6);
-    background: var(--Base-White-100, #FFF);
     display: flex;
     flex-direction: column;
     padding: 25px 35px 38px 18px;
-    border-radius: 20px;
-}
-.logo {
-    margin-top: 10px;
-    margin-bottom: 15px;
-    margin-left: 18px;
-    height: 45px;
-}
-.sidebar-nav {
-    flex-grow: 1;
-}
-.sidebar ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-.sidebar-nav li a, .sidebar-footer li a {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px 16px;
-    border-radius: 5px;
-    text-decoration: none;
-    color: var(--text-secondary);
-    font-size: 16px;
-    font-weight: 500;
-    transition: background-color 0.2s ease;
-}
-.sidebar-nav li a:hover , .sidebar-footer li a:hover {
-    background-color: #F9F9F9;
-    color: var(--text-primary);
-}
-.sidebar-nav li.active a {
-    background-color: var(--light-green-bg);
-    color: var(--primary-green);
-}
-.sidebar-nav img, .sidebar-footer img {
-    width: 30px;
-    height: 30px;
-}
-
-/* --- Main Content --- */
+    border-radius: 20px; /* Note: you might want to change this */
+    box-sizing: border-box; /* Good practice to include this */
+}        .logo { margin-top: 10px; margin-bottom: 15px; margin-left: 18px; height: 45px; }
+        .sidebar-nav { flex-grow: 1; }
+        .sidebar ul { list-style: none; padding: 0; margin: 0; }
+        .sidebar-nav li a, .sidebar-footer li a { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 5px; text-decoration: none; color: var(--text-secondary); font-size: 16px; font-weight: 500; transition: background-color 0.2s ease; }
+        .sidebar-nav li a:hover, .sidebar-footer li a:hover { background-color: #F9F9F9; color: var(--text-primary); }
+        .sidebar-nav li.active a { background-color: var(--light-green-bg); color: var(--primary-green); }
+        .sidebar-nav img, .sidebar-footer img { width: 30px; height: 30px; }
 .main-content {
+    /* --- The Fix --- */
+    margin-left: 263px; /* This pushes the content to the right, creating space for the sidebar */
+    
+    /* --- Your existing styles (kept for consistency) --- */
     flex-grow: 1;
     padding: 40px 32px;
     background-color: #F9F9F9;
-}
-.content-header h1 {
-    font-size: 28px;
-    font-weight: 700;
-    margin: 0 0 15px 0;
-}
-
-hr{
-    margin-bottom: 10px;
-}
+}        .content-header h1 { font-size: 28px; font-weight: 700; margin: 0 0 15px 0; }
+        hr { margin-bottom: 20px; border: 0; border-top: 1px solid #EFF0F6; }
 
 
 .clients-table {
@@ -257,26 +222,25 @@ hr{
 
     <div class="dashboard">
         <aside class="sidebar">
-            <div class="sidebar-header">
-
-                <img src="../logo/Logo black shadow.png"class="logo">
-            </div>
-            <nav class="sidebar-nav">
-                <ul>
-                    <li><a href="statistics.php"><img src="../Icons/Dashboard/increaseBlack.png"><span>Statistics</span></a></li>
-                    <li><a href="requests.php"><img src="../Icons/Dashboard/icons8-liste-de-tâches-100.png" alt=""><span>Requests</span></a></li>
-                    <li><a href="clients.php"><img src="../Icons/Dashboard/users.png" alt=""><span>Clients</span></a></li>
-                    <li class="active"><a href="volunteers.php"><img src="../Icons/Dashboard/icons8-bénévolat-100.png" alt=""><span>Volunteers</span></a></li>
-                    <li><a href="partners.php"><img src="../Icons/Dashboard/icons8-collaborating-in-circle-100.png" alt=""><span>Partners</span></a></li>
-                </ul>
-            </nav>
-            <div class="sidebar-footer">
-                <ul>
-                    <li><a href="settings.php"><img src="../Icons/Dashboard/icons8-settings-100.png" alt=""><span>Settings</span></a></li>
-                    <li><a href="admin_logOut.php"><img src="../Icons/Dashboard/icons8-sortie-100.png" alt=""><span>Logout</span></a></li>
-                </ul>
-            </div>
-        </aside>
+        <div class="sidebar-header">
+            <img src="../logo/Logo black shadow.png"class="logo">
+        </div>
+        <nav class="sidebar-nav">
+            <ul>
+                <li><a href="statistics.php"><img src="../Icons/Dashboard/increaseBlack.png"><span>Statistics</span></a></li>
+                <li><a href="requests.php"><img src="../Icons/Dashboard/icons8-liste-de-tâches-100.png" alt=""><span>Requests</span></a></li>
+                <li class="active"><a href="clients.php"><img src="../Icons/Dashboard/users.png" alt=""><span>Clients</span></a></li>
+                <li><a href="volunteers.php"><img src="../Icons/Dashboard/icons8-bénévolat-100.png" alt=""><span>Volunteers</span></a></li>
+                <li><a href="partners.php"><img src="../Icons/Dashboard/icons8-collaborating-in-circle-100.png" alt=""><span>Partners</span></a></li>
+            </ul>
+        </nav>
+        <div class="sidebar-footer">
+            <ul>
+                <li><a href="settings.php"><img src="../Icons/Dashboard/icons8-settings-100.png" alt=""><span>Settings</span></a></li>
+                <li><a href="admin_logOut.php"><img src="../Icons/Dashboard/icons8-sortie-100.png" alt=""><span>Logout</span></a></li>
+            </ul>
+        </div>
+    </aside>
 
          <main class="main-content">
             <header class="content-header">

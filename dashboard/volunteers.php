@@ -90,13 +90,24 @@ body {
     min-height: 100vh;
 }
 .sidebar {
+    /* --- The Fix --- */
+    position: fixed; /* This is the key: it fixes the element to the viewport */
+    top: 0;
+    left: 0;
+    height: 100vh; /* Make the sidebar always full height */
+    overflow-y: auto; /* Add a scrollbar ONLY to the sidebar if its content is too long */
+    width: 263px; /* We need to explicitly define the width now */
+    z-index: 100; /* Ensures the sidebar stays on top of other content */
+
+    /* --- Your existing styles (kept for consistency) --- */
     flex: 0 0 208px;
-    border: 1px solid var(--Stroke-Color, #EFF0F6);
-    background: var(--Base-White-100, #FFF);
+    background: var(--background-main, #FFF);
+        border: 1px solid var(--Stroke-Color, #EFF0F6);
     display: flex;
     flex-direction: column;
     padding: 25px 35px 38px 18px;
-    border-radius: 20px;
+    border-radius: 20px; /* Note: you might want to change this */
+    box-sizing: border-box; /* Good practice to include this */
 }
 .logo {
     margin-top: 10px;
@@ -138,18 +149,16 @@ body {
 }
 
 .main-content {
+    /* --- The Fix --- */
+    margin-left: 263px; /* This pushes the content to the right, creating space for the sidebar */
+    
+    /* --- Your existing styles (kept for consistency) --- */
     flex-grow: 1;
     padding: 40px 32px;
     background-color: #F9F9F9;
 }
-.content-header h1 {
-    font-size: 28px;
-    font-weight: 700;
-    margin: 0 0 15px 0;
-}
-hr{
-    margin-bottom: 10px;
-}
+.content-header h1 { font-size: 28px; font-weight: 700; margin: 0 0 15px 0; }
+hr { margin-bottom: 20px; border: 0; border-top: 1px solid #EFF0F6; }
 
 .volunteers-table {
     width: 100%;
