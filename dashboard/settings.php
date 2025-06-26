@@ -20,6 +20,7 @@ body {
     font-family: "Lexend", sans-serif;
     background-color: #F9F9F9;
     color: var(--text-primary);
+
 }
 .dashboard {
     display: flex;
@@ -73,7 +74,6 @@ body {
     height: 30px;
 }
 
-/* --- Main Content --- */
 .main-content {
     flex-grow: 1;
     padding: 40px 32px;
@@ -84,141 +84,98 @@ body {
     font-weight: 700;
     margin: 0 0 15px 0;
 }
-.filter-controls {
-    display: flex;
-    gap: 55px;
-    margin-bottom: 24px;
-}
-.filter-group {
-    position: relative;
-}
-.filter-group label {
-    font-size: 12px;
-    font-weight: 300;
-    color: var(--text-secondary);
-    position: absolute;
-    top: -10px;
-    left: 8px;
-    padding: 32px 4px;
-}
-.filter-group select {
-    padding: 8px 32px 8px 12px;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    margin-top: 15px;
-    width: 100px;
-    font-family: 'Inter', sans-serif;
-    font-size: 0.9rem;
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%236b7280' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 10px center;
+
+
+
+.profile-container {
+    margin-top: 25px;
 }
 
-/* --- Table --- */
-.table-container {
-    background-color: var(--background-main);
-    border: 1px solid var(--border-color);
+.welcome-banner {
+    background: linear-gradient(90deg, rgba(50, 235, 42, 0.60) 0%, #238649 100%);
+    color: #3E435D;
+    padding: 38px 60px;
     border-radius: 12px;
-    overflow: hidden;
-}
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-th, td {
-    padding: 16px 24px;
-    text-align: left;
-    font-size: 0.9rem;
-}
-th {
-    color: var(--text-secondary);
+    font-size: 20px;
     font-weight: 500;
-    text-transform: uppercase;
-    font-size: 0.75rem;
-    letter-spacing: 0.5px;
-}
-tbody tr.data-row {
-    border-bottom: 1px solid var(--border-color);
-    transition: background-color 0.2s ease;
-    cursor: pointer;
-}
-tbody tr.data-row:last-child {
-    border-bottom: none;
-}
-tbody tr.data-row:hover {
-    background-color: var(--background-light);
-}
-tbody tr.active-row {
-    background-color: #9dfd9a; /* Light blue to indicate active */
+    margin-bottom: 40px;
 }
 
-/* --- Tags/Pills --- */
-.tag {
-    display: inline-block;
-    padding: 6px 18px;
-    border-radius: 20px;
-    font-weight: 400;
-    font-size: 14px;
-}
-.tag-whatsapp { background-color: #e8f5e9; color: #25D366; }
-.tag-email { background-color: #e3f2fd; color: #5B93FF; }
-.tag-calls { background-color: #f3e5f5; color: #9116F9; }
-
-/* --- Action Buttons --- */
-.action-cell {
+.profile-form {
     display: flex;
-    gap: 8px;
-}
-.icon-button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 4px;
-}
-.icon-button img {
-    width: 18px;
-    height: 18px;
+    flex-direction: column;
+    gap: 22px; /* Space between form groups */
 }
 
-/* --- Expandable Detail View --- */
-.detail-row.hidden {
-    display: none;
-}
-.detail-row td {
-    padding: 0;
-    background-color: #b0ffaf2c;
-}
-.detail-content {
-    padding: 24px;
+.form-row {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 12px;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
 }
-.detail-item {
-    background-color: #fff;
-    padding: 16px;
-    border-radius: 8px;
-    border: 1px solid var(--border-color);
+
+.form-group {
+    display: flex;
+    flex-direction: column;
 }
-.detail-item.full-width {
-    grid-column: 1 / -1;
-}
-.detail-item label {
-    display: block;
-    font-size: 0.8rem;
-    font-weight: 400;
-    color: #747474;
+
+.form-group label {
+    font-size: 14px;
+    color: var(--text-secondary, #414142);
     margin-bottom: 8px;
+    font-weight: 500;
 }
-.detail-item p {
-    margin: 0;
-    font-size: 0.9rem;
-    color: var(--text-primary);
+
+.form-group input {
+    font-family: "Lexend", sans-serif;
+    padding: 14px 16px;
+    border: 1px solid var(--border-color, #e5e7eb);
+    border-radius: 8px;
+    background-color: #FDFDFD;
+    font-size: 15px;
+    color: var(--text-secondary, #414142);
+    width: 100%;
+    box-sizing: border-box; /* Important for grid layout */
 }
-hr{
-    margin-bottom: 10px;
+
+.form-group input:focus {
+    outline: none;
+    border-color: #238649;
+    box-shadow: 0 0 0 2px rgba(35, 134, 73, 0.2);
 }
+
+.form-group input:disabled {
+    background-color: #F0F0F0;
+    color: #888;
+    cursor: not-allowed;
+    border-color: #e5e7eb;
+}
+
+.form-section-title {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 15px 0 -5px 0;
+    color: var(--text-primary, black);
+}
+
+.change-btn {
+    font-family: "Lexend", sans-serif;
+    background-color: #238649;
+    color: white;
+    border: none;
+    padding: 15px 45px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    align-self: flex-start; /* Align button to the left */
+    margin-top: 10px;
+}
+
+.change-btn:hover {
+    background-color: #1a6b39; 
+}
+
     </style>
 </head>
 <body>
@@ -231,16 +188,16 @@ hr{
             </div>
             <nav class="sidebar-nav">
                 <ul>
-                    <li><a href="statistics.php"><img src="../Icons/Dashboard/" alt=""><span>Statistics</span></a></li>
+                    <li><a href="statistics.php"><img src="../Icons/Dashboard/increaseBlack.png"><span>Statistics</span></a></li>
                     <li><a href="requests.php"><img src="../Icons/Dashboard/icons8-liste-de-tâches-100.png" alt=""><span>Requests</span></a></li>
                     <li><a href="clients.php"><img src="../Icons/Dashboard/utilisateur.png" alt=""><span>Clients</span></a></li>
-                    <li class="active"><a href="volunteers.php"><img src="../Icons/Dashboard/volunteer.png" alt=""><span>Volunteers</span></a></li>
+                    <li class="active"><a href="volunteers.php"><img src="../Icons/Dashboard/icons8-bénévolat-100.png" alt=""><span>Volunteers</span></a></li>
                     <li><a href="partners.php"><img src="../Icons/Dashboard/icons8-collaborating-in-circle-100.png" alt=""><span>Partners</span></a></li>
                 </ul>
             </nav>
             <div class="sidebar-footer">
                 <ul>
-                    <li><a href="settings.php"><img src="../Icons/Dashboard/icons8-settings-100.png" alt=""><span>Settings</span></a></li>
+                    <li><a href="settings.php"><img src="../Icons/Dashboard/icons8-paramètres-100.png" alt=""><span>Settings</span></a></li>
                     <li><a href="admin_logOut.php"><img src="../Icons/Dashboard/icons8-sortie-100.png" alt=""><span>Logout</span></a></li>
                 </ul>
             </div>
@@ -252,36 +209,44 @@ hr{
                 <hr>
             </header>
 
+            <div class="profile-container">
+    <div class="welcome-banner">
+        Howdy, Blood Moon !
+    </div>
+
+    <form class="profile-form">
+        <div class="form-row">
+            <div class="form-group">
+                <label for="admin-name">Admin name</label>
+                <input type="text" id="admin-name" value="Blood Moon">
+            </div>
+            <div class="form-group">
+                <label for="email-address">Email address</label>
+                <input type="email" id="email-address" value="abcdefghijklmnopqrst@gmail.com" disabled>
+            </div>
+        </div>
+
+        <h2 class="form-section-title">Change password</h2>
+        
+        <div class="form-group">
+            <label for="current-password">Current password</label>
+            <input type="password" id="current-password" placeholder="">
+        </div>
+        <div class="form-group">
+            <label for="new-password">New password</label>
+            <input type="password" id="new-password" placeholder="">
+        </div>
+        <div class="form-group">
+            <label for="confirm-password">Confirm password</label>
+            <input type="password" id="confirm-password" placeholder="">
+        </div>
+
+        <button type="submit" class="change-btn">Change</button>
+    </form>
+</div>
+       
         </main>
     </div>
 
-    <!-- Link to your JavaScript file -->
-    <script>document.addEventListener('DOMContentLoaded', function() {
-    // Select all the main data rows in the table
-    const dataRows = document.querySelectorAll('.data-row');
-
-    // Add a click event listener to each data row
-    dataRows.forEach(row => {
-        row.addEventListener('click', () => {
-            // Find the detail row that immediately follows the clicked data row
-            const detailRow = row.nextElementSibling;
-            
-            // Check if the clicked row is already active
-            const isAlreadyActive = row.classList.contains('active-row');
-
-            // First, close all other open rows
-            document.querySelectorAll('.data-row').forEach(r => r.classList.remove('active-row'));
-            document.querySelectorAll('.detail-row').forEach(d => d.classList.add('hidden'));
-
-            // If the clicked row was NOT already active, open its details
-            if (!isAlreadyActive) {
-                row.classList.add('active-row');
-                if (detailRow && detailRow.classList.contains('detail-row')) {
-                    detailRow.classList.remove('hidden');
-                }
-            }
-        });
-    });
-});</script>
 </body>
 </html>

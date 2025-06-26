@@ -231,10 +231,10 @@ hr{
             </div>
             <nav class="sidebar-nav">
                 <ul>
-                    <li><a href="statistics.php"><img src="../Icons/Dashboard/" alt=""><span>Statistics</span></a></li>
-                    <li><a href="requests.php"><img src="../Icons/Dashboard/icons8-liste-de-tâches-100.png" alt=""><span>Requests</span></a></li>
+                    <li><a href="statistics.php"><img src="../Icons/Dashboard/increaseBlack.png"><span>Statistics</span></a></li>
+                    <li><a href="requests.php"><img src="../Icons/Dashboard/requests.png" alt=""><span>Requests</span></a></li>
                     <li><a href="clients.php"><img src="../Icons/Dashboard/utilisateur.png" alt=""><span>Clients</span></a></li>
-                    <li class="active"><a href="volunteers.php"><img src="../Icons/Dashboard/volunteer.png" alt=""><span>Volunteers</span></a></li>
+                    <li class="active"><a href="volunteers.php"><img src="../Icons/Dashboard/icons8-bénévolat-100.png" alt=""><span>Volunteers</span></a></li>
                     <li><a href="partners.php"><img src="../Icons/Dashboard/icons8-collaborating-in-circle-100.png" alt=""><span>Partners</span></a></li>
                 </ul>
             </nav>
