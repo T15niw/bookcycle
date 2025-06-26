@@ -1,3 +1,46 @@
+<?php
+$host = 'localhost';
+$dbname = 'bookcycle';
+$user = 'root';
+$password = ''; 
+
+try {
+    $conn = new PDO("mysql:host=$host;dbname=$dbname", $user, $password);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Connection failed: ");
+}
+
+// --- Function to get row count from a table ---
+// Using a WHERE clause is optional but useful for tables like partners/volunteers
+function get_table_count($pdo, $table_name, $where_clause = '') {
+    try {
+        $sql = "SELECT COUNT(*) FROM " . $table_name;
+        if (!empty($where_clause)) {
+            $sql .= " WHERE " . $where_clause;
+        }
+        $stmt = $pdo->query($sql);
+        return $stmt->fetchColumn();
+    } catch (PDOException $e) {
+        // In a real application, you should log this error instead of dying
+        // For now, we'll return 0 to prevent breaking the page.
+        error_log("Count failed for table $table_name: " . $e->getMessage());
+        return 0;
+    }
+}
+
+// --- Calculate all statistics ---
+$total_users = get_table_count($conn, 'client');
+$total_requests = get_table_count($conn, 'request_form');
+
+// For partners and volunteers, we need to count based on the 'type_of_collaboration' column
+// This assumes 'partners' and 'volunteers' might be in the same table in the future,
+// but based on your schema, they are in separate tables with a discriminator column.
+// We will query the correct table with the correct condition.
+$total_partners = get_table_count($conn, 'partners', "type_of_collaboration = 'partnership'");
+$total_volunteers = get_table_count($conn, 'volunteers', "type_of_collaboration = 'volunteering'");
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -25,24 +68,19 @@ body {
     min-height: 100vh;
 }
 .sidebar {
-    /* --- The Fix --- */
-    position: fixed; /* This is the key: it fixes the element to the viewport */
+    position: fixed;
     top: 0;
     left: 0;
-    height: 100vh; /* Make the sidebar always full height */
-    overflow-y: auto; /* Add a scrollbar ONLY to the sidebar if its content is too long */
-    width: 263px; /* We need to explicitly define the width now */
-    z-index: 100; /* Ensures the sidebar stays on top of other content */
-
-    /* --- Your existing styles (kept for consistency) --- */
-    flex: 0 0 208px;
+    height: 100vh;
+    overflow-y: auto;
+    width: 263px;
+    z-index: 100;
     background: var(--background-main, #FFF);
-        border: 1px solid var(--Stroke-Color, #EFF0F6);
+    border-right: 1px solid var(--border-color, #EFF0F6);
     display: flex;
     flex-direction: column;
     padding: 25px 35px 38px 18px;
-    border-radius: 20px; /* Note: you might want to change this */
-    box-sizing: border-box; /* Good practice to include this */
+    box-sizing: border-box;
 }
 .logo {
     margin-top: 10px;
@@ -82,150 +120,57 @@ body {
     width: 30px;
     height: 30px;
 }
-
-/* --- Main Content --- */
 .main-content {
-    /* --- The Fix --- */
-    margin-left: 263px; /* This pushes the content to the right, creating space for the sidebar */
-    
-    /* --- Your existing styles (kept for consistency) --- */
+    margin-left: 263px;
     flex-grow: 1;
     padding: 40px 32px;
     background-color: #F9F9F9;
 }
 .content-header h1 { font-size: 28px; font-weight: 700; margin: 0 0 15px 0; }
 hr { margin-bottom: 20px; border: 0; border-top: 1px solid #EFF0F6; }
-.filter-controls {
+.stats-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 24px;
+    margin-top: 20px;
+}
+.stat-card {
+    background-color: var(--background-main, #ffffff);
+    border-radius: 16px;
+    padding: 24px;
     display: flex;
-    gap: 55px;
-    margin-bottom: 24px;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid var(--border-color, #EFF0F6);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
 }
-.filter-group {
-    position: relative;
-}
-.filter-group label {
-    font-size: 12px;
-    font-weight: 300;
-    color: var(--text-secondary);
-    position: absolute;
-    top: -10px;
-    left: 8px;
-    padding: 32px 4px;
-}
-.filter-group select {
-    padding: 8px 32px 8px 12px;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    margin-top: 15px;
-    width: 100px;
-    font-family: 'Inter', sans-serif;
-    font-size: 0.9rem;
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%236b7280' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 10px center;
-}
-
-/* --- Table --- */
-.table-container {
-    background-color: var(--background-main);
-    border: 1px solid var(--border-color);
-    border-radius: 12px;
-    overflow: hidden;
-}
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-th, td {
-    padding: 16px 24px;
-    text-align: left;
-    font-size: 0.9rem;
-}
-th {
-    color: var(--text-secondary);
-    font-weight: 500;
-    text-transform: uppercase;
-    font-size: 0.75rem;
-    letter-spacing: 0.5px;
-}
-tbody tr.data-row {
-    border-bottom: 1px solid var(--border-color);
-    transition: background-color 0.2s ease;
-    cursor: pointer;
-}
-tbody tr.data-row:last-child {
-    border-bottom: none;
-}
-tbody tr.data-row:hover {
-    background-color: var(--background-light);
-}
-tbody tr.active-row {
-    background-color: #9dfd9a; /* Light blue to indicate active */
-}
-
-/* --- Tags/Pills --- */
-.tag {
-    display: inline-block;
-    padding: 6px 18px;
-    border-radius: 20px;
-    font-weight: 400;
-    font-size: 14px;
-}
-.tag-whatsapp { background-color: #e8f5e9; color: #25D366; }
-.tag-email { background-color: #e3f2fd; color: #5B93FF; }
-.tag-calls { background-color: #f3e5f5; color: #9116F9; }
-
-/* --- Action Buttons --- */
-.action-cell {
+.stat-info {
     display: flex;
+    flex-direction: column;
     gap: 8px;
 }
-.icon-button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 4px;
+.stat-label {
+    font-size: 15px;
+    color: var(--text-secondary, #414142);
+    font-weight: 500;
 }
-.icon-button img {
-    width: 18px;
-    height: 18px;
+.stat-value {
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--text-primary, black);
 }
-
-/* --- Expandable Detail View --- */
-.detail-row.hidden {
-    display: none;
+.stat-icon-wrapper {
+    background-color: rgba(50, 235, 42, 0.20);
+    width: 64px;
+    height: 64px;
+    border-radius: 14px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
-.detail-row td {
-    padding: 0;
-    background-color: #b0ffaf2c;
-}
-.detail-content {
-    padding: 24px;
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 12px;
-}
-.detail-item {
-    background-color: #fff;
-    padding: 16px;
-    border-radius: 8px;
-    border: 1px solid var(--border-color);
-}
-.detail-item.full-width {
-    grid-column: 1 / -1;
-}
-.detail-item label {
-    display: block;
-    font-size: 0.8rem;
-    font-weight: 400;
-    color: #747474;
-    margin-bottom: 8px;
-}
-.detail-item p {
-    margin: 0;
-    font-size: 0.9rem;
-    color: var(--text-primary);
+.stat-icon-wrapper img {
+    width: 32px;
+    height: 32px;
 }
     </style>
 </head>
@@ -234,12 +179,11 @@ tbody tr.active-row {
     <div class="dashboard">
         <aside class="sidebar">
             <div class="sidebar-header">
-
                 <img src="../logo/Logo black shadow.png"class="logo">
             </div>
             <nav class="sidebar-nav">
                 <ul>
-                    <li class="active"><a href="statistics.php"><img src="../Icons/Dashboard/increaseGreen (1).png" alt=""><span>Statistics</span></a></li>
+                    <li class="active"><a href="statistics.php"><img src="../Icons/Dashboard/increaseGreen (1).png" alt=""><span>Statistique</span></a></li>
                     <li><a href="requests.php"><img src="../Icons/Dashboard/icons8-liste-de-tâches-100.png" alt=""><span>Requests</span></a></li>
                     <li><a href="clients.php"><img src="../Icons/Dashboard/utilisateur.png" alt=""><span>Clients</span></a></li>
                     <li><a href="volunteers.php"><img src="../Icons/Dashboard/icons8-bénévolat-100.png" alt=""><span>Volunteers</span></a></li>
@@ -256,40 +200,56 @@ tbody tr.active-row {
 
         <main class="main-content">
             <header class="content-header">
-                <h1>Statistics</h1>
+                <h1>Statistiques</h1>
                 <hr>
             </header>
 
+            <div class="stats-container">
+                <!-- Stat Card 1: Total Users (Clients) -->
+                <div class="stat-card">
+                    <div class="stat-info">
+                        <span class="stat-label">Total Users</span>
+                        <span class="stat-value"><?php echo $total_users; ?></span>
+                    </div>
+                    <div class="stat-icon-wrapper">
+                        <img src="../Icons/Dashboard/utilisateur.png" alt="Users Icon">
+                    </div>
+                </div>
+
+                <!-- Stat Card 2: Total Requests -->
+                <div class="stat-card">
+                    <div class="stat-info">
+                        <span class="stat-label">Total Requests</span>
+                        <span class="stat-value"><?php echo $total_requests; ?></span>
+                    </div>
+                    <div class="stat-icon-wrapper">
+                        <img src="../Icons/Dashboard/icons8-liste-de-tâches-100.png" alt="Requests Icon">
+                    </div>
+                </div>
+
+                <!-- Stat Card 3: Total Partners -->
+                <div class="stat-card">
+                    <div class="stat-info">
+                        <span class="stat-label">Total Partners</span>
+                        <span class="stat-value"><?php echo $total_partners; ?></span>
+                    </div>
+                    <div class="stat-icon-wrapper">
+                        <img src="../Icons/Dashboard/icons8-collaborating-in-circle-100.png" alt="Partners Icon">
+                    </div>
+                </div>
+
+                <!-- Stat Card 4: Total Volunteers -->
+                <div class="stat-card">
+                    <div class="stat-info">
+                        <span class="stat-label">Total Volunteers</span>
+                        <span class="stat-value"><?php echo $total_volunteers; ?></span>
+                    </div>
+                    <div class="stat-icon-wrapper">
+                        <img src="../Icons/Dashboard/icons8-bénévolat-100.png" alt="Volunteers Icon">
+                    </div>
+                </div>
+            </div>
         </main>
     </div>
-
-    <!-- Link to your JavaScript file -->
-    <script>document.addEventListener('DOMContentLoaded', function() {
-    // Select all the main data rows in the table
-    const dataRows = document.querySelectorAll('.data-row');
-
-    // Add a click event listener to each data row
-    dataRows.forEach(row => {
-        row.addEventListener('click', () => {
-            // Find the detail row that immediately follows the clicked data row
-            const detailRow = row.nextElementSibling;
-            
-            // Check if the clicked row is already active
-            const isAlreadyActive = row.classList.contains('active-row');
-
-            // First, close all other open rows
-            document.querySelectorAll('.data-row').forEach(r => r.classList.remove('active-row'));
-            document.querySelectorAll('.detail-row').forEach(d => d.classList.add('hidden'));
-
-            // If the clicked row was NOT already active, open its details
-            if (!isAlreadyActive) {
-                row.classList.add('active-row');
-                if (detailRow && detailRow.classList.contains('detail-row')) {
-                    detailRow.classList.remove('hidden');
-                }
-            }
-        });
-    });
-});</script>
 </body>
 </html>

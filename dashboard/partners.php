@@ -334,11 +334,11 @@ hr { margin-bottom: 20px; border: 0; border-top: 1px solid #EFF0F6; }
 
             <div class="partners-table expandable-table">
                 <div class="table-header">
-                    <div class="header-cell">Name <svg width="8" height="5" viewBox="0 0 8 5" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 1L4 4L7 1" stroke="#414142" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-                    <div class="header-cell">City <svg width="8" height="5" viewBox="0 0 8 5" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 1L4 4L7 1" stroke="#414142" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-                    <div class="header-cell">Company name <svg width="8" height="5" viewBox="0 0 8 5" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 1L4 4L7 1" stroke="#414142" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-                    <div class="header-cell">Field of activity <svg width="8" height="5" viewBox="0 0 8 5" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 1L4 4L7 1" stroke="#414142" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-                    <div class="header-cell">Preferred contact method <svg width="8" height="5" viewBox="0 0 8 5" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 1L4 4L7 1" stroke="#414142" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                    <div class="header-cell">Name</div>
+                    <div class="header-cell">City  </div>
+                    <div class="header-cell">Company name  </div>
+                    <div class="header-cell">Field of activity  </div>
+                    <div class="header-cell">Preferred contact method  </div>
                     <div class="header-cell actions"></div>
                 </div>
 

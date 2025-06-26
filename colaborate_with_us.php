@@ -23,7 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $file_upload_error = false;
 
     if (isset($_FILES['uploaded_file']) && $_FILES['uploaded_file']['error'] == 0) {
-        $upload_dir = 'uploads/'; // Make sure this folder exists
+        $upload_dir = 'collaborate_form_uploaded_files/'; // Make sure this folder exists
         $unique_name = uniqid() . '-' . basename($_FILES['uploaded_file']['name']);
         $target_file = $upload_dir . $unique_name;
         
