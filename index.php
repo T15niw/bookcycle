@@ -65,7 +65,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         :pickup_address, 
                         :pickup_date, 
                         :additional_remarks, 
-                        'Received', 
+                        'processing', 
                         0.00
                     )";
             
