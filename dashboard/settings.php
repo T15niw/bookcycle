@@ -1,3 +1,97 @@
+<?php
+// --- 1. INITIALIZATION ---
+session_start();
+$host = 'localhost';
+$dbname = 'bookcycle';
+$user = 'root';
+$password = ''; 
+
+try {
+    $conn = new PDO("mysql:host=$host;dbname=$dbname", $user, $password);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Connection failed: " . $e->getMessage());
+}
+
+// Check if the admin is logged in. If not, redirect to the login page.
+// We'll assume the admin's email is stored in $_SESSION['admin_email'] after login.
+if (!isset($_SESSION['admin_email'])) {
+    header("Location: login.php"); // Change 'login.php' to your actual login page
+    exit();
+}
+
+$admin_email = $_SESSION['admin_email'];
+$message = ''; // To store success or error messages
+$message_type = ''; // 'success' or 'error'
+
+// --- 2. HANDLE FORM SUBMISSION (PASSWORD CHANGE) ---
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $current_password = $_POST['current_password'];
+    $new_password = $_POST['new_password'];
+    $confirm_password = $_POST['confirm_password'];
+
+    try {
+        // First, get the current hashed password from the database
+        $stmt = $conn->prepare("SELECT password FROM admin WHERE email_admin_ID = :email");
+        $stmt->bindParam(':email', $admin_email);
+        $stmt->execute();
+        $admin = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($admin && password_verify($current_password, $admin['password'])) {
+            // Current password is correct. Now validate the new password.
+            if (empty($new_password)) {
+                $message = "New password cannot be empty.";
+                $message_type = 'error';
+            } elseif (strlen($new_password) < 8) {
+                $message = "New password must be at least 8 characters long.";
+                $message_type = 'error';
+            } elseif ($new_password !== $confirm_password) {
+                $message = "New password and confirmation do not match.";
+                $message_type = 'error';
+            } else {
+                // All checks passed. Hash the new password and update the database.
+                $new_hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
+                
+                $update_stmt = $conn->prepare("UPDATE admin SET password = :password WHERE email_admin_ID = :email");
+                $update_stmt->bindParam(':password', $new_hashed_password);
+                $update_stmt->bindParam(':email', $admin_email);
+                
+                if ($update_stmt->execute()) {
+                    $message = "Password updated successfully!";
+                    $message_type = 'success';
+                } else {
+                    $message = "Failed to update password. Please try again.";
+                    $message_type = 'error';
+                }
+            }
+        } else {
+            // Current password entered by the user is incorrect.
+            $message = "Incorrect current password.";
+            $message_type = 'error';
+        }
+
+    } catch (PDOException $e) {
+        $message = "Database error: " . $e->getMessage();
+        $message_type = 'error';
+    }
+}
+
+// --- 3. FETCH CURRENT ADMIN DATA FOR DISPLAY ---
+try {
+    $stmt = $conn->prepare("SELECT admin_name, email_admin_ID FROM admin WHERE email_admin_ID = :email");
+    $stmt->bindParam(':email', $admin_email);
+    $stmt->execute();
+    $current_admin = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$current_admin) {
+        // This case should ideally not happen if session is managed properly
+        die("Could not find admin data. Please log out and log in again.");
+    }
+} catch (PDOException $e) {
+    die("Could not fetch admin data: " . $e->getMessage());
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -175,7 +269,25 @@ body {
 .change-btn:hover {
     background-color: #1a6b39; 
 }
+.profile-container { margin-top: 25px; }
 
+ .message-banner {
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            display: <?php echo empty($message) ? 'none' : 'block'; ?>;
+        }
+        .message-banner.success {
+            background-color: #E2F8E9;
+            color: #25D366;
+            border: 1px solid #25D366;
+        }
+        .message-banner.error {
+            background-color: #F8E2E2;
+            color: #D32525;
+            border: 1px solid #D32525;
+        }
     </style>
 </head>
 <body>
@@ -210,41 +322,45 @@ body {
             </header>
 
             <div class="profile-container">
-    <div class="welcome-banner">
-        Howdy, Blood Moon !
-    </div>
+                <!-- This message banner will appear on success or error -->
+                <div class="message-banner <?php echo $message_type; ?>">
+                    <?php echo htmlspecialchars($message); ?>
+                </div>
 
-    <form class="profile-form">
-        <div class="form-row">
-            <div class="form-group">
-                <label for="admin-name">Admin name</label>
-                <input type="text" id="admin-name" value="Blood Moon">
+                <div class="welcome-banner">
+                    Howdy, <?php echo htmlspecialchars($current_admin['admin_name']); ?>!
+                </div>
+
+                <form class="profile-form" method="POST" action="settings.php">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="admin-name">Admin name</label>
+                            <input type="text" id="admin-name" value="<?php echo htmlspecialchars($current_admin['admin_name']); ?>" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="email-address">Email address</label>
+                            <input type="email" id="email-address" value="<?php echo htmlspecialchars($current_admin['email_admin_ID']); ?>" disabled>
+                        </div>
+                    </div>
+
+                    <h2 class="form-section-title">Change password</h2>
+                    
+                    <div class="form-group">
+                        <label for="current-password">Current password</label>
+                        <input type="password" id="current-password" name="current_password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="new-password">New password</label>
+                        <input type="password" id="new-password" name="new_password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirm-password">Confirm password</label>
+                        <input type="password" id="confirm-password" name="confirm_password" required>
+                    </div>
+
+                    <button type="submit" class="change-btn">Change</button>
+                </form>
             </div>
-            <div class="form-group">
-                <label for="email-address">Email address</label>
-                <input type="email" id="email-address" value="abcdefghijklmnopqrst@gmail.com" disabled>
-            </div>
-        </div>
-
-        <h2 class="form-section-title">Change password</h2>
-        
-        <div class="form-group">
-            <label for="current-password">Current password</label>
-            <input type="password" id="current-password" placeholder="">
-        </div>
-        <div class="form-group">
-            <label for="new-password">New password</label>
-            <input type="password" id="new-password" placeholder="">
-        </div>
-        <div class="form-group">
-            <label for="confirm-password">Confirm password</label>
-            <input type="password" id="confirm-password" placeholder="">
-        </div>
-
-        <button type="submit" class="change-btn">Change</button>
-    </form>
-</div>
-       
         </main>
     </div>
 
