@@ -120,42 +120,49 @@ session_start();
     padding: 65px 70px;
     font-family: 'Lexend', sans-serif;
 }
+
 .ourValues .values_div {
     flex: 1.2;
     display: flex;
     flex-direction: column;
     gap: 30px;
-    /* min-width: 600px; */
 }
+
 .value {
     display: flex;
-    align-items: flex-start;
+    /* This ensures the icon aligns with the top of the text block */
+    align-items: flex-start; 
     gap: 18px;
 }
+
 .value img {
     width: 60px;
-    height: 60px; /*auto*/
-    /* flex-shrink: 0; */
-    margin-top: 5px;
+    height: auto;
+    flex-shrink: 0; /* Prevents the icon from shrinking */
 }
+
 .value h3 {
-    font-size: 35px;
-    font-weight:600;
+    /* Slightly adjusted font-size for better balance */
+    font-size: 32px; 
+    font-weight: 600;
     color: black;
     margin: 0 0 8px 0;
 }
+
 .value p {
-    font-size: 25px;
+    /* Slightly adjusted font-size and line-height for readability */
+    font-size: 22px; 
     font-weight: 300;
     color: black;
-    line-height: 1.2;
+    /* Increased line-height to match the maquette's spacing */
+    line-height: 1.4; 
     margin: 0;
 }
+
 .ourValues .ourValuesTitle {
     flex: 0.8;
     height: 500px;
-    /* min-width: 500px; */
-    background-image: url('Photos/about_us/our\ values.png');
+    background-image: url('Photos/about_us/our values.png');
     background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
@@ -163,8 +170,8 @@ session_start();
     justify-content: center;
     align-items: center;
     text-align: center;
-    /* position: relative; */
 }
+
 .ourValues .ourValuesTitle h2 {
     color: black;
     font-size: 60px;
@@ -404,28 +411,37 @@ font-weight: 700;
             <p>Every year, tons of school books go to waste. At BookCycle, we give them a second life. <br>By reusing and recycling school books, we reduce paper waste, and protect our planet, one book at a time.</p>
         </div>
     </section>
-    <section class="ourValues">
-        <div class="values_div">
-            <div class="value">
-            <img src="Icons/UI/about_us/icons8-protection-de-l'environnement-100.png" alt="">
-            <h3>Sustainability</h3>
-            <p>We protect the planet by reducing paper waste while promoting recycling.</p>
-            </div> 
-            <div class="value">
-            <img src="Icons/UI/about_us/icons8-poignée-de-main-100.png" alt="">
-            <h3>Integrity</h3>
-            <p>We operate with honesty and transparency at every step.</p>
-            </div>
-            <div class="value">
-            <img src="Icons/UI/about_us/icons8-coup-de-poing-avant-100.png" alt="">
-            <h3>Empowerment</h3>
-            <p>We encourage everyone to make a difference by donating, volunteering, or partnering with us.</p>
+   <section class="ourValues">
+    <div class="values_div">
+        <div class="value">
+            <img src="Icons/UI/about_us/icons8-protection-de-l'environnement-100.png" alt="Sustainability Icon">
+            <!-- This wrapper groups the heading and paragraph -->
+            <div class="value-text">
+                <h3>Sustainability</h3>
+                <p>We protect the planet by reducing paper waste while promoting recycling.</p>
             </div>
         </div>
-        <div class="ourValuesTitle">
-            <h2>Our <br> Values</h2>
+        <div class="value">
+            <img src="Icons/UI/about_us/icons8-poignée-de-main-100.png" alt="Integrity Icon">
+            <!-- This wrapper groups the heading and paragraph -->
+            <div class="value-text">
+                <h3>Integrity</h3>
+                <p>We operate with honesty and transparency at every step.</p>
+            </div>
         </div>
-    </section>
+        <div class="value">
+            <img src="Icons/UI/about_us/icons8-coup-de-poing-avant-100.png" alt="Empowerment Icon">
+            <!-- This wrapper groups the heading and paragraph -->
+            <div class="value-text">
+                <h3>Empowerment</h3>
+                <p>We encourage everyone to make a difference by donating, volunteering, or partnering with us.</p>
+            </div>
+        </div>
+    </div>
+    <div class="ourValuesTitle">
+        <h2>Our <br> Values</h2>
+    </div>
+</section>
     <section class="ourVision">
         <div class="ourVisionTitle">
             <h2>Our <br> vision</h2>
