@@ -1,9 +1,45 @@
-<?php include 'include/db_connect.php';
+<?php
+// --- DATABASE CONNECTION AND SESSION START ---
+$host = 'localhost';
+$dbname = 'bookcycle';
+$user = 'root';
+$password = '';
+
+try {
+    $conn = new PDO("mysql:host=$host;dbname=$dbname", $user, $password);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Connection failed: " . $e->getMessage());
+}
+
 session_start();
-// SECURITY CHECK: If the user is NOT logged in, redirect them to the login page
+
+// --- SECURITY CHECK ---
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     header('Location: logIn.php');
-    exit; // Stop the script from running further
+    exit;
+}
+
+// --- LOGIC TO FETCH THE LATEST REQUEST STATUS ---
+$requestStatus = null; // Default value
+
+// Check for the session variable from your logIn.php (it's 'email')
+if (isset($_SESSION['email']) && !empty($_SESSION['email'])) {
+    $email = $_SESSION['email'];
+
+    $stmt = $conn->prepare(
+        "SELECT status FROM request_form 
+         WHERE email_client_ID = :email 
+         ORDER BY submission_date DESC 
+         LIMIT 1"
+    );
+    $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+    $stmt->execute();
+
+    if ($stmt->rowCount() > 0) {
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $requestStatus = $result['status'];
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -99,7 +135,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
 .progress-line-fill {
     background-color: #277448;
     width: 0;
-    transition: width 0.6s ease-in-out;
+    transition: width 0.6s ease-in-out, background-color 0.6s ease-in-out;
 }
 .step {
     display: flex;
@@ -115,6 +151,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     height: 65px;
     margin-bottom: 10px;
     transition: filter 0.4s ease;
+    filter: grayscale(100%) opacity(0.7); /* Grayscale by default */
 }
 .icon-circle {
     width: 80px;
@@ -138,12 +175,11 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     opacity: 0; /* Hide text by default */
     visibility: hidden;
     transition: opacity 0.4s ease-in-out, visibility 0.4s;
+    min-height: 35px; /* Reserve space to prevent layout jumps */
 }
 .step.active .step-title,
-.step.active .step-description,
-.step.completed .step-title,
-.step.completed .step-description {
-    opacity: 1; /* Show text for active and completed steps */
+.step.active .step-description {
+    opacity: 1; /* Show text for active step */
     visibility: visible;
 }
 .step h3 {
@@ -159,6 +195,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     font-weight: 200;
     color: black;
     max-width: 200px;
+    line-height: 1.4;
     text-shadow: 0px 3px 3px rgba(255, 255, 255, 0.4);
 }
 .step.active .icon-circle {
@@ -166,71 +203,55 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     border-color: #277448;
     color: #fff;
 }
-
 .step.active .step-icon-main {
     filter: none; /* Removes grayscale to show full color */
 }
-
-/* Style for a COMPLETED step */
 .step.completed .icon-circle {
     border-color: #277448;
 }
-
 .step.completed .step-icon-main {
     filter: none;
-    color: #277448;
 }
-
-/* When a step is completed, hide the number and show the checkmark */
 .step.completed .step-number {
     display: none;
 }
 .step.completed .checkmark-icon {
     display: block;
 }
-
-
-/* --- NEW 'CANCELED' STATE --- */
 .step.canceled .icon-circle {
     border-color: #d9534f; /* Red color for canceled */
     background-color: #fff;
 }
-.step.canceled .step-icon-main {
-    filter: grayscale(100%) opacity(0.5); /* Keep main icon gray */
-}
 .step.canceled .step-number { display: none; }
-.step.canceled .checkmark-icon { display: none; } /* Hide checkmark */
+.step.canceled .checkmark-icon { display: none; }
 .step.canceled .cancel-icon { display: block; }
 
-
-
-
+#no-request-message {
+    text-align: center;
+    font-size: 20px;
+    color: #333;
+    margin-top: 50px;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 8px;
+}
+#no-request-message a {
+    color: #238649;
+    font-weight: 600;
+    text-decoration: underline;
+}
     </style>
 </head>
 <body>
     <header>
        <div class="navbar">
-        <a href="index.php"
-          ><img src="logo/Logo black shadow.png" alt="Logo"
-        /></a>
+        <a href="index.php"><img src="logo/Logo black shadow.png" alt="Logo"/></a>
         <nav>
           <ul>
             <li><a href="progress.php" target="_self" class="navItems">Progress</a></li>
-            <li>
-              <a href="colaborate_with_us.php" target="_self" class="navItems"
-                >Collaborate with us</a
-              >
-            </li>
-            <li>
-              <a href="about_us.php" target="_self" class="navItems"
-                >About us</a
-              >
-            </li>
-            <li>
-              <a href="contact_us.php" target="_self" class="navItems"
-                >Contact us</a
-              >
-            </li>
+            <li><a href="colaborate_with_us.php" target="_self" class="navItems">Collaborate with us</a></li>
+            <li><a href="about_us.php" target="_self" class="navItems">About us</a></li>
+            <li><a href="contact_us.php" target="_self" class="navItems">Contact us</a></li>
             <li><a href="profile.php"><img src="Icons/UI/Progress/icons8-utilisateur-100.png" class="img"></a></li>
           </ul>
         </nav>
@@ -238,10 +259,14 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
 </header>
     <main class="book-pickup-status">
         <h1>Your Book Pickup Progress</h1>
+
+        <!-- Container for the "No Request" message -->
+        <div id="no-request-message" style="display: none;">
+            <p>You haven't made a request yet. <br> Please <a href="index.php">fill the request form</a> to track your request.</p>
+        </div>
+
         <div class="progress-container" id="progressBar">
-
             <div class="progress-line-bg"></div>
-
             <div class="progress-line-fill" id="progressFill"></div>
         
             <!-- Step 1 -->
@@ -279,116 +304,91 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     </main>
     <script>
     document.addEventListener('DOMContentLoaded', () => {
-
-    const allSteps = document.querySelectorAll('.step');
-    const progressFill = document.getElementById('progressFill');
-
-    // --- NEW: DATA STRUCTURE FOR TEXT CONTENT ---
-    const stepData = [
-        { // Step 1
-            title: "Request Received",
-            description: "We’re reviewing your information and will confirm soon."
-        },
-        { // Step 2
-            title: "Pickup Scheduled",
-            description: "Please check your email for more details regarding the pickup."
-        },
-        { // Step 3
-            title: "On the Way",
-            description: "Our team is heading to your location now, please keep your books ready."
-        },
-        { // Step 4 - Has multiple final states
-            title: "Status", // A generic title
-            description: "", // Empty description
-            finalStates: {
-                collected: {
-                    title: "Books collected",
-                    description: "Thank you for contributing to a cleaner planet!"
-                },
-                canceled: {
-                    title: "Pickup Canceled",
-                    description: "There was an issue with the pickup. Please contact support."
+        const allSteps = document.querySelectorAll('.step');
+        const progressFill = document.getElementById('progressFill');
+        const stepData = [
+            { title: "Request Received", description: "We're reviewing your information and will confirm soon." },
+            { title: "Pickup Scheduled", description: "Please check your email for more details regarding the pickup." },
+            { title: "On the Way", description: "Our team is heading to your location now, please keep your books ready." },
+            { 
+                finalStates: {
+                    collected: { title: "Books Collected", description: "Thank you for contributing to a cleaner planet!" },
+                    canceled: { title: "Pickup Canceled", description: "There was an issue with your request." }
                 }
             }
-        }
-    ];
+        ];
 
-    /**
-     * Updates the progress bar UI.
-     * @param {number} currentStep - The current active step (e.g., 1, 2, 3, or 4).
-     * @param {string|null} finalStatus - The status for the last step ('collected', 'canceled', etc.).
-     */
-    function updateProgress(currentStep, finalStatus = null) {
-        const totalSteps = allSteps.length;
-        if (currentStep < 1) currentStep = 1;
-        if (currentStep > totalSteps) currentStep = totalSteps;
+        function updateProgress(currentStep, finalStatus = null) {
+            const totalSteps = allSteps.length;
+            if (currentStep < 1 || currentStep > totalSteps) return;
 
-        allSteps.forEach((step, index) => {
-            const stepNumber = index + 1;
-            const titleEl = step.querySelector('.step-title');
-            const descriptionEl = step.querySelector('.step-description');
+            allSteps.forEach((step, index) => {
+                const stepNumber = index + 1;
+                const titleEl = step.querySelector('.step-title');
+                const descriptionEl = step.querySelector('.step-description');
 
-            // --- Reset states and text content ---
-            step.classList.remove('active', 'completed', 'canceled');
-            titleEl.textContent = '';
-            descriptionEl.textContent = '';
+                step.classList.remove('active', 'completed', 'canceled');
 
-            // --- Set visual state (classes) ---
-            if (stepNumber < currentStep) {
-                step.classList.add('completed');
-            } else if (stepNumber === currentStep) {
-                step.classList.add('active');
-            }
-            
-            // --- Set text content based on state ---
-            if (step.classList.contains('completed') || step.classList.contains('active')) {
-                // Handle special case for the last step
-                if (stepNumber === totalSteps && finalStatus) {
-                    step.classList.remove('active'); // Final step is never 'active', it's a final state.
-                    step.classList.add('completed'); // Mark as completed visually
-                    
-                    if (stepData[index].finalStates[finalStatus]) {
-                        titleEl.textContent = stepData[index].finalStates[finalStatus].title;
-                        descriptionEl.textContent = stepData[index].finalStates[finalStatus].description;
+                // Set visual state for circles and top icons
+                if (stepNumber < currentStep) {
+                    step.classList.add('completed');
+                } else if (stepNumber === currentStep) {
+                    if (finalStatus) {
+                        step.classList.add('completed'); // Final step is visually 'completed'
                         if (finalStatus === 'canceled') {
-                             step.classList.add('canceled');
+                            step.classList.add('canceled');
                         }
+                    } else {
+                        step.classList.add('active');
                     }
-                } else {
-                    // Standard text for steps 1, 2, 3
-                    titleEl.textContent = stepData[index].title;
-                    descriptionEl.textContent = stepData[index].description;
                 }
+                
+                // Show text ONLY for the currently active/final step
+                if (stepNumber === currentStep) {
+                    step.classList.add('active'); // This class controls text visibility
+                    if (finalStatus) {
+                        const state = stepData[index].finalStates[finalStatus];
+                        if (state) {
+                            titleEl.textContent = state.title;
+                            descriptionEl.textContent = state.description;
+                        }
+                    } else {
+                        titleEl.textContent = stepData[index].title;
+                        descriptionEl.textContent = stepData[index].description;
+                    }
+                }
+            });
+            
+            const progressTarget = (finalStatus) ? totalSteps : currentStep;
+            const progressPercentage = ((progressTarget - 1) / (totalSteps - 1)) * 100;
+            progressFill.style.width = `${progressPercentage}%`;
+            progressFill.style.backgroundColor = (finalStatus === 'canceled') ? '#d9534f' : '#277448';
+        }
+
+        // --- PHP TO JAVASCRIPT BRIDGE ---
+        const requestStatus = <?php echo json_encode($requestStatus); ?>;
+        const progressBar = document.getElementById('progressBar');
+        const noRequestMessage = document.getElementById('no-request-message');
+
+        if (requestStatus === null) {
+            progressBar.style.display = 'none';
+            noRequestMessage.style.display = 'block';
+        } else {
+            progressBar.style.display = 'flex';
+            noRequestMessage.style.display = 'none';
+            let stepToActivate = 0;
+            let finalState = null;
+            switch (requestStatus) {
+                case 'processing': stepToActivate = 1; break;
+                case 'scheduled': stepToActivate = 2; break;
+                case 'in transit': stepToActivate = 3; break;
+                case 'collected': stepToActivate = 4; finalState = 'collected'; break;
+                case 'canceled': stepToActivate = 4; finalState = 'canceled'; break;
+                default: stepToActivate = 1; // Default to first step
             }
-        });
-        
-        // --- Update progress line ---
-        // The line should be full if a final status is given, otherwise it goes to the active step.
-        const progressTarget = finalStatus ? totalSteps : currentStep;
-        const progressPercentage = ((progressTarget - 1) / (totalSteps - 1)) * 100;
-        progressFill.style.width = `${progressPercentage}%`;
-        // Make the line red if canceled
-        progressFill.style.backgroundColor = (finalStatus === 'canceled') ? '#d9534f' : '#277448';
-    }
-
-    // --- HOW TO USE IT (EXAMPLES) ---
-    // Your backend will provide the status. You call the function accordingly.
-
-    // Example 1: Pickup is scheduled (Step 2 is active)
-    // updateProgress(2);
-
-    // Example 2: Team is on the way (Step 3 is active)
-    updateProgress(3);
-
-    // Example 3: Books have been successfully collected
-    // updateProgress(4, 'collected');
-    
-    // Example 4: Pickup was canceled
-    // updateProgress(4, 'canceled');
-    
-    // Example 5: Initial state (Step 1 is active, no text shown for other steps)
-    // updateProgress(1);
-});
-</script>
+            updateProgress(stepToActivate, finalState);
+        }
+    });
+    </script>
 </body>
 </html>

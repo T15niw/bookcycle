@@ -16,7 +16,7 @@ try {
 // Check if the admin is logged in. If not, redirect to the login page.
 // We'll assume the admin's email is stored in $_SESSION['admin_email'] after login.
 if (!isset($_SESSION['admin_email'])) {
-    header("Location: login.php"); // Change 'login.php' to your actual login page
+    header("Location: admin_logIn.php"); // Change 'login.php' to your actual login page
     exit();
 }
 
