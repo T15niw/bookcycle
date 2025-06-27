@@ -116,19 +116,22 @@ if (isset($_SESSION['email']) && !empty($_SESSION['email'])) {
     font-weight: 900;
 }
 .progress-container {
-    display: flex;
-    justify-content: space-between;
-    position: relative;
-    margin-bottom: 30px;
-}
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            margin-bottom: 30px;
+            margin-left: auto;
+            margin-right: auto;
+            width: 85%; /* Adjust width to control line length */
+        }
 .progress-line-bg, .progress-line-fill {
-    position: absolute;
-    top: 115px;
-    left: 0;
-    height: 3px;
-    width: 100%;
-    z-index: 1;
-}
+            position: absolute;
+            top: 115px;
+            left: 0;
+            height: 3px;
+            width: 100%;
+            z-index: 1;
+        }
 .progress-line-bg {
     background-color: #e0e0e0;
 }
@@ -138,14 +141,13 @@ if (isset($_SESSION['email']) && !empty($_SESSION['email'])) {
     transition: width 0.6s ease-in-out, background-color 0.6s ease-in-out;
 }
 .step {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    flex-basis: 25%;
-    position: relative;
-    z-index: 2;
-    text-align: center;
-}
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+            text-align: center;
+        }
 .step-icon-main {
     width: 65px;
     height: 65px;
@@ -207,8 +209,10 @@ if (isset($_SESSION['email']) && !empty($_SESSION['email'])) {
     filter: none; /* Removes grayscale to show full color */
 }
 .step.completed .icon-circle {
-    border-color: #277448;
-}
+            border-color: #277448;
+            background-color: #fff;
+            color: #238649;
+        }
 .step.completed .step-icon-main {
     filter: none;
 }
@@ -328,13 +332,16 @@ if (isset($_SESSION['email']) && !empty($_SESSION['email'])) {
                 const descriptionEl = step.querySelector('.step-description');
 
                 step.classList.remove('active', 'completed', 'canceled');
+                titleEl.textContent = ''; 
+                descriptionEl.textContent = ''; 
 
-                // Set visual state for circles and top icons
+                // Set visual state
                 if (stepNumber < currentStep) {
                     step.classList.add('completed');
                 } else if (stepNumber === currentStep) {
+                    // CHANGE 5: The final step (collected or canceled) is 'completed', not 'active'
                     if (finalStatus) {
-                        step.classList.add('completed'); // Final step is visually 'completed'
+                        step.classList.add('completed');
                         if (finalStatus === 'canceled') {
                             step.classList.add('canceled');
                         }
@@ -345,7 +352,8 @@ if (isset($_SESSION['email']) && !empty($_SESSION['email'])) {
                 
                 // Show text ONLY for the currently active/final step
                 if (stepNumber === currentStep) {
-                    step.classList.add('active'); // This class controls text visibility
+                    // Make the text visible by adding the .active class, which controls opacity
+                    step.classList.add('active'); 
                     if (finalStatus) {
                         const state = stepData[index].finalStates[finalStatus];
                         if (state) {
@@ -359,13 +367,12 @@ if (isset($_SESSION['email']) && !empty($_SESSION['email'])) {
                 }
             });
             
-            const progressTarget = (finalStatus) ? totalSteps : currentStep;
-            const progressPercentage = ((progressTarget - 1) / (totalSteps - 1)) * 100;
+            // CHANGE 6: Adjust the width calculation for the line
+            const progressPercentage = ((currentStep - 1) / (totalSteps - 1)) * 100;
             progressFill.style.width = `${progressPercentage}%`;
             progressFill.style.backgroundColor = (finalStatus === 'canceled') ? '#d9534f' : '#277448';
         }
 
-        // --- PHP TO JAVASCRIPT BRIDGE ---
         const requestStatus = <?php echo json_encode($requestStatus); ?>;
         const progressBar = document.getElementById('progressBar');
         const noRequestMessage = document.getElementById('no-request-message');
@@ -384,7 +391,7 @@ if (isset($_SESSION['email']) && !empty($_SESSION['email'])) {
                 case 'in transit': stepToActivate = 3; break;
                 case 'collected': stepToActivate = 4; finalState = 'collected'; break;
                 case 'canceled': stepToActivate = 4; finalState = 'canceled'; break;
-                default: stepToActivate = 1; // Default to first step
+                default: stepToActivate = 1;
             }
             updateProgress(stepToActivate, finalState);
         }
