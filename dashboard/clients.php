@@ -1,4 +1,5 @@
 <?php
+
 $host = 'localhost';
 $dbname = 'bookcycle';
 $user = 'root';
@@ -11,31 +12,29 @@ try {
     die("Connection failed: " . $e->getMessage());
 }
 
-// --- 1. HANDLE DELETE REQUEST ---
-// This block must be before any HTML is outputted.
+// delete client
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_client_id'])) {
     $client_id_to_delete = $_POST['delete_client_id'];
 
     try {
-        // Use the correct table name 'client' and primary key 'email_client_ID'
         $sql = "DELETE FROM client WHERE email_client_ID = :id";
         $stmt = $conn->prepare($sql);
         $stmt->bindParam(':id', $client_id_to_delete, PDO::PARAM_STR);
         $stmt->execute();
 
-        // Redirect to the same page to prevent form resubmission on refresh
+        //redirect to the same page
         header("Location: clients.php");
         exit();
     } catch (PDOException $e) {
-        // Handle error, maybe log it or show a generic error message
+        // error 404
         die("Error deleting record: " . $e->getMessage());
     }
 }
 
 
-// --- 2. FETCH CLIENT DATA ---
+// fetch client data
 try {
-    // Select all records from the 'client' table
+    // select all client data 
     $stmt = $conn->prepare("SELECT * FROM client ORDER BY first_name, last_name ASC");
     $stmt->execute();
     $clients = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -43,7 +42,7 @@ try {
     die("Could not fetch clients: " . $e->getMessage());
 }
 
-// Helper function to get the correct CSS class and text for the contact pill
+// Correct CSS style class
 function get_contact_pill_info($method) {
     switch (strtolower($method)) {
         case 'whatsapp':
@@ -66,162 +65,199 @@ function get_contact_pill_info($method) {
     <title>Clients</title>
     <link rel="icon" href="../logo/bookcycle.png" type="image/x-icon" />
     <style>
-            @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Lexend:wght@100..900&display=swap');
-:root {
-            --primary-green: #32eb2a;
-            --light-green-bg: rgba(50, 235, 42, 0.30);
-            --text-primary: black;
-            --text-secondary: #414142;
-            --border-color: #e5e7eb;
-            --background-main: #ffffff;
-        }
-body { margin: 0; font-family: "Lexend", sans-serif; background-color: #F9F9F9; color: var(--text-primary); }
-        .dashboard { min-height: 100vh; }
-.sidebar {
-    /* --- The Fix --- */
-    position: fixed; /* This is the key: it fixes the element to the viewport */
-    top: 0;
-    left: 0;
-    height: 100vh; /* Make the sidebar always full height */
-    overflow-y: auto; /* Add a scrollbar ONLY to the sidebar if its content is too long */
-    width: 263px; /* We need to explicitly define the width now */
-    z-index: 100; /* Ensures the sidebar stays on top of other content */
+    @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Lexend:wght@100..900&display=swap');
+    :root {
+                --primary-green: #32eb2a;
+                --light-green-bg: rgba(50, 235, 42, 0.30);
+                --text-primary: black;
+                --text-secondary: #414142;
+                --border-color: #e5e7eb;
+                --background-main: #ffffff;
+            }
+    body { margin: 0; font-family: "Lexend", sans-serif; background-color: #F9F9F9; color: var(--text-primary); }
+    .dashboard { 
+        min-height: 100vh; 
+    }
+/*******************SideBar****************************** */
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        overflow-y: auto;
+        width: 263px;
+        z-index: 100;
+        flex: 0 0 208px;
+        background: var(--background-main, #FFF);
+        border: 1px solid var(--Stroke-Color, #EFF0F6);
+        display: flex;
+        flex-direction: column;
+        padding: 25px 35px 38px 18px;
+        border-radius: 20px;
+        box-sizing: border-box;
+    }        
+    .logo { 
+        margin-top: 10px; 
+        margin-bottom: 15px; 
+        margin-left: 18px; 
+        height: 45px; 
+    }        
+    .sidebar-nav { 
+        flex-grow: 1; 
+    }
+    .sidebar ul { 
+        list-style: none; 
+        padding: 0; 
+        margin: 0; 
+    }
+    .sidebar-nav li a, .sidebar-footer li a { 
+        display: flex; 
+        align-items: center; 
+        gap: 12px; 
+        padding: 12px 16px; 
+        border-radius: 5px; 
+        text-decoration: none; 
+        color: var(--text-secondary); 
+        font-size: 16px; 
+        font-weight: 500; 
+        transition: background-color 0.2s ease; 
+    }
+    .sidebar-nav li a:hover, .sidebar-footer li a:hover { 
+        background-color: #F9F9F9; 
+        color: var(--text-primary); 
+    }
+    .sidebar-nav li.active a { 
+        background-color: var(--light-green-bg); 
+        color: var(--primary-green); 
+    }
+    .sidebar-nav img, .sidebar-footer img { 
+        width: 30px; 
+        height: 30px; 
+    }
+/**********************Mian content******************* */
+    .main-content {
+        margin-left: 263px;
+        flex-grow: 1;
+        padding: 40px 32px;
+        background-color: #F9F9F9;
+    }        
+    .content-header h1 { 
+        font-size: 28px; 
+        font-weight: 700; 
+        margin: 0 0 15px 0; 
+    }
+    hr { 
+        margin-bottom: 20px; 
+        border: 0; 
+        border-top: 1px solid #EFF0F6; 
+    }
 
-    /* --- Your existing styles (kept for consistency) --- */
-    flex: 0 0 208px;
-    background: var(--background-main, #FFF);
-    border: 1px solid var(--Stroke-Color, #EFF0F6);
-    display: flex;
-    flex-direction: column;
-    padding: 25px 35px 38px 18px;
-    border-radius: 20px; /* Note: you might want to change this */
-    box-sizing: border-box; /* Good practice to include this */
-}        .logo { margin-top: 10px; margin-bottom: 15px; margin-left: 18px; height: 45px; }
-        .sidebar-nav { flex-grow: 1; }
-        .sidebar ul { list-style: none; padding: 0; margin: 0; }
-        .sidebar-nav li a, .sidebar-footer li a { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 5px; text-decoration: none; color: var(--text-secondary); font-size: 16px; font-weight: 500; transition: background-color 0.2s ease; }
-        .sidebar-nav li a:hover, .sidebar-footer li a:hover { background-color: #F9F9F9; color: var(--text-primary); }
-        .sidebar-nav li.active a { background-color: var(--light-green-bg); color: var(--primary-green); }
-        .sidebar-nav img, .sidebar-footer img { width: 30px; height: 30px; }
-.main-content {
-    /* --- The Fix --- */
-    margin-left: 263px; /* This pushes the content to the right, creating space for the sidebar */
-    
-    /* --- Your existing styles (kept for consistency) --- */
-    flex-grow: 1;
-    padding: 40px 32px;
-    background-color: #F9F9F9;
-}        .content-header h1 { font-size: 28px; font-weight: 700; margin: 0 0 15px 0; }
-        hr { margin-bottom: 20px; border: 0; border-top: 1px solid #EFF0F6; }
+/***********************clients table************************ */
+    .clients-table {
+        width: 100%;
+    }
+    .table-header,
+    .table-row {
+        display: grid;
+        align-items: center;
+        grid-template-columns: 1.2fr 1.8fr 1.2fr 1fr 1.5fr 0.3fr;
+    }
 
+    .table-header {
+        padding: 0 20px;
+        margin-bottom: 15px;
+    }
+    .header-cell {
+        color: var(--text-secondary, #414142);
+        font-size: 14px;
+        font-weight: 500;
+        text-align: left;
+        padding: 10px 8px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .header-cell.actions {
+        justify-content: flex-end;
+    }
+    .table-body {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+    .table-row {
+        background-color: var(--background-main, #ffffff);
+        border-radius: 12px;
+        box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.05);
+        padding: 12px 20px;
+        transition: box-shadow 0.2s ease-in-out;
+    }
+    .table-row:hover {
+        box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.07);
+    }
+    .table-cell {
+        padding: 10px 8px;
+        font-size: 15px;
+        color: var(--text-primary, black);
+        font-weight: 500;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .contact-pill {
+        display: inline-block;
+        padding: 6px 16px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 500;
+        text-align: center;
+    }
+    .pill-whatsapp {
+        background-color: #E2F8E9;
+        color: #25D366;
+    }
+    .pill-email {
+        background-color: #F1E4FF;
+        color: #9116F9;
+    }
+    .pill-calls {
+        background-color: #E6EEFF;
+        color: #5B93FF;
+    }
 
-.clients-table {
-    width: 100%;
-}
-
-.table-header,
-.table-row {
-    display: grid;
-    align-items: center;
-    /* Grid layout for columns */
-    grid-template-columns: 1.2fr 1.8fr 1.2fr 1fr 1.5fr 0.3fr;
-}
-
-.table-header {
-    padding: 0 20px;
-    margin-bottom: 15px;
-}
-
-.header-cell {
-    color: var(--text-secondary, #414142);
-    font-size: 14px;
-    font-weight: 500;
-    text-align: left;
-    padding: 10px 8px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.header-cell.actions {
-    justify-content: flex-end;
-}
-
-.table-body {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.table-row {
-    background-color: var(--background-main, #ffffff);
-    border-radius: 12px;
-    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.05);
-    padding: 12px 20px;
-    transition: box-shadow 0.2s ease-in-out;
-}
-.table-row:hover {
-    box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.07);
-}
-
-.table-cell {
-    padding: 10px 8px;
-    font-size: 15px;
-    color: var(--text-primary, black);
-    font-weight: 500;
-    /* For long emails or names */
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-.contact-pill {
-    display: inline-block;
-    padding: 6px 16px;
-    border-radius: 20px;
-    font-size: 13px;
-    font-weight: 500;
-    text-align: center;
-}
-.pill-whatsapp {
-    background-color: #E2F8E9;
-    color: #25D366;
-}
-.pill-email {
-    background-color: #F1E4FF;
-    color: #9116F9;
-}
-.pill-calls {
-    background-color: #E6EEFF;
-    color: #5B93FF;
-}
-
-.row-actions {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-}
-
-.icon.bin {
-    cursor: pointer;
-    transition: transform 0.2s ease;
-}
-.bin:hover {
-    transform: scale(1.1);
-}
-.bin{
-     width: 18px;
-    height: 18px;
-}
-.delete-form { display: inline-block; line-height: 0; }
-        .delete-button { background: none; border: none; padding: 0; cursor: pointer; }
+    .row-actions {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+    }
+    .icon.bin {
+        cursor: pointer;
+        transition: transform 0.2s ease;
+    }
+    .bin:hover {
+        transform: scale(1.1);
+    }
+    .bin{
+        width: 18px;
+        height: 18px;
+    }
+    .delete-form { 
+        display: inline-block; 
+        line-height: 0; 
+    }
+    .delete-button { 
+        background: none; 
+        border: none; 
+        padding: 0; 
+        cursor: pointer; 
+    }
 
     </style>
 </head>
 <body>
-
     <div class="dashboard">
-        <aside class="sidebar">
+        <!-- sidebar  -->
+    <aside class="sidebar">
         <div class="sidebar-header">
             <img src="../logo/Logo black shadow.png"class="logo">
         </div>
@@ -248,6 +284,7 @@ body { margin: 0; font-family: "Lexend", sans-serif; background-color: #F9F9F9; 
                 <hr>
             </header>
 
+            <!-- Clients table  -->
             <div class="clients-table">
                 <div class="table-header">
                     <div class="header-cell">Name </div>

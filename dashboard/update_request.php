@@ -53,9 +53,7 @@ try {
         $response['message'] = 'Unknown action.';
     }
 
-} catch (PDOException $e) {
-    // For debugging, you might want to see the real error
-    // error_log($e->getMessage()); 
+} catch (PDOException $e) { 
     $response['message'] = 'A database error occurred.'; 
 }
 

@@ -1,5 +1,4 @@
 <?php
-// --- 1. INITIALIZATION ---
 session_start();
 $host = 'localhost';
 $dbname = 'bookcycle';
@@ -13,32 +12,31 @@ try {
     die("Connection failed: " . $e->getMessage());
 }
 
-// Check if the admin is logged in. If not, redirect to the login page.
-// We'll assume the admin's email is stored in $_SESSION['admin_email'] after login.
+//check if admin logged in
 if (!isset($_SESSION['admin_email'])) {
-    header("Location: admin_logIn.php"); // Change 'login.php' to your actual login page
+    header("Location: admin_logIn.php");
     exit();
 }
 
 $admin_email = $_SESSION['admin_email'];
-$message = ''; // To store success or error messages
-$message_type = ''; // 'success' or 'error'
+$message = ''; //succ error msg
+$message_type = ''; // succ error
 
-// --- 2. HANDLE FORM SUBMISSION (PASSWORD CHANGE) ---
+// password change operation
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $current_password = $_POST['current_password'];
     $new_password = $_POST['new_password'];
     $confirm_password = $_POST['confirm_password'];
 
     try {
-        // First, get the current hashed password from the database
+        // get the current hashed pw from db
         $stmt = $conn->prepare("SELECT password FROM admin WHERE email_admin_ID = :email");
         $stmt->bindParam(':email', $admin_email);
         $stmt->execute();
         $admin = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($admin && password_verify($current_password, $admin['password'])) {
-            // Current password is correct. Now validate the new password.
+            // corrent pw id correct? now validate akhrin
             if (empty($new_password)) {
                 $message = "New password cannot be empty.";
                 $message_type = 'error';
@@ -49,7 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $message = "New password and confirmation do not match.";
                 $message_type = 'error';
             } else {
-                // All checks passed. Hash the new password and update the database.
+                // kollo tamam? hash the new pw and send to db
                 $new_hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
                 
                 $update_stmt = $conn->prepare("UPDATE admin SET password = :password WHERE email_admin_ID = :email");
@@ -65,7 +63,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 }
             }
         } else {
-            // Current password entered by the user is incorrect.
+            // incorrect entered pw
             $message = "Incorrect current password.";
             $message_type = 'error';
         }
@@ -76,7 +74,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
-// --- 3. FETCH CURRENT ADMIN DATA FOR DISPLAY ---
+// fetch current admin data for display
 try {
     $stmt = $conn->prepare("SELECT admin_name, email_admin_ID FROM admin WHERE email_admin_ID = :email");
     $stmt->bindParam(':email', $admin_email);
@@ -84,7 +82,6 @@ try {
     $current_admin = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if (!$current_admin) {
-        // This case should ideally not happen if session is managed properly
         die("Could not find admin data. Please log out and log in again.");
     }
 } catch (PDOException $e) {
@@ -101,55 +98,95 @@ try {
     <link rel="icon" href="../logo/bookcycle.png" type="image/x-icon" />
     <style>
             @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Lexend:wght@100..900&display=swap');
-:root {
-            --primary-green: #32eb2a;
-            --light-green-bg: rgba(50, 235, 42, 0.30);
-            --text-primary: black;
-            --text-secondary: #414142;
-            --border-color: #e5e7eb;
-            --background-main: #ffffff;
-        }
-body { margin: 0; font-family: "Lexend", sans-serif; background-color: #F9F9F9; color: var(--text-primary); }
-        .dashboard { min-height: 100vh; }
-.sidebar {
-    /* --- The Fix --- */
-    position: fixed; /* This is the key: it fixes the element to the viewport */
-    top: 0;
-    left: 0;
-    height: 100vh; /* Make the sidebar always full height */
-    overflow-y: auto; /* Add a scrollbar ONLY to the sidebar if its content is too long */
-    width: 263px; /* We need to explicitly define the width now */
-    z-index: 100; /* Ensures the sidebar stays on top of other content */
-
-    /* --- Your existing styles (kept for consistency) --- */
-    flex: 0 0 208px;
-    background: var(--background-main, #FFF);
+    :root {
+        --primary-green: #32eb2a;
+        --light-green-bg: rgba(50, 235, 42, 0.30);
+        --text-primary: black;
+        --text-secondary: #414142;
+        --border-color: #e5e7eb;
+        --background-main: #ffffff;
+    }
+    body { 
+        margin: 0; 
+        font-family: "Lexend", sans-serif; 
+        background-color: #F9F9F9; 
+        color: var(--text-primary); 
+    }
+    .dashboard { 
+        min-height: 100vh; 
+    }
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        overflow-y: auto;
+        width: 263px;
+        z-index: 100;
+        flex: 0 0 208px;
+        background: var(--background-main, #FFF);
         border: 1px solid var(--Stroke-Color, #EFF0F6);
-    display: flex;
-    flex-direction: column;
-    padding: 25px 35px 38px 18px;
-    border-radius: 20px; /* Note: you might want to change this */
-    box-sizing: border-box; /* Good practice to include this */
-}
-        .logo { margin-top: 10px; margin-bottom: 15px; margin-left: 18px; height: 45px; }
-        .sidebar-nav { flex-grow: 1; }
-        .sidebar ul { list-style: none; padding: 0; margin: 0; }
-        .sidebar-nav li a, .sidebar-footer li a { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 5px; text-decoration: none; color: var(--text-secondary); font-size: 16px; font-weight: 500; transition: background-color 0.2s ease; }
-        .sidebar-nav li a:hover, .sidebar-footer li a:hover { background-color: #F9F9F9; color: var(--text-primary); }
-        .sidebar-footer li.active a { background-color: var(--light-green-bg); color: var(--primary-green); }
-        .sidebar-nav img, .sidebar-footer img { width: 30px; height: 30px; }
-.main-content {
-    /* --- The Fix --- */
-    margin-left: 263px; /* This pushes the content to the right, creating space for the sidebar */
-    
-    /* --- Your existing styles (kept for consistency) --- */
-    flex-grow: 1;
-    padding: 40px 32px;
-    background-color: #F9F9F9;
-}
-        .content-header h1 { font-size: 28px; font-weight: 700; margin: 0 0 15px 0; }
-        hr { margin-bottom: 20px; border: 0; border-top: 1px solid #EFF0F6; }
-/* *************************************************** */
+        display: flex;
+        flex-direction: column;
+        padding: 25px 35px 38px 18px;
+        border-radius: 20px;
+        box-sizing: border-box;
+    }
+        .logo { 
+            margin-top: 10px; 
+            margin-bottom: 15px; 
+            margin-left: 18px; 
+            height: 45px; 
+        }
+        .sidebar-nav { 
+            flex-grow: 1; 
+        }
+        .sidebar ul { 
+            list-style: none; 
+            padding: 0; 
+            margin: 0; 
+        }
+        .sidebar-nav li a, .sidebar-footer li a { 
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+            padding: 12px 16px; 
+            border-radius: 5px; 
+            text-decoration: none; 
+            color: var(--text-secondary); 
+            font-size: 16px; 
+            font-weight: 500; 
+            transition: background-color 0.2s ease; 
+        }
+        .sidebar-nav li a:hover, .sidebar-footer li a:hover { 
+            background-color: #F9F9F9; 
+            color: var(--text-primary); 
+        }
+        .sidebar-footer li.active a { 
+            background-color: var(--light-green-bg); 
+            color: var(--primary-green); 
+        }
+        .sidebar-nav img, .sidebar-footer img { 
+            width: 30px; 
+            height: 30px; 
+        }
+    .main-content {
+        margin-left: 263px;
+        flex-grow: 1;
+        padding: 40px 32px;
+        background-color: #F9F9F9;
+    }
+    .content-header h1 { 
+        font-size: 28px; 
+        font-weight: 700; 
+        margin: 0 0 15px 0; 
+    }
+    hr { 
+        margin-bottom: 20px; 
+        border: 0; 
+        border-top: 1px solid #EFF0F6; 
+    }
+/* *************************Main Content********************** */
 
 
 
@@ -166,31 +203,26 @@ body { margin: 0; font-family: "Lexend", sans-serif; background-color: #F9F9F9; 
     font-weight: 500;
     margin-bottom: 40px;
 }
-
 .profile-form {
     display: flex;
     flex-direction: column;
-    gap: 22px; /* Space between form groups */
+    gap: 22px;
 }
-
 .form-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 30px;
 }
-
 .form-group {
     display: flex;
     flex-direction: column;
 }
-
 .form-group label {
     font-size: 14px;
     color: var(--text-secondary, #414142);
     margin-bottom: 8px;
     font-weight: 500;
 }
-
 .form-group input {
     font-family: "Lexend", sans-serif;
     padding: 14px 16px;
@@ -200,29 +232,25 @@ body { margin: 0; font-family: "Lexend", sans-serif; background-color: #F9F9F9; 
     font-size: 15px;
     color: var(--text-secondary, #414142);
     width: 100%;
-    box-sizing: border-box; /* Important for grid layout */
+    box-sizing: border-box;
 }
-
 .form-group input:focus {
     outline: none;
     border-color: #238649;
     box-shadow: 0 0 0 2px rgba(35, 134, 73, 0.2);
 }
-
 .form-group input:disabled {
     background-color: #F0F0F0;
     color: #888;
     cursor: not-allowed;
     border-color: #e5e7eb;
 }
-
 .form-section-title {
     font-size: 24px;
     font-weight: 700;
     margin: 15px 0 -5px 0;
     color: var(--text-primary, black);
 }
-
 .change-btn {
     font-family: "Lexend", sans-serif;
     background-color: #238649;
@@ -234,15 +262,15 @@ body { margin: 0; font-family: "Lexend", sans-serif; background-color: #F9F9F9; 
     font-weight: 600;
     cursor: pointer;
     transition: background-color 0.2s ease;
-    align-self: flex-start; /* Align button to the left */
+    align-self: flex-start;
     margin-top: 10px;
 }
-
 .change-btn:hover {
     background-color: #1a6b39; 
 }
-.profile-container { margin-top: 25px; }
-
+.profile-container { 
+    margin-top: 25px; 
+}
  .message-banner {
             padding: 15px 20px;
             margin-bottom: 20px;
@@ -293,7 +321,7 @@ body { margin: 0; font-family: "Lexend", sans-serif; background-color: #F9F9F9; 
             </header>
 
             <div class="profile-container">
-                <!-- This message banner will appear on success or error -->
+                
                 <div class="message-banner <?php echo $message_type; ?>">
                     <?php echo htmlspecialchars($message); ?>
                 </div>

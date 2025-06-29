@@ -1,18 +1,17 @@
 <?php
-// 1. Start the session to manage the admin's logged-in state.
 session_start();
 
-// If the admin is already logged in, redirect them to the dashboard
+// if loggedIn redirecte to statistics
 if (isset($_SESSION['admin_loggedin']) && $_SESSION['admin_loggedin'] === true) {
     header('Location: statistics.php');
     exit;
 }
 
-// 2. Database Connection
+// db conn
 $host = 'localhost';
 $dbname = 'bookcycle';
 $user = 'root';
-$password = ''; // Your DB password
+$password = '';
 
 try {
     $conn = new PDO("mysql:host=$host;dbname=$dbname", $user, $password);
@@ -21,10 +20,10 @@ try {
     die("Connection failed: " . $e->getMessage());
 }
 
-// 3. Initialize an error message variable
+// error msg var
 $errorMessage = '';
 
-// 4. Process form data when the form is submitted
+// process form data when submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = trim($_POST['email']);
     $pass = $_POST['password'];
@@ -33,34 +32,34 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $errorMessage = 'Please enter both email and password.';
     } else {
         try {
-            // Find the admin by email
+            // find admin by email
             $sql = "SELECT email_admin_ID, password FROM admin WHERE email_admin_ID = :email";
             $stmt = $conn->prepare($sql);
             $stmt->bindParam(':email', $email, PDO::PARAM_STR);
             $stmt->execute();
 
-            // Check if an admin with that email exists
+            // check if email exists
             if ($stmt->rowCount() == 1) {
                 $admin = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                // Verify the password against the stored hash
+                //verify PW
                 if (password_verify($pass, $admin['password'])) {
-                    // Password is correct! Start a new session.
-                    session_regenerate_id(true); // Security measure
+                    // pw correct, start a nwe session
+                    session_regenerate_id(true);
 
-                    // Store data in session variables
+                    // store data in session variables
                     $_SESSION['admin_loggedin'] = true;
                     $_SESSION['admin_email'] = $admin['email_admin_ID'];
 
-                    // Redirect to the admin dashboard
+                    // Redirect to statistics
                     header("Location: statistics.php");
                     exit();
                 } else {
-                    // Password is not valid
+                    // incorrect pW
                     $errorMessage = 'Invalid email or password.';
                 }
             } else {
-                // No user found with that email
+                // no admin found
                 $errorMessage = 'Invalid email or password.';
             }
         } catch (PDOException $e) {
@@ -78,84 +77,80 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link rel="icon" href="../logo/bookcycle.png" type="image/x-icon" />
     <link href="https://fonts.googleapis.com/css2?family=Lexend&display=swap" rel="stylesheet">
     <style>
-body, html {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    font-family: "Lexend", sans-serif; /* A clean, modern font similar to the image */
-}
-
-.login-page {
-    height: 100%;
-    width: 100%;
-    background-color: #238649; /* The dark green background from the image */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-/* The white login card */
-.login-card {
-    background-color: #ffffff;
-    padding: 45px 50px;
-    border-radius: 20px; /* Highly rounded corners */
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
-    width: 100%;
-    max-width: 450px;
-    box-sizing: border-box; /* Ensures padding doesn't affect the final width */
-    text-align: center;
-}
-
-/* Welcome title */
-.login-card h2 {
-    color: #333333;
-    font-size: 24px;
-    font-weight: 700; /* Semi-bold */
-    margin-top: 40px;
-    margin-bottom: 40px;
-    letter-spacing: -0.114px;
-}
-
-/* Styling for the form inputs */
-.login-form input[type="email"],
-.login-form input[type="password"] {
-    width: 350px;
-    height: 55px;
-    padding: 14px 16px;
-    margin-bottom: 25px;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    background-color: #f7f7f7; /* Very light gray background */
-    font-size: 1em;
-    font-family: "Lexend", sans-serif;
-    box-sizing: border-box;
-}
-
-.login-form input::placeholder {
-    color: #aaaaaa;
-}
-
-/* "Sign In" button */
-.login-form button {
-    width: 180px;
-    height: 45px;
-    padding: 15px 0px;
-    background-color: #32eb2a;
-    border: none;
-    border-radius: 8px;
-    color: white;
-    font-size: 18px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    margin-bottom: 40px;
-}
-
-.login-form button:hover {
-    background-color: #2dbb2d; /* A slightly darker green for hover effect */
-}
-
-.error-message { color: #D8000C; background-color: #FFD2D2; border: 1px solid; padding: 10px; border-radius: 4px; margin-bottom: 15px; text-align: center; }
+    body, html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        font-family: "Lexend", sans-serif;
+    }
+    .login-page {
+        height: 100%;
+        width: 100%;
+        background-color: #238649;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .login-card {
+        background-color: #ffffff;
+        padding: 45px 50px;
+        border-radius: 20px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        width: 100%;
+        max-width: 450px;
+        box-sizing: border-box;
+        text-align: center;
+    }
+    .login-card h2 {
+        color: #333333;
+        font-size: 24px;
+        font-weight: 700;
+        margin-top: 40px;
+        margin-bottom: 40px;
+        letter-spacing: -0.114px;
+    }
+    .login-form input[type="email"],
+    .login-form input[type="password"] {
+        width: 350px;
+        height: 55px;
+        padding: 14px 16px;
+        margin-bottom: 25px;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        background-color: #f7f7f7;
+        font-size: 1em;
+        font-family: "Lexend", sans-serif;
+        box-sizing: border-box;
+    }
+    .login-form input::placeholder {
+        color: #aaaaaa;
+    }
+    .login-form button {
+        width: 180px;
+        height: 45px;
+        padding: 15px 0px;
+        background-color: #32eb2a;
+        border: none;
+        border-radius: 8px;
+        color: white;
+        font-size: 18px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        margin-bottom: 40px;
+    }
+    .login-form button:hover {
+        background-color: #2dbb2d; 
+    }
+    .error-message { 
+        color: #D8000C; 
+        background-color: #FFD2D2; 
+        border: 1px solid; 
+        padding: 10px; 
+        border-radius: 4px; 
+        margin-bottom: 15px; 
+        text-align: center; 
+    }
     </style>
 </head>
 <body>

@@ -1,14 +1,13 @@
 <?php
-// Start the session to gain access to it
 session_start();
 
-// Unset all session variables
+// unset all session variables
 $_SESSION = [];
 
-// Destroy the session
+// destroy the session
 session_destroy();
 
-// Redirect to the admin login page
+// redirect to logIn page
 header("Location: admin_logIn.php");
 exit();
 ?>
