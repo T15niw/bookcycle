@@ -1,14 +1,13 @@
 <?php
-// 1. START SESSION & SECURITY CHECK
 session_start();
 
-// Redirect to login if not logged in
+// redirect to login if not logged in
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
-    header('Location: index.php');
+    header('Location: logIn.php');
     exit;
 }
 
-// 2. DATABASE CONNECTION
+// database connection
 $host = 'localhost';
 $dbname = 'bookcycle';
 $user = 'root';
@@ -21,21 +20,21 @@ try {
     die("Connection failed: " . $e->getMessage());
 }
 
-// 3. HANDLE FORM SUBMISSION (UPDATE LOGIC)
-// This block runs only when the "Save change" button is clicked and the form is submitted
+// form submission and updating information in DB
+// when we click on "Save change" and the form gets submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     try {
-        // Get data from the form
+        // gets data from the form
         $firstName = $_POST['firstName'];
         $lastName = $_POST['lastName'];
         $phone = $_POST['phone'];
         $contactMethod = $_POST['contactMethod'];
         $city = $_POST['city'];
 
-        // Get the user's email from the session to know which row to update
+        // gets the user's email from the session to know which row to update
         $userEmail = $_SESSION['email'];
         
-        // Prepare the UPDATE SQL statement
+        // the update SQL statement
         $sql = "UPDATE client SET 
                     first_name = :first_name, 
                     last_name = :last_name, 
@@ -46,7 +45,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         $stmt = $conn->prepare($sql);
 
-        // Bind parameters
+        // linking each field to a variable
         $stmt->bindParam(':first_name', $firstName);
         $stmt->bindParam(':last_name', $lastName);
         $stmt->bindParam(':phone_number', $phone);
@@ -56,26 +55,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         $stmt->execute();
         
-        // IMPORTANT: Update the name in the session so the welcome message changes
+        // updating the name in the welcome sentence
         $_SESSION['name'] = $firstName;
         
-        // Set a success flash message
+        // success message
         $_SESSION['flash_message'] = "Profile updated successfully!";
         $_SESSION['flash_type'] = "success";
 
     } catch (PDOException $e) {
-        // Set an error flash message
+        // error message
         $_SESSION['flash_message'] = "Error updating profile: " . $e->getMessage();
         $_SESSION['flash_type'] = "error";
     }
 
-    // Redirect back to the profile page to show the message and prevent form resubmission
+    // redirect to profile again
     header('Location: profile.php');
     exit;
 }
 
-// 4. FETCH CURRENT USER DATA (to display on the page)
-// This runs every time the page loads
+// fetching current user data for display 
 try {
     $userEmail = $_SESSION['email'];
     $sql = "SELECT * FROM client WHERE email_client_ID = :email";
@@ -83,10 +81,10 @@ try {
     $stmt->bindParam(':email', $userEmail);
     $stmt->execute();
     
-    // Fetch the user data into the $client variable
+    // fetch the user data into the $client variable
     $client = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    // If for some reason the user isn't found, log them out
+    // if for some reason the user isn't found log them out
     if (!$client) {
         header('Location: logOut.php');
         exit;
@@ -94,9 +92,6 @@ try {
 } catch (PDOException $e) {
     die("Error fetching user data: " . $e->getMessage());
 }
-
-// Include your header file if you have one
-// include 'header.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -116,7 +111,7 @@ try {
           font-family: 'Lexend', sans-serif;
           background-color: white;
         }
-        /************************************************************/
+        /*********************Navbar****************************/
         .navbar {
         display: flex;
         justify-content: space-between;
@@ -166,7 +161,7 @@ try {
         height: 55px;
         width: 55px;
       }
-      /************************************************************/
+      /*********************Main content***************************/
 
   body {
     background-color: white;
@@ -288,30 +283,30 @@ try {
     font-weight: 500;
     font-size: 18px;
     font-weight: 600;
+    color: #000;
     cursor: pointer;
     transition: background-color 0.3s ease, color 0.3s ease;
     display: inline-block;
 }
-span{
-  color: #238649;
-font-size: 17px;
-font-weight: 600;
-}
-.edit-button.save-mode {
+.edit-button .save-mode {
     background-color: #238649;
     color: black;
 }
-
+span{
+    color: #238649;
+    font-size: 17px;
+    font-weight: 600;
+}
 .form-group.full-width {
-    grid-column: 1 / -1; /* This makes it span the full width like before */
+    grid-column: 1 / -1;
     display: flex;
-    justify-content: space-between; /* This pushes the buttons to opposite ends */
+    justify-content: space-between;
     align-items: center;
 }
 
 .logout-button {
-    background-color: #fee2e2; /* Light red background */
-    color: #FF0000; /* Darker red text */
+    background-color: #fee2e2;
+    color: #FF0000;
     border: 1px solid #FF0000;
     border-radius: 8px;
     padding: 12px 20px;
@@ -319,22 +314,44 @@ font-weight: 600;
     font-size: 18px;
     font-weight: 600;
     cursor: pointer;
-    text-decoration: none; /* Removes underline from the link */
+    text-decoration: none;
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 .logout-button:hover {
-    background-color: #FF0000; /* Dark red background on hover */
+    background-color: #FF0000;
     color: white;
 }
-
-.form-group input, .form-group select { pointer-events: none; background-color: #f3f4f6; color: #6b7280; }
-        .form-group.editable input, .form-group.editable select { pointer-events: auto; background-color: #fff; color: #111827; }
-        .edit-button.save-mode { background-color: #238649; color: white; }
-        .logout-button { text-decoration: none; /* ... your other logout styles */ }
-        .form-actions { display: flex; justify-content: space-between; align-items: center; grid-column: 1 / -1; }
-        .message { padding: 1em; margin-bottom: 1em; border-radius: 5px; text-align: center; grid-column: 1 / -1; }
-        .success { background-color: #d4edda; color: #155724; }
-        .error { background-color: #f8d7da; color: #721c24; }
+.form-group input, .form-group select {
+    pointer-events: none;
+    background-color: #f3f4f6;
+    color: #6b7280;
+}
+.form-group.editable input, .form-group.editable select {
+    pointer-events: auto; 
+    background-color: #fff; 
+    color: #111827; 
+}
+.form-actions {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    grid-column: 1 / -1; 
+}
+.message { 
+    padding: 1em; 
+    margin-bottom: 1em; 
+    border-radius: 5px; 
+    text-align: center; 
+    grid-column: 1 / -1; 
+}
+.success { 
+    background-color: #d4edda; 
+    color: #155724; 
+}
+.error { 
+    background-color: #f8d7da; 
+    color: #721c24; 
+}
     </style>
 </head>
 <body>
@@ -431,7 +448,6 @@ font-weight: 600;
    </main>
    <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Get all the elements we need to work with
     const editButton = document.querySelector('.edit-button');
     const form = document.querySelector('.profile-form');
     const editableFields = form.querySelectorAll('input:not(#email), select'); // Select all fields EXCEPT the email input
@@ -440,19 +456,19 @@ document.addEventListener('DOMContentLoaded', function() {
     const firstNameInput = document.getElementById('firstName');
     const lastNameInput = document.getElementById('lastName');
 
-    // Start in "read-only" mode
+    // read-only mode
     let isEditMode = false;
 
     editButton.addEventListener('click', function(event) {
-        // Prevent the form from submitting when we click "Edit"
+        // prevent the form from submitting when we click Edit
         event.preventDefault(); 
         
-        isEditMode = !isEditMode; // Toggle the mode
+        isEditMode = !isEditMode; //switch On/Off
 
         if (isEditMode) {
-            // --- ENTERING EDIT MODE ---
+            // edit mode
 
-            // Make fields editable by adding the 'editable' class
+            // make fields editable by adding 'editable' class
             editableFields.forEach(field => {
                 field.parentElement.classList.add('editable');
             });
@@ -462,31 +478,22 @@ document.addEventListener('DOMContentLoaded', function() {
             this.classList.add('save-mode');
 
         } else {
-            // --- SAVING CHANGES (leaving edit mode) ---
+            // save change and exit edit mode
 
-            // Here, you would typically submit the form to the server.
-            // The form.submit() command will trigger the 'action' and 'method' in your <form> tag.
-            // Your backend will receive the data and update the database.
+            // submit the new information, form.submi() will triger 'action' and 'method' in <form>, back-en will recieve the new data and updates the old one
             
-            console.log('Form submitted!'); // For testing purposes
             form.submit();
 
-            // After submission, you might want to revert the fields to read-only state.
-            // In a real application, the page would likely reload with the new data.
-            // For this example, we'll manually revert the styles.
-            
-            // Make fields read-only again
+            // refresh and turn on read-only again
             editableFields.forEach(field => {
                 field.parentElement.classList.remove('editable');
             });
 
-            // Change button back to "Edit"
+            // change button back to "edit"
             this.textContent = 'Edit';
             this.classList.remove('save-mode');
 
-            // BONUS: Update the name displayed next to the icon and in the header
-            // This simulates what would happen after the page reloads with new data.
-            console.log('Form submitted!'); // For testing purposes
+            // update the name next to the icon
             form.submit();
         }
     });

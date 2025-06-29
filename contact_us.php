@@ -1,49 +1,47 @@
 <?php
-// Start session for flash messages
 session_start();
 
-// Import PHPMailer classes into the global namespace
+// import PHPMailer clases
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-// Load PHPMailer files
+// load PHPMailer files
 require 'PHP_mail/Exception.php';
 require 'PHP_mail/PHPMailer.php';
 require 'PHP_mail/SMTP.php';
 
-// --- THIS IS THE MOST IMPORTANT FIX ---
-// Only run this code if the form has been submitted
+// only run if form sibmitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    // --- Sanitize and Validate Form Data ---
+    // sanitize form data
     $fullName = trim($_POST['full_name']);
     $email = trim($_POST['email']);
-    $message_body = trim($_POST['message']); // Renamed variable to avoid conflict
+    $message_body = trim($_POST['message']);
 
     if (empty($fullName) || !filter_var($email, FILTER_VALIDATE_EMAIL) || empty($message_body)) {
-        // If validation fails, set an error message
+        // if validation fails show error message
         $_SESSION['flash_message'] = "Please fill out all fields correctly.";
         $_SESSION['flash_type'] = "error";
     } else {
-        // --- If validation passes, create a new PHPMailer instance ---
+        // if it passes create a new PHPMailer instance
         $mail = new PHPMailer(true);
 
         try {
-            // --- Server settings ---
+            //server settings
             $mail->isSMTP();
             $mail->Host       = 'smtp.gmail.com';
             $mail->SMTPAuth   = true;
-            $mail->Username   = 'tasnimmezgueldi@gmail.com'; // Your Gmail address
-            $mail->Password   = 'vsbm eaxl tykl euqx';      // Your Gmail App Password
+            $mail->Username   = 'tasnimmezgueldi@gmail.com'; // my gmail address
+            $mail->Password   = 'vsbm eaxl tykl euqx';      // my gmail App Password
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
             $mail->Port       = 465;
 
-            // --- Recipients ---
+            // recipient (me)
             $mail->setFrom('tasnimmezgueldi@gmail.com', 'BookCycle Contact Form');
             $mail->addAddress('tasnimmezgueldi@gmail.com');
             $mail->addReplyTo($email, $fullName);
 
-            // --- Content ---
+            // msg content structure
             $mail->isHTML(true);
             $mail->Subject = 'New Contact Form Submission from ' . $fullName;
             $mail->Body    = "<h3>New Message from Contact Form</h3>
@@ -55,18 +53,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             $mail->send();
             
-            // Set success message
+            // success message
             $_SESSION['flash_message'] = 'Thank you! Your message has been sent.';
             $_SESSION['flash_type'] = 'success';
 
         } catch (Exception $e) {
-            // Set error message if sending fails
+            // error message
             $_SESSION['flash_message'] = "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
             $_SESSION['flash_type'] = 'error';
         }
     }
 
-    // --- Redirect back to the form to show the message ---
     header('Location: ' . $_SERVER['PHP_SELF']);
     exit;
 }
@@ -83,20 +80,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         body {
           font-family: 'Lexend', sans-serif;
           background-image: url(Photos/contact_us/background.jpg);
-        background-size: cover;
-        background-position: center center;
-        background-repeat: no-repeat;
-        background-attachment: fixed;
-        margin: 0;
-        padding: 0;
+          background-size: cover;
+          background-position: center center;
+          background-repeat: no-repeat;
+          background-attachment: fixed;
+          margin: 0;
+          padding: 0;
           box-sizing: border-box;
-    color: black;
+          color: black;
         }
+/**************************Navbar******************* */
         .navbar {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 20px 40px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 20px 40px;
       }
       nav ul {
         display: flex;
@@ -136,43 +134,45 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         text-decoration: none;
         color: inherit;
       }
+/*****************Main content****************** */
       main{
         display: flex;
         flex-wrap: wrap; 
         justify-content: center;
-    gap: 30px 50px;
-    margin-bottom: 20px;
+        gap: 30px 50px;
+        margin-bottom: 20px;
       }
       h1 {
-    flex-basis: 100%; 
-    text-align: center;
-    font-size: 65px;
-    font-weight: bolder;
-    margin-bottom: 5px;
-    margin-top: 0;
-    text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.40);
-}
-.contactForm{
-    flex-basis: 380px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-.contactInfo{ 
-    flex-basis: 400px;
-    padding-left: 5px;
-}
-#fName, #email, #message {
-    width: 400px;
-    padding: 15px;
-    margin-bottom: 20px; 
-    border: 1px solid #e0e0e0;
-    border-radius: 5px;
-    font-family: 'Lexend', sans-serif;
-    font-size: 16px;
-    background-color: #f9f9f9;
-    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.20);
+      flex-basis: 100%; 
+      text-align: center;
+      font-size: 65px;
+      font-weight: bolder;
+      margin-bottom: 5px;
+      margin-top: 0;
+      text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.40);
       }
+/************Contact form*************************** */
+    .contactForm{
+        flex-basis: 380px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    .contactInfo{ 
+        flex-basis: 400px;
+        padding-left: 5px;
+    }
+    #fName, #email, #message {
+        width: 400px;
+        padding: 15px;
+        margin-bottom: 20px; 
+        border: 1px solid #e0e0e0;
+        border-radius: 5px;
+        font-family: 'Lexend', sans-serif;
+        font-size: 16px;
+        background-color: #f9f9f9;
+        box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.20);
+        }
       #fName::placeholder, #email::placeholder, #message::placeholder{
         color: #888;
       }
@@ -180,101 +180,112 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         height: 180px;
       }
       button{
-         background-color: #238649;
-    color: white;
-    padding: 8px 48px;
-    border: none;
-    border-radius: 5px;
-    font-family: 'Lexend', sans-serif;
-    font-size: 18px;
-    font-weight: lighter;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.20);
+        background-color: #238649;
+        color: white;
+        padding: 8px 48px;
+        border: none;
+        border-radius: 5px;
+        font-family: 'Lexend', sans-serif;
+        font-size: 18px;
+        font-weight: lighter;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+        box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.20);
       }
       button:hover{
          background-color: #1c6b3a;
       }
+/***************Coordonnées*********************** */
       .giveUs{
         font-size: 19px;
         text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.20);
       }
       .contact-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 15px;
-    margin-bottom: 25px;
-}
-.contact-item img {
-    width: 30px; 
-    height: 30px;
+        display: flex;
+        align-items: flex-start;
+        gap: 15px;
+        margin-bottom: 25px;
+      }
+    .contact-item img {
+        width: 30px; 
+        height: 30px;
 
-}
-.contact-item h3 {
-    font-size: 1.2em;
-    font-weight: 600;
-    color: #000000;
-    margin-top: 0;
-    margin-bottom: 5px;
-    text-shadow: 0 1px 3px rgba(0,0,0,0.2);
-}
-.contact-item p {
-    font-size: 1em;
-    color: #555;
-    margin: 0;
-    line-height: 1.5;
-    text-shadow: 0 1px 3px rgba(0,0,0,0.2);
-}
-.onMap{
-    display: inline-flex;
-    justify-content: center;
-    gap: 8px;
-    color: #238649;
-    font-weight: 600;
-    font-size: 19px;
-    margin-top: 10px;
-}
-.onMap img {
-    width: 22px;
-    height: 22px;
-    rotate: -45deg;
-}
-.onMap:hover{
-text-decoration: underline;
-text-decoration-thickness: 2px;
-}
-hr{
-    border: 0;
-    height: 4px;
-    width: 395px;
-    background-color: #000000;
-    margin-top: 10px;
-    margin-bottom: 15px;
-    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.20);
-}
-.socials{
-    display: flex;
-    justify-content: center;
-}
-.socials a img{
-     width: 60px;
-    height: 60px;
-}
-
-.message { padding: 1em; margin-bottom: 1em; border-radius: 5px; text-align: center; } 
-.success { background-color: #d4edda; color: #155724; } 
-.error { background-color: #f8d7da; color: #721c24; }
+    }
+    .contact-item h3 {
+        font-size: 1.2em;
+        font-weight: 600;
+        color: #000000;
+        margin-top: 0;
+        margin-bottom: 5px;
+        text-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+    .contact-item p {
+        font-size: 1em;
+        color: #555;
+        margin: 0;
+        line-height: 1.5;
+        text-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+    .onMap{
+        display: inline-flex;
+        justify-content: center;
+        gap: 8px;
+        color: #238649;
+        font-weight: 600;
+        font-size: 19px;
+        margin-top: 10px;
+    }
+    .onMap img {
+        width: 22px;
+        height: 22px;
+        rotate: -45deg;
+    }
+    .onMap:hover{
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    }
+    hr{
+        border: 0;
+        height: 4px;
+        width: 395px;
+        background-color: #000000;
+        margin-top: 10px;
+        margin-bottom: 15px;
+        box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.20);
+    }
+    .socials{
+        display: flex;
+        justify-content: center;
+    }
+    .socials a img{
+        width: 60px;
+        height: 60px;
+    }
+/*****************msg***************** */
+    .message {
+      padding: 1em; 
+      margin-bottom: 1em; 
+      border-radius: 5px; 
+      text-align: center; 
+      } 
+    .success { 
+      background-color: #d4edda; 
+      color: #155724; 
+    } 
+    .error { 
+      background-color: #f8d7da; 
+      color: #721c24; 
+    }
     </style>
 </head>
 <body>
     <header>
        <?php
-            // Check if the user is logged in
             if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true) {
-                // If they are logged in, show the logged-in navbar
+                // if logged in logged-in navbar
                 include 'include/navbar_logged_in.php';
             } else {
-                // If they are not logged in, show the logged-out navbar
+                // if not logged-out navbar
                 include 'include/navbar_logged_out.php';
             }
         ?>
@@ -284,7 +295,7 @@ hr{
     <div class="contactForm">
         <form action="contact_us.php" method="post">
 
-<?php
+            <?php
                 if (isset($_SESSION['flash_message'])) {
                     echo '<div class="message ' . $_SESSION['flash_type'] . '">' . htmlspecialchars($_SESSION['flash_message']) . '</div>';
                     unset($_SESSION['flash_message']);

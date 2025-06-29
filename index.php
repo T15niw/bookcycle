@@ -1,9 +1,7 @@
 <?php
-// 1. START SESSION & SECURITY CHECK
-// This MUST be the very first thing in your file.
 session_start();
 
-// 2. DATABASE CONNECTION
+// db conn
 $host = 'localhost';
 $dbname = 'bookcycle';
 $user = 'root';
@@ -16,37 +14,32 @@ try {
     die("Connection failed: " . $e->getMessage());
 }
 
-// 3. INITIALIZE MESSAGE VARIABLES
+// error succ msg
 $message = '';
-$message_type = ''; // 'success' or 'error'
+$message_type = '';
 
-// 4. HANDLE FORM SUBMISSION
+// form submichon
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    // 1. ADD THIS SECURITY CHECK HERE
-    // First, check if the user is actually logged in.
+    // check if user is logged in
     if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
         
-        // If they are NOT logged in, set the error message and stop.
+        // if not tell them to
         $message = "You must be logged in to submit a request.";
         $message_type = "error";
 
     } else {
-        // 2. If the check passes, the user IS logged in.
-        // Now it's safe to run all the database logic.
-        
-        // Retrieve form data
+        // if logged in
+        // retrieve form data
         $category = $_POST['category'];
         $quantity = $_POST['quantity'];
         $pickup_address = trim($_POST['pickup_address']);
         $pickup_date = $_POST['pickup_date'];
         $additional_notes = trim($_POST['additional_notes']);
         
-        // This line is now SAFE because we know the user is logged in.
         $client_email = $_SESSION['email'];
 
         try {
-            // Prepare the SQL INSERT statement with named placeholders for security
             $sql = "INSERT INTO request_form (
                         email_client_ID, 
                         submission_date, 
@@ -82,12 +75,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Execute the query
             $stmt->execute();
             
-            // Set success message
+            // success message
             $message = "Your request was submitted successfully!";
             $message_type = "success";
 
         } catch (PDOException $e) {
-            // Set error message for database-specific issues
+            // database errors
             $message = "An error occurred while saving your request. Please try again.";
             $message_type = "error";
         }
@@ -114,7 +107,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
           margin: 0;
           padding: 0;
         }
-        /************************************************************/
+        /*********************Navbar********************************/
          .navbar {
         background-image: url('Photos/Homepage/background.jpeg');
         background-size: cover;
@@ -122,7 +115,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         box-sizing: border-box;
       }
      
-      /************************************************************/
+      /*************************HeroSection***************************/
       .hero{
             display: flex;
             justify-content: space-around;
@@ -171,7 +164,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             cursor: pointer;
             background-color: #23a31e;
         }
-        /************************************************************/
+        /***********************Process*****************************/
         .process {
             background-image: url('Photos/Homepage/background.jpeg');
             background-size: cover;
@@ -210,8 +203,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             max-width: 260px;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            
+            align-items: center; 
         }
         .step h3 {
             font-family: 'Caveat', cursive;
@@ -227,7 +219,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             line-height: 1.3;
             margin-top: 20px;
         }
-        /************************************************************/
+        /***********************Request form*****************************/
         #request_form {
         display: flex;
         align-items: center;
@@ -318,7 +310,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         #request_form button[type="submit"]:hover {
             background-color: #2dbb2d;
         }
-        /************************************************************/
+        /************************Footer*******************************/
         footer {
             background-image: url('photos/Homepage/background.jpeg');
             background-size: cover;
@@ -400,12 +392,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
 <header>
     <?php
-            // Check if the user is logged in
             if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true) {
-                // If they are logged in, show the logged-in navbar
+                // if they are show logged-in navbar
                 include 'include/navbar_logged_in.php';
             } else {
-                // If they are not logged in, show the logged-out navbar
+                // if not show logged-out navbar
                 include 'include/navbar_logged_out.php';
             }
         ?>

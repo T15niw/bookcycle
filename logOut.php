@@ -1,14 +1,14 @@
 <?php
-// 1. Start the session to access it.
+// start the session to access it.
 session_start();
 
-// 2. Unset all session variables.
+// unset all session variables.
 $_SESSION = [];
 
-// 3. Destroy the session itself.
+// destroy the session itself.
 session_destroy();
 
-// 4. Redirect the user to the login page.
+// redirect the user to the login page.
 header("Location: index.php");
-exit(); // IMPORTANT: Stop the script from executing further.
+exit();
 ?>

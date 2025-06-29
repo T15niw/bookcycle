@@ -1,12 +1,11 @@
 <?php
-// Make sure session_start() is at the VERY TOP
 session_start();
 
-// --- DATABASE CONNECTION ---
+// database connection
 $host = 'localhost';
 $dbname = 'bookcycle';
 $user = 'root';
-$password = ''; // Your DB password
+$password = '';
 
 try {
     $conn = new PDO("mysql:host=$host;dbname=$dbname", $user, $password);
@@ -15,37 +14,33 @@ try {
     die("Connection failed: " . $e->getMessage());
 }
 
-// Initialize an empty variable to hold our error message
 $errorMessage = '';
 
-// --- FORM PROCESSING ---
-// Check if the form was submitted via POST
+// Form processing
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    // 1. Get email and password from the form
+    // get email and password from the form
     $email = trim($_POST['email']);
     $pass = $_POST['password'];
 
-    // Basic validation to ensure fields are not empty
+    // validation to ensure fields are not empty
     if (empty($email) || empty($pass)) {
         $errorMessage = 'Please enter both email and password.';
     } else {
         try {
-            // 2. Prepare a SQL statement to find the user by email
+            // SQL statement to find the user by email
             $sql = "SELECT email_client_ID, password, first_name FROM client WHERE email_client_ID = :email";
             $stmt = $conn->prepare($sql);
             $stmt->bindParam(':email', $email, PDO::PARAM_STR);
             $stmt->execute();
 
-            // 3. Check if exactly one user was found
+            // see if one user exactly was found
             if ($stmt->rowCount() == 1) {
                 // Fetch the user's data
                 $user = $stmt->fetch(PDO::FETCH_ASSOC);
                 
-                // 4. Verify the submitted password against the hashed password from the database
-                // The password_verify() function does this securely.
+                // verify if the two passwords are matching (entered, DB)
                 if (password_verify($pass, $user['password'])) {
-                    // Password is correct!
                     
                     // Regenerate session ID for security
                     session_regenerate_id(true);
@@ -53,25 +48,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     // Store user data in the session to mark them as logged in
                     $_SESSION['loggedin'] = true;
                     $_SESSION['email'] = $user['email_client_ID'];
-                    $_SESSION['name'] = $user['first_name']; // Useful for personalizing the homepage
+                    $_SESSION['name'] = $user['first_name']; 
 
-                    // 5. Redirect to the homepage
+                    // Redirect to the homepage
                     header("Location: index.php");
-                    exit(); // IMPORTANT: Stop the script after a redirect
+                    exit();
 
                 } else {
-                    // Password was not correct
                     $errorMessage = 'Password incorrect.';
                 }
             } else {
-                // No user found with that email address
-                // We use a generic message for security to not reveal which part was wrong.
+                // no user was found with that email address
                 $errorMessage = 'Invalid email or password.';
             }
 
         } catch (PDOException $e) {
             $errorMessage = 'A database error occurred. Please try again later.';
-            // For debugging, you could log the error: error_log($e->getMessage());
         }
     }
 }
@@ -107,22 +99,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         padding: 0;
       }
       body::before {
-  content: ""; 
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.4);
-  z-index: 0; 
-}
+        content: ""; 
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.4);
+        z-index: 0; 
+      }
       main {
         display: flex;
         flex-direction: column;
         align-items: center;
         width: 100%;
         position: relative; 
-  z-index: 1; 
+        z-index: 1; 
       }
       .logo {
         position: fixed;
@@ -231,8 +223,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         text-decoration: underline;
       }
       .error-message {
-            color: #D8000C; /* Red text */
-            background-color: #FFD2D2; /* Light red background */
+            color: #D8000C;
+            background-color: #FFD2D2;
             border: 1px solid #D8000C;
             padding: 10px;
             margin-bottom: 15px;
@@ -259,7 +251,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <h3>One click. One book. Big impact.</h3>
         <form action="logIn.php" method="post">
         
-        <!-- PHP code to display the error message if it exists -->
+        <!-- error message -->
         <?php if (!empty($errorMessage)): ?>
             <div class="error-message"><?php echo htmlspecialchars($errorMessage); ?></div>
         <?php endif; ?>

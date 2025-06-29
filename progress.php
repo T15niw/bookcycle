@@ -1,5 +1,5 @@
 <?php
-// --- DATABASE CONNECTION AND SESSION START ---
+//databasse connection
 $host = 'localhost';
 $dbname = 'bookcycle';
 $user = 'root';
@@ -14,16 +14,16 @@ try {
 
 session_start();
 
-// --- SECURITY CHECK ---
+// redirect to login if not logged in
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     header('Location: logIn.php');
     exit;
 }
 
-// --- LOGIC TO FETCH THE LATEST REQUEST STATUS ---
-$requestStatus = null; // Default value
+//fetch the latest request status
+$requestStatus = null; // default value
 
-// Check for the session variable from your logIn.php (it's 'email')
+// check for the session variable from your logIn.php in other words knowing which user is here
 if (isset($_SESSION['email']) && !empty($_SESSION['email'])) {
     $email = $_SESSION['email'];
 
@@ -51,199 +51,202 @@ if (isset($_SESSION['email']) && !empty($_SESSION['email'])) {
     <link rel="icon" href="logo/bookcycle.png" type="image/x-icon" />
     <link href="https://fonts.googleapis.com/css2?family=Lexend&display=swap" rel="stylesheet">
     <style>
-         * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-          font-family: 'Lexend', sans-serif;
-          background-image: url(Photos/progress/background.jpg);
-          background-size: contain;
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    body {
+        font-family: 'Lexend', sans-serif;
+        background-image: url(Photos/progress/background.jpg);
+        background-size: contain;
         background-position: center;
         background-repeat: no-repeat;
         background-attachment: fixed;
         background-position: bottom center;
-        }
-        
-
-        /************************************************************/
-        .navbar {
+    }
+/****************Navbar*************************************/
+    .navbar {
         display: flex;
         justify-content: space-between;
         align-items: center;
         padding: 20px 40px;
-      }
-      nav ul {
+    }
+    nav ul {
         display: flex;
         gap: 30px;
         align-items: center;
         list-style: none;
         margin: 0;
         padding: 0;
-      }
-      .navItems {
+    }
+    .navItems {
         color: #238649;
         font-size: 22px;
         font-weight: 900;
-      }
+    }
 
-      .navItems:hover {
+    .navItems:hover {
         color: #32eb2a;
         cursor: pointer;
-      }
-      a {
+    }
+    a {
         text-decoration: none;
         color: inherit;
-      }
-      .img{
+    }
+    .img{
         height: 55px;
         width: 55px;
-      }
-      /************************************************************/
-      .book-pickup-status {
-    font-family: 'Lexend', sans-serif;
-    text-align: center;
-    padding: 10px 20px;
-    max-width: 1200px;
-    margin: 0 auto;
-    overflow: hidden;
-}
-.book-pickup-status h1 {
-    font-size: 40px;
-    color: black;
-    margin-bottom: 43px;
-    font-weight: 900;
-}
-.progress-container {
-            display: flex;
-            justify-content: space-between;
-            position: relative;
-            margin-bottom: 30px;
-            margin-left: auto;
-            margin-right: auto;
-            width: 85%; /* Adjust width to control line length */
-        }
-.progress-line-bg, .progress-line-fill {
-            position: absolute;
-            top: 115px;
-            left: 0;
-            height: 3px;
-            width: 100%;
-            z-index: 1;
-        }
-.progress-line-bg {
-    background-color: #e0e0e0;
-}
-.progress-line-fill {
-    background-color: #277448;
-    width: 0;
-    transition: width 0.6s ease-in-out, background-color 0.6s ease-in-out;
-}
-.step {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            position: relative;
-            z-index: 2;
-            text-align: center;
-        }
-.step-icon-main {
-    width: 65px;
-    height: 65px;
-    margin-bottom: 10px;
-    transition: filter 0.4s ease;
-    filter: grayscale(100%) opacity(0.7); /* Grayscale by default */
-}
-.icon-circle {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    background-color: white;
-    border: 2px solid #238649;
-    color: #238649;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    font-weight: 600;
-    transition: all 0.4s ease;
-}
-.checkmark-icon, .cancel-icon {
-    display: none;
-}
-.step .step-title,
-.step .step-description {
-    opacity: 0; /* Hide text by default */
-    visibility: hidden;
-    transition: opacity 0.4s ease-in-out, visibility 0.4s;
-    min-height: 35px; /* Reserve space to prevent layout jumps */
-}
-.step.active .step-title,
-.step.active .step-description {
-    opacity: 1; /* Show text for active step */
-    visibility: visible;
-}
-.step h3 {
-    margin-top: 20px;
-    margin-bottom: 8px;
-    font-size: 24px;
-    color: black;
-    font-weight: 600;
-    text-shadow: 0px 3px 3px rgba(255, 255, 255, 0.4);
-}
-.step p {
-    font-size: 18px;
-    font-weight: 200;
-    color: black;
-    max-width: 200px;
-    line-height: 1.4;
-    text-shadow: 0px 3px 3px rgba(255, 255, 255, 0.4);
-}
-.step.active .icon-circle {
-    background-color: #277448;
-    border-color: #277448;
-    color: #fff;
-}
-.step.active .step-icon-main {
-    filter: none; /* Removes grayscale to show full color */
-}
-.step.completed .icon-circle {
-            border-color: #277448;
-            background-color: #fff;
-            color: #238649;
-        }
-.step.completed .step-icon-main {
-    filter: none;
-}
-.step.completed .step-number {
-    display: none;
-}
-.step.completed .checkmark-icon {
-    display: block;
-}
-.step.canceled .icon-circle {
-    border-color: #d9534f; /* Red color for canceled */
-    background-color: #fff;
-}
-.step.canceled .step-number { display: none; }
-.step.canceled .checkmark-icon { display: none; }
-.step.canceled .cancel-icon { display: block; }
-
-#no-request-message {
-    text-align: center;
-    font-size: 20px;
-    color: #333;
-    margin-top: 50px;
-    padding: 20px;
-    background-color: rgba(255, 255, 255, 0.7);
-    border-radius: 8px;
-}
-#no-request-message a {
-    color: #238649;
-    font-weight: 600;
-    text-decoration: underline;
-}
+    }
+      /********************Main content*****************************/
+    .book-pickup-status {
+        font-family: 'Lexend', sans-serif;
+        text-align: center;
+        padding: 10px 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+        overflow: hidden;
+    }
+    .book-pickup-status h1 {
+        font-size: 40px;
+        color: black;
+        margin-bottom: 43px;
+        font-weight: 900;
+    }
+    .progress-container {
+        display: flex;
+        justify-content: space-between;
+        position: relative;
+        margin-bottom: 30px;
+        margin-left: auto;
+        margin-right: auto;
+        width: 85%; 
+    }
+    .progress-line-bg, .progress-line-fill {
+        position: absolute;
+        top: 115px;
+        left: 0;
+        height: 3px;
+        width: 100%;
+        z-index: 1;
+    }
+    .progress-line-bg {
+        background-color: #e0e0e0;
+    }
+   .progress-line-fill {
+        background-color: #277448;
+        width: 0;
+        transition: width 0.6s ease-in-out, background-color 0.6s ease-in-out;
+    }
+    .step {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+        z-index: 2;
+        text-align: center;
+    }
+    .step-icon-main {
+        width: 65px;
+        height: 65px;
+        margin-bottom: 10px;
+        transition: filter 0.4s ease;
+        filter: grayscale(100%) opacity(0.7); /*gray main icons*/
+    }
+    .icon-circle {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background-color: white;
+        border: 2px solid #238649;
+        color: #238649;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        font-weight: 600;
+        transition: all 0.4s ease;
+    }
+    .checkmark-icon, .cancel-icon {
+        display: none;
+    }
+    .step .step-title,
+    .step .step-description {
+        opacity: 0; /* hide text */
+        visibility: hidden;
+        transition: opacity 0.4s ease-in-out, visibility 0.4s;
+        min-height: 35px;
+    }
+    .step.active .step-title,
+    .step.active .step-description {
+        opacity: 1; /* show text */
+        visibility: visible;
+    }
+    .step h3 {
+        margin-top: 20px;
+        margin-bottom: 8px;
+        font-size: 24px;
+        color: black;
+        font-weight: 600;
+        text-shadow: 0px 3px 3px rgba(255, 255, 255, 0.4);
+    }
+    .step p {
+        font-size: 18px;
+        font-weight: 200;
+        color: black;
+        max-width: 200px;
+        line-height: 1.4;
+        text-shadow: 0px 3px 3px rgba(255, 255, 255, 0.4);
+    }
+    .step.active .icon-circle {
+        background-color: #277448;
+        border-color: #277448;
+        color: #fff;
+    }
+    .step.active .step-icon-main {
+        filter: none; /* remove gray icon and show real color */
+    }
+    .step.completed .icon-circle {
+        border-color: #277448;
+        background-color: #fff;
+        color: #238649;
+    }
+    .step.completed .step-icon-main {
+        filter: none;
+    }
+    .step.completed .step-number {
+        display: none;
+    }
+    .step.completed .checkmark-icon {
+        display: block;
+    }
+    .step.canceled .icon-circle {
+        border-color: #d9534f;
+        background-color: #fff;
+    }
+    .step.canceled .step-number { 
+        display: none; 
+    }
+    .step.canceled .checkmark-icon { 
+        display: none; 
+    }
+    .step.canceled .cancel-icon { 
+        display: block; 
+    }
+    #no-request-message {
+        text-align: center;
+        font-size: 20px;
+        color: #333;
+        margin-top: 50px;
+        padding: 20px;
+        background-color: rgba(255, 255, 255, 0.7);
+        border-radius: 8px;
+    }
+    #no-request-message a {
+        color: #238649;
+        font-weight: 600;
+        text-decoration: underline;
+    }
     </style>
 </head>
 <body>
@@ -264,7 +267,7 @@ if (isset($_SESSION['email']) && !empty($_SESSION['email'])) {
     <main class="book-pickup-status">
         <h1>Your Book Pickup Progress</h1>
 
-        <!-- Container for the "No Request" message -->
+        <!-- no request message -->
         <div id="no-request-message" style="display: none;">
             <p>You haven't made a request yet. <br> Please <a href="index.php">fill the request form</a> to track your request.</p>
         </div>
@@ -273,7 +276,6 @@ if (isset($_SESSION['email']) && !empty($_SESSION['email'])) {
             <div class="progress-line-bg"></div>
             <div class="progress-line-fill" id="progressFill"></div>
         
-            <!-- Step 1 -->
             <div class="step">
                 <img class="step-icon-main" src="Icons/UI/Progress/icons8-double-coche-100.png">
               <div class="icon-circle"> <span class="step-number">1</span><img class="checkmark-icon"  src="Icons/UI/Progress/Path.png"></div>
@@ -281,7 +283,6 @@ if (isset($_SESSION['email']) && !empty($_SESSION['email'])) {
             <p class="step-description"></p>
             </div>
         
-            <!-- Step 2 -->
             <div class="step">
                 <img class="step-icon-main" src="Icons/UI/Progress/icons8-scheduled-delivery-100.png" alt="">
               <div class="icon-circle"> <span class="step-number">2</span><img class="checkmark-icon"  src="Icons/UI/Progress/Path.png"></div>
@@ -289,7 +290,6 @@ if (isset($_SESSION['email']) && !empty($_SESSION['email'])) {
             <p class="step-description"></p>
             </div>
 
-         <!-- Step 3 -->
             <div class="step">
                 <img class="step-icon-main" src="Icons/UI/Progress/icons8-in-transit-100.png" alt="">
               <div class="icon-circle"> <span class="step-number">3</span><img class="checkmark-icon"  src="Icons/UI/Progress/Path.png"></div>
@@ -297,7 +297,6 @@ if (isset($_SESSION['email']) && !empty($_SESSION['email'])) {
             <p class="step-description"></p>
             </div>
 
-        <!-- Step 4 -->
             <div class="step">
                 <img class="step-icon-main" src="Icons/UI/Progress/icons8-pass-100.png" alt="">
               <div class="icon-circle"> <span class="step-number">4</span><img class="checkmark-icon"  src="Icons/UI/Progress/Path.png"><img class="cancel-icon" src="Icons/UI/Progress/cancel.png" alt="Canceled"></div>
@@ -339,7 +338,7 @@ if (isset($_SESSION['email']) && !empty($_SESSION['email'])) {
                 if (stepNumber < currentStep) {
                     step.classList.add('completed');
                 } else if (stepNumber === currentStep) {
-                    // CHANGE 5: The final step (collected or canceled) is 'completed', not 'active'
+                    // the final step (collected or canceled) is 'completed', not 'active'
                     if (finalStatus) {
                         step.classList.add('completed');
                         if (finalStatus === 'canceled') {
@@ -350,9 +349,9 @@ if (isset($_SESSION['email']) && !empty($_SESSION['email'])) {
                     }
                 }
                 
-                // Show text ONLY for the currently active/final step
+                // show text ONLY for the currently active/final step
                 if (stepNumber === currentStep) {
-                    // Make the text visible by adding the .active class, which controls opacity
+                    // Make the text visible by adding the .active class
                     step.classList.add('active'); 
                     if (finalStatus) {
                         const state = stepData[index].finalStates[finalStatus];
@@ -367,7 +366,7 @@ if (isset($_SESSION['email']) && !empty($_SESSION['email'])) {
                 }
             });
             
-            // CHANGE 6: Adjust the width calculation for the line
+            // width calculation for the line
             const progressPercentage = ((currentStep - 1) / (totalSteps - 1)) * 100;
             progressFill.style.width = `${progressPercentage}%`;
             progressFill.style.backgroundColor = (finalStatus === 'canceled') ? '#d9534f' : '#277448';

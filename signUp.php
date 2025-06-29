@@ -1,28 +1,27 @@
 <?php
 session_start();
 
-// --- DATABASE CONNECTION ---
+//db connection
 $host = 'localhost';
 $dbname = 'bookcycle';
 $user = 'root';
-$password = ''; // Your DB password
+$password = ''; 
 
-$message = ''; // Variable to hold success or error messages
-$message_type = ''; // Variable to hold the class for styling the message (success or error)
+$message = ''; // success or error messages
+$message_type = ''; // variable to hold the class for styling the message 
 
 try {
     $conn = new PDO("mysql:host=$host;dbname=$dbname", $user, $password);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
-    // This is a critical error, so we'll stop the script.
     die("Connection failed: " . $e->getMessage());
 }
 
-// --- FORM PROCESSING ---
-// Check if the form was submitted
+// signUp form
+// check if the form was submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    // 1. Retrieve and sanitize form data
+    // store form data in appropriate vars
     $firstName = trim($_POST['first_name']);
     $lastName = trim($_POST['last_name']);
     $email = trim($_POST['email']);
@@ -32,28 +31,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $pass = $_POST['password'];
     $confirmPass = $_POST['confirm_password'];
 
-    // 2. Validate Passwords
+    // validate Passwords
     if ($pass !== $confirmPass) {
         $message = "Passwords do not match. Please try again.";
         $message_type = "error";
     } else {
-        // 3. Passwords match, proceed with database operations
+        
         try {
-            // 4. Check if the email (primary key) already exists
+            // check if the email already exists
             $checkSql = "SELECT email_client_ID FROM client WHERE email_client_ID = :email";
             $checkStmt = $conn->prepare($checkSql);
             $checkStmt->bindParam(':email', $email);
             $checkStmt->execute();
 
             if ($checkStmt->rowCount() > 0) {
-                // Email already exists
+                // email already exists
                 $message = "An account with this email address already exists.";
                 $message_type = "error";
             } else {
-                // 5. Email is unique, hash the password and insert the new client
+                // no email was found then hash pw and store
                 $hashedPassword = password_hash($pass, PASSWORD_DEFAULT);
 
-                // SQL statement WITHOUT the address column
                 $sql = "INSERT INTO client (email_client_ID, first_name, last_name, phone_number, preferred_contact_method, city, password) 
                         VALUES (:email, :first_name, :last_name, :phone_number, :contact_method, :city, :password)";
 
@@ -68,18 +66,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $stmt->bindParam(':city', $city);
                 $stmt->bindParam(':password', $hashedPassword);
 
-                // Execute the statement
+                // execute the statement
                 $stmt->execute();
                 
-                // Set the success message
+                // success message
                 $message = "Sign up successful! Welcome to BookCycle.";
                 $message_type = "success";
             }
         } catch (PDOException $e) {
-            // Catch any other database errors during the process
+            // database errors 
             $message = "An unexpected error occurred. Please try again later.";
             $message_type = "error";
-            // For debugging: error_log("Signup Error: " . $e->getMessage());
         }
     }
 }
@@ -113,22 +110,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         position: relative;
       }
       body::before {
-  content: ""; 
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.4);
-  z-index: 0; 
-}
+        content: ""; 
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.4);
+        z-index: 0; 
+      }
       main {
         display: flex;
         flex-direction: column;
         align-items: center;
         width: 100%;
         position: relative; 
-  z-index: 1; 
+        z-index: 1; 
       }
       .logo {
         position: fixed;
@@ -169,8 +166,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       }
       .form_row{
         display: flex;
-  flex-direction: row;
-  gap: 12px;
+        flex-direction: row;
+        gap: 12px;
       }
       #stName, #ndName, #email, #telNum, #preConMethod, #city,
       #PW, #confirmPW {
@@ -234,25 +231,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       }
 
       .message {
-            padding: 15px;
-            margin-bottom: 20px;
-            border-radius: 5px;
-            font-family: sans-serif;
-            font-size: 1em;
-            text-align: center;
-        }
-        /* Style for error messages (red) */
-        .error {
-            color: #D8000C;
-            background-color: #FFD2D2;
-            border: 1px solid #D8000C;
-        }
-        /* Style for success messages (green) */
-        .success {
-            color: #270;
-            background-color: #DFF2BF;
-            border: 1px solid #270;
-        }
+          padding: 15px;
+          margin-bottom: 20px;
+          border-radius: 5px;
+          font-family: sans-serif;
+          font-size: 1em;
+          text-align: center;
+      }
+      .error {
+          color: #D8000C;
+          background-color: #FFD2D2;
+          border: 1px solid #D8000C;
+      }
+      .success {
+          color: #270;
+          background-color: #DFF2BF;
+          border: 1px solid #270;
+      }
     </style>
 </head>
 <body>
@@ -263,7 +258,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
          <h1>SIGN UP AND START MAKING AN IMPACT</h1>
          <form action="signUp.php" method="post">
     
-        <!-- Universal Message Area: This will display success or error messages -->
         <?php if (!empty($message)): ?>
             <div class="message <?php echo $message_type; ?>">
                 <?php echo $message; ?>

@@ -1,8 +1,7 @@
 <?php
-// Start the session at the very top. This is required for flash messages.
 session_start();
 
-// --- DATABASE CONNECTION ---
+// db conn
 $host = 'localhost';
 $dbname = 'bookcycle';
 $user = 'root';
@@ -15,15 +14,15 @@ try {
     die("Connection failed: " . $e->getMessage());
 }
 
-// --- HANDLE FORM SUBMISSION ---
+// form submichon
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    // --- 1. HANDLE FILE UPLOAD ---
+    // form file uploads
     $uploaded_file_path = NULL; 
     $file_upload_error = false;
 
     if (isset($_FILES['uploaded_file']) && $_FILES['uploaded_file']['error'] == 0) {
-        $upload_dir = 'collaborate_form_uploaded_files/'; // Make sure this folder exists
+        $upload_dir = 'collaborate_form_uploaded_files/';
         $unique_name = uniqid() . '-' . basename($_FILES['uploaded_file']['name']);
         $target_file = $upload_dir . $unique_name;
         
@@ -36,10 +35,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 
-    // --- 2. PROCESS THE REST OF THE FORM (if no file upload error) ---
+    // kmmel xoghlek if ther's no file error
     if (!$file_upload_error) {
         
-        // Get all the form data
+        // get form data
         $collaboration_type = $_POST['collaboration_type'];
         $full_name = trim($_POST['full_name']);
         $phone_number = trim($_POST['phone_number']);
@@ -49,7 +48,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $user_message = trim($_POST['message']);
 
         try {
-            // --- 3. CHOOSE THE SQL BASED ON COLLABORATION TYPE ---
+            // SQL based on collaboration type
             if ($collaboration_type === 'volunteering') {
                 $sql = "INSERT INTO volunteers (email_volunteer_ID, full_name, phone_number, preferred_contact_method, city, type_of_collaboration, desired_role, how_often_can_you_volunteer, uploaded_file, message) 
                         VALUES (:email, :name, :phone, :contact, :city, :collab_type, :role, :availability, :file, :msg)";
@@ -65,7 +64,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $stmt->bindParam(':activity', $_POST['field_of_activity']);
             }
 
-            // --- 4. BIND COMMON FIELDS AND EXECUTE ---
+            // binding parameters
             if (isset($stmt)) {
                 $stmt->bindParam(':email', $email);
                 $stmt->bindParam(':name', $full_name);
@@ -78,25 +77,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 
                 $stmt->execute();
                 
-                // Set the SUCCESS flash message
+                // success message
                 $_SESSION['flash_message'] = "Thank you! Your submission has been received. We'll make sure to contact you as soon as possible!";
                 $_SESSION['flash_type'] = "success";
             } else {
-                 // Set an ERROR flash message if type is invalid
+                 // error msg if type invalid
                  $_SESSION['flash_message'] = "An invalid collaboration type was selected.";
                  $_SESSION['flash_type'] = "error";
             }
 
         } catch (PDOException $e) {
-            // Set the DATABASE ERROR flash message (e.g., duplicate email)
+            // error msg duplicate email
             $_SESSION['flash_message'] = "A submission with this email address already exists.";
             $_SESSION['flash_type'] = "error";
-            // For debugging: error_log($e->getMessage());
         }
     }
     
-    // --- 5. REDIRECT BACK TO THE FORM TO SHOW THE MESSAGE ---
-    // This runs after every form submission, success or error.
+    // redirect back to form to show msg
     header('Location: ' . $_SERVER['PHP_SELF'] . '#form');
     exit;
 }
@@ -130,7 +127,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         background-position: center;
       }
       
-      /************************************************************/
+      /************************HeroSection******************************/
       .heroSection {
         display: flex;
         flex-direction: column;
@@ -181,7 +178,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         background-color: #238649;
         cursor: pointer;
       }
-      /************************************************************/
+      /********************WhoCan Join********************************/
       .whoCanJoin {
         background-color: #238649;
         padding: 50px 110px;
@@ -259,7 +256,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
           margin-bottom: 5px;
           text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.35);
       }
-    /************************************************************/
+    /*************************3lach join us*****************************/
     .whyJoinUs {
         background-image: url('Photos/collaborate_with_us/background.jpg');
         background-size: cover;
@@ -278,77 +275,77 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         height: auto;
         z-index: 1;
     }
-.whyJoinUs h1 {
-    text-align: center;
-    font-size: 65px;
-    font-weight: 900;
-    color: black;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-    margin-bottom: 50px;
-    position: relative;
-    z-index: 2;
-}
-.why-join-container {
-    display: flex;
-    justify-content: center;
-    gap: 70px;
-    position: relative;
-    z-index: 2;
-}
-.benefit-column {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    flex: 1;
-    max-width: 450px;
-}
-.benefit-column h2 {
-    font-size: 40px;
-    font-weight: 750;
-    color: black;
-    margin: 0 0 15px 0;
-}
-.benefit-card {
-    width: 100%;
-    max-width: 450px;
-    font-family: 'Lexend', sans-serif;
-    border: 4px solid #000;
-    border-radius: 8px;
-    padding: 40px 30px;
-    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.50);
-    background: rgba(217, 217, 217, 0.30);
-}
-.benefit-item {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    margin-bottom: 30px;
-}
-.benefit-item:last-child {
-    margin-bottom: 0;
-}
-.benefit-item img {
-    width: 45px;
-    height: 45px;
-    flex-shrink: 0; /* Prevents icon from shrinking */
-}
-.benefit-item p {
-    font-size: 22px;
-    font-weight: 400;
-    color: black;
-    text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50);
-    margin: 0;
-    line-height: 1.5;
-}
-/************************************************************/
+    .whyJoinUs h1 {
+        text-align: center;
+        font-size: 65px;
+        font-weight: 900;
+        color: black;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        margin-bottom: 50px;
+        position: relative;
+        z-index: 2;
+    }
+    .why-join-container {
+        display: flex;
+        justify-content: center;
+        gap: 70px;
+        position: relative;
+        z-index: 2;
+    }
+    .benefit-column {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        flex: 1;
+        max-width: 450px;
+    }
+    .benefit-column h2 {
+        font-size: 40px;
+        font-weight: 750;
+        color: black;
+        margin: 0 0 15px 0;
+    }
+    .benefit-card {
+        width: 100%;
+        max-width: 450px;
+        font-family: 'Lexend', sans-serif;
+        border: 4px solid #000;
+        border-radius: 8px;
+        padding: 40px 30px;
+        box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.50);
+        background: rgba(217, 217, 217, 0.30);
+    }
+    .benefit-item {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+    .benefit-item:last-child {
+        margin-bottom: 0;
+    }
+    .benefit-item img {
+        width: 45px;
+        height: 45px;
+        flex-shrink: 0;
+    }
+    .benefit-item p {
+        font-size: 22px;
+        font-weight: 400;
+        color: black;
+        text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.50);
+        margin: 0;
+        line-height: 1.5;
+    }
+/***********************Ready to team up?*********************************/
     .teamUpForm {
-    background-color: #238649;
-    padding: 50px 60px 30px 10px;
-    font-family: 'Lexend', sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 100px;
+      background-color: #238649;
+      padding: 50px 60px 30px 10px;
+      font-family: 'Lexend', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 100px;
     }
     #teamUpForm h1 {
       width: 100%;
@@ -435,158 +432,158 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     .hidden {
     display: none !important;
-}
-#partner-fields,
-#volunteer-fields {
-    grid-column: 1 / -1;
-    display: grid;
-    grid-template-columns: 321px 321px;
-    gap: 15px;
-    border-radius: 5px; 
-}
+    }
+    #partner-fields,
+    #volunteer-fields {
+        grid-column: 1 / -1;
+        display: grid;
+        grid-template-columns: 321px 321px;
+        gap: 15px;
+        border-radius: 5px; 
+    }
     #partner-fields input:focus,
     #volunteer-fields select:focus{
         outline: none;
         border-color: black;
     }
-/************************************************************/ 
-.ourPartners {
-    background-image: url('Photos/collaborate_with_us/our\ partners\ bg.jpeg');
-    background-size: cover;
-    background-position: center;
-    padding: 60px 40px;
-    text-align: center;
-    font-family: 'Lexend', sans-serif;
-}
-.ourPartners h1 {
-    font-size: 66px;
-    font-weight: 900;
-    color: #000;
-    margin-bottom:  40px;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
-}
-.logos-container {
-    display: flex;
-    justify-content: center; 
-    align-items: center;
-    gap: 50px;
-}
-.logos-container img {
-    max-height: 150px; 
-    max-width: 250px;
-    width: auto;
-    cursor: pointer;
-}
-/************************************************************/
-#faq {
-    display: grid;
-    grid-template-columns: 580px 580px;
-    grid-template-rows: auto auto auto auto;
-    grid-template-areas:
-        "title title"
-        "col1 col2"
-        "contact contact"
-        "button-area button-area";
-    gap: 40px 20px;
-    padding: 30px 60px;
-    color: white;
-    font-family: 'Lexend', sans-serif;
-}
-#faq h2 {
-    grid-area: title;
-    text-align: center;
-    font-size: 65px;
-    font-weight: 800;
-    color: white;
-}
-.stCol {
-    grid-area: col1;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-.ndCol {
-    grid-area: col2;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-#faq details {
-    background-color: #FFFFFF;
-    border-radius: 8px;
-    width: 100%;
-    overflow: hidden;
-    display: grid;
-    grid-template-rows: auto 0fr;
-    transition: grid-template-rows 0.3s ease-in-out;
-}
-#faq details[open] {
-    grid-template-rows: auto 1fr;
-}
-#faq summary {
-    padding: 22px 20px 22px 40px;
-    color: black;
-    font-size: 19px;
-    font-weight: 400;
-    cursor: pointer;
-    list-style: none;
-    display: flex;
-    justify-content: space-between;
-    align-items: center; 
-}
-#faq summary::-webkit-details-marker {
-    display: none;
-}
-#faq summary::after {
-    content: '';
-    display: inline-block;
-    width: 8px;
-    height: 8px;
-    border-style: solid;
-    border-color: #555555; 
-    border-width: 0 2px 2px 0; 
-    transform: rotate(45deg);
-}
-#faq details[open] summary::after {
-    transform: rotate(225deg);
-}
-#faq details p {
-    background-color: black;
-    color: white;
-    padding: 30px 40px;
-    margin: 0;
-    font-size: 19px;
-    overflow: hidden;
-}
-.stillHave {
-    grid-area: contact;
-    text-align: center;
-    font-family: "Caveat", cursive;
-    font-size: 35px;
-    color: white;
-}
-#faq > a {
-    grid-area: button-area;
-    justify-self: center;
-    text-decoration: none;
-}
-#faq button {
-    background-color: #32eb2a;
-    color: white;
-    padding: 15px 40px;
-    border: none;
-    border-radius: 12px;
-    font-size: 25px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    font-family: 'Lexend', sans-serif;
-}
-#faq button:hover {
-    background-color: #2dbb2d;
-}
+/*************************Prtners dyalna*******************************/ 
+    .ourPartners {
+        background-image: url('Photos/collaborate_with_us/our\ partners\ bg.jpeg');
+        background-size: cover;
+        background-position: center;
+        padding: 60px 40px;
+        text-align: center;
+        font-family: 'Lexend', sans-serif;
+    }
+    .ourPartners h1 {
+        font-size: 66px;
+        font-weight: 900;
+        color: #000;
+        margin-bottom:  40px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+    }
+    .logos-container {
+        display: flex;
+        justify-content: center; 
+        align-items: center;
+        gap: 50px;
+    }
+    .logos-container img {
+        max-height: 150px; 
+        max-width: 250px;
+        width: auto;
+        cursor: pointer;
+    }
+/**************************FAQ off*******************************/
+    #faq {
+        display: grid;
+        grid-template-columns: 580px 580px;
+        grid-template-rows: auto auto auto auto;
+        grid-template-areas:
+            "title title"
+            "col1 col2"
+            "contact contact"
+            "button-area button-area";
+        gap: 40px 20px;
+        padding: 30px 60px;
+        color: white;
+        font-family: 'Lexend', sans-serif;
+    }
+    #faq h2 {
+        grid-area: title;
+        text-align: center;
+        font-size: 65px;
+        font-weight: 800;
+        color: white;
+    }
+    .stCol {
+        grid-area: col1;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+    .ndCol {
+        grid-area: col2;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+    #faq details {
+        background-color: #FFFFFF;
+        border-radius: 8px;
+        width: 100%;
+        overflow: hidden;
+        display: grid;
+        grid-template-rows: auto 0fr;
+        transition: grid-template-rows 0.3s ease-in-out;
+    }
+    #faq details[open] {
+        grid-template-rows: auto 1fr;
+    }
+    #faq summary {
+        padding: 22px 20px 22px 40px;
+        color: black;
+        font-size: 19px;
+        font-weight: 400;
+        cursor: pointer;
+        list-style: none;
+        display: flex;
+        justify-content: space-between;
+        align-items: center; 
+    }
+    #faq summary::-webkit-details-marker {
+        display: none;
+    }
+    #faq summary::after {
+        content: '';
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-style: solid;
+        border-color: #555555; 
+        border-width: 0 2px 2px 0; 
+        transform: rotate(45deg);
+    }
+    #faq details[open] summary::after {
+        transform: rotate(225deg);
+    }
+    #faq details p {
+        background-color: black;
+        color: white;
+        padding: 30px 40px;
+        margin: 0;
+        font-size: 19px;
+        overflow: hidden;
+    }
+    .stillHave {
+        grid-area: contact;
+        text-align: center;
+        font-family: "Caveat", cursive;
+        font-size: 35px;
+        color: white;
+    }
+    #faq > a {
+        grid-area: button-area;
+        justify-self: center;
+        text-decoration: none;
+    }
+    #faq button {
+        background-color: #32eb2a;
+        color: white;
+        padding: 15px 40px;
+        border: none;
+        border-radius: 12px;
+        font-size: 25px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        font-family: 'Lexend', sans-serif;
+    }
+    #faq button:hover {
+        background-color: #2dbb2d;
+    }
 
-/************************************************************/
+/***********************Footer**********************************/
         footer {
             background-image: url('Photos/collaborate_with_us/background.jpg');
             background-size: cover;
@@ -678,16 +675,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   </head>
   <body>
     <header>
-<?php
-            // Check if the user is logged in
+        <?php
             if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true) {
-                // If they are logged in, show the logged-in navbar
+                // if loggedIn, logged-in navbar
                 include 'include/navbar_logged_in.php';
             } else {
-                // If they are not logged in, show the logged-out navbar
+                // If not, logged-out navbar
                 include 'include/navbar_logged_out.php';
             }
         ?>
+
+        <!-- HeroSection  -->
       <section class="heroSection">
         <h1>Let’s Make an Impact Together!</h1>
         <p>
@@ -701,6 +699,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       </section>
     </header>
     <main>
+
+      <!-- WhoCanJoin  -->
       <section class="whoCanJoin">
         <h1>Who can join</h1>
         <div class="who-can-join-section">
@@ -726,6 +726,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
         </div>
       </section>
+
+      <!-- WhyJoinUs  -->
       <section class="whyJoinUs">
          <img class="why-join-bg-image" src="Photos/collaborate_with_us/why join us bg.png" alt="Decorative vine and hand illustration" />
         <h1>Why join Us?</h1>
@@ -784,6 +786,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
       </div>
       </section>
+
+      <!-- team up  -->
       <section id="teamUpForm">
         <h1>Ready to Team Up?</h1>
         <div class="teamUpForm">
@@ -794,14 +798,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
           <form action="#form" method="post" enctype="multipart/form-data">
 
           <?php
-            // Check if a flash message exists in the session
             if (isset($_SESSION['flash_message'])) {
-                // Display the message with the correct style
+                // if alredy message exist show with appropriate style
                 echo '<div class="message ' . $_SESSION['flash_type'] . '">';
                 echo htmlspecialchars($_SESSION['flash_message']);
                 echo '</div>';
                 
-                // CRUCIAL: Delete the message so it doesn't show again
                 unset($_SESSION['flash_message']);
                 unset($_SESSION['flash_type']);
             }
@@ -897,6 +899,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
         </div>
       </section>
+
+      <!-- our partners  -->
       <section class="ourPartners">
         <h1>Our Partners</h1>
          <div class="logos-container">
@@ -907,6 +911,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <a target="_blank" href="https://www.terracycle.com/fr-FR/?srsltid=AfmBOoq8eRHJcmOPCKIhEqVfkQ0RLawEdG6MFC8H5V57thUuBPAv3Ju7"><img src="Photos/collaborate_with_us/partner 4.png" alt=""/></a>
         </div>
       </section>
+
+      <!-- FAQ off  -->
       <section id="faq">
         <h2>FAQ</h2>
         <div class="stCol">
@@ -997,18 +1003,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     const partnerFields = document.getElementById('partner-fields');
     const volunteerFields = document.getElementById('volunteer-fields');
     
-    // Get all the inputs/selects within the conditional sections
+    // get all vol/part inputs/selects
     const partnerInputs = partnerFields.querySelectorAll('input');
     const volunteerInputs = volunteerFields.querySelectorAll('select');
 
     collaTypeSelect.addEventListener('change', function() {
-        // First, hide both sections and make all their fields NOT required
+    //hide them by default 
         partnerFields.classList.add('hidden');
         volunteerFields.classList.add('hidden');
         partnerInputs.forEach(input => input.required = false);
         volunteerInputs.forEach(input => input.required = false);
 
-        // Now, show the correct section and make ITS fields required
+        // show correct section
         if (this.value === 'partnership') {
             partnerFields.classList.remove('hidden');
             partnerInputs.forEach(input => input.required = true);
@@ -1018,8 +1024,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     });
 
-    // Optional: Trigger the change event on page load in case a value is pre-selected
-    // This is good practice for forms that might remember old values.
     collaTypeSelect.dispatchEvent(new Event('change'));
 </script>
   </body>
