@@ -77,80 +77,80 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link rel="icon" href="../logo/bookcycle.png" type="image/x-icon" />
     <link href="https://fonts.googleapis.com/css2?family=Lexend&display=swap" rel="stylesheet">
     <style>
-    body, html {
-        margin: 0;
-        padding: 0;
-        height: 100%;
-        font-family: "Lexend", sans-serif;
-    }
-    .login-page {
-        height: 100%;
-        width: 100%;
-        background-color: #238649;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-    .login-card {
-        background-color: #ffffff;
-        padding: 45px 50px;
-        border-radius: 20px;
-        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
-        width: 100%;
-        max-width: 450px;
-        box-sizing: border-box;
-        text-align: center;
-    }
-    .login-card h2 {
-        color: #333333;
-        font-size: 24px;
-        font-weight: 700;
-        margin-top: 40px;
-        margin-bottom: 40px;
-        letter-spacing: -0.114px;
-    }
-    .login-form input[type="email"],
-    .login-form input[type="password"] {
-        width: 350px;
-        height: 55px;
-        padding: 14px 16px;
-        margin-bottom: 25px;
-        border: 1px solid #e0e0e0;
-        border-radius: 8px;
-        background-color: #f7f7f7;
-        font-size: 1em;
-        font-family: "Lexend", sans-serif;
-        box-sizing: border-box;
-    }
-    .login-form input::placeholder {
-        color: #aaaaaa;
-    }
-    .login-form button {
-        width: 180px;
-        height: 45px;
-        padding: 15px 0px;
-        background-color: #32eb2a;
-        border: none;
-        border-radius: 8px;
-        color: white;
-        font-size: 18px;
-        font-weight: 700;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-        margin-bottom: 40px;
-    }
-    .login-form button:hover {
-        background-color: #2dbb2d; 
-    }
-    .error-message { 
-        color: #D8000C; 
-        background-color: #FFD2D2; 
-        border: 1px solid; 
-        padding: 10px; 
-        border-radius: 4px; 
-        margin-bottom: 15px; 
-        text-align: center; 
-    }
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: "Lexend", sans-serif;
+        }
+        .login-page {
+            height: 100%;
+            width: 100%;
+            background-color: #238649;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .login-card {
+            background-color: #ffffff;
+            padding: 45px 50px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            max-width: 450px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+        .login-card h2 {
+            color: #333333;
+            font-size: 24px;
+            font-weight: 700;
+            margin-top: 40px;
+            margin-bottom: 40px;
+            letter-spacing: -0.114px;
+        }
+        .login-form input[type="email"],
+        .login-form input[type="password"] {
+            width: 350px;
+            height: 55px;
+            padding: 14px 16px;
+            margin-bottom: 25px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            background-color: #f7f7f7;
+            font-size: 1em;
+            font-family: "Lexend", sans-serif;
+            box-sizing: border-box;
+        }
+        .login-form input::placeholder {
+            color: #aaaaaa;
+        }
+        .login-form button {
+            width: 180px;
+            height: 45px;
+            padding: 15px 0px;
+            background-color: #32eb2a;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-bottom: 40px;
+        }
+        .login-form button:hover {
+            background-color: #2dbb2d; 
+        }
+        .error-message { 
+            color: #D8000C; 
+            background-color: #FFD2D2; 
+            border: 1px solid; 
+            padding: 10px; 
+            border-radius: 4px; 
+            margin-bottom: 15px; 
+            text-align: center; 
+        }
     </style>
 </head>
 <body>
